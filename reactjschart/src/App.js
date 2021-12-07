@@ -8,12 +8,8 @@ class App extends Component {
     render() {
         return (
             <div className="App">
-                <h1>LineChart</h1>
-                <LineChartComponent/>
-                <h1>BarChart</h1>
+                <h1>Tỷ giá vàng lấy từ API</h1>
                 <BarChartComponent/>
-                <h1>PieChart</h1>
-                <PieChartComponent/>
             </div>
         );
     }

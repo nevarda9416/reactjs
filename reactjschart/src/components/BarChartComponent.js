@@ -1,48 +1,56 @@
-import React from 'react';
-import {Chart} from 'chart.js/auto'
+import React, { Component } from 'react';
 import {Bar} from 'react-chartjs-2';
 import axios from 'axios';
+import {ArcElement} from 'chart.js';
+import Chart from 'chart.js/auto';
+Chart.register(ArcElement);
 
-const state = {
-    labels: ['January', 'February', 'March',
-        'April', 'May'],
-    datasets: [
-        {
-            label: 'Rainfall',
-            backgroundColor: 'rgba(75,192,192,1)',
-            borderColor: 'rgba(0,0,0,1)',
-            borderWidth: 2,
-            data: [65, 59, 80, 81, 56]
+export default class BarChartComponent extends Component
+{
+    constructor(props) {
+        super(props);
+        this.state = {
+            chartData: {}
         }
-    ]
-};
-
-export default class App extends React.Component {
-    componentDidMount() {
-        axios.get('http://localhost:8000/coins')
-            .then(res => {
-
-            })
     }
 
-    render() {
-        return (
+    componentDidMount() {
+        axios.get(`http://127.0.0.1:8000/coins`)
+            .then(res => {
+                const data = res.data.golds[0].value;console.log(data);
+                let brands = [];
+                let sells = [];
+                if (data) {
+                    data.forEach(element => {
+                        brands.push(element.brand + ' (' + element.company + ')');
+                        sells.push(Number(element.sell.replace(/[^0-9.-]+/g, "")));
+                    });
+                }
+                this.setState({
+                    chartData: {
+                        labels: brands,
+                        datasets:[
+                            {
+                                label:'Giá vàng trong nước bán ra ngày ' + res.data.golds[0].updated,
+                                data: sells ,
+                                backgroundColor: 'yellow'
+                            }
+                        ]
+                    }
+                });
+            })
+    }
+    render()
+    {
+        return(
             <div>
-                <Bar
-                    data={state}
-                    options={{
-                        title: {
-                            display: true,
-                            text: 'Average Rainfall per month',
-                            fontSize: 20
-                        },
-                        legend: {
-                            display: true,
-                            position: 'right'
-                        }
-                    }}
-                />
+                {
+                    Object.keys(this.state.chartData).length &&
+                    <Bar
+                        data={this.state.chartData}
+                        options={{maintainAspectRatio: false}}/>
+                }
             </div>
-        );
+        )
     }
 }
