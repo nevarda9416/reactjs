@@ -1,6 +1,7 @@
 import logo from './logo.svg';
-import {Counter} from './features/counter/Counter';
 import './App.css';
+import {Counter} from "./counter/actions";
+import React from "react";
 
 function App() {
     return (
