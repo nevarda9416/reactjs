@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FilterLink from '../containers/FilterLink';
 import {SHOW_ALL, SHOW_COMPLETED, SHOW_ACTIVE} from "../constants/TodoFilters";
 
-const FILTER_TTILES = {
+const FILTER_TITLES = {
     [SHOW_ALL]: 'All',
     [SHOW_ACTIVE]: 'Active',
     [SHOW_COMPLETED]: 'Completed',
@@ -17,10 +17,10 @@ const Footer = (props) => {
                 <strong>{activeCount || 'No'}</strong> {itemWord} left
             </span>
             <ul className="filters">
-                {Object.keys(FILTER_TTILES).map(filter =>
+                {Object.keys(FILTER_TITLES).map(filter =>
                     <li key={filter}>
                         <FilterLink filter={filter}>
-                            {FILTER_TTILES[filter]}
+                            {FILTER_TITLES[filter]}
                         </FilterLink>
                     </li>
                 )}
