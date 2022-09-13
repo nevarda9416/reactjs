@@ -18,10 +18,10 @@ class Welcome extends Component {
         this.getList();
     }
     getList=()=>{
-        /*** Method to make api call */
+        /*** Method to make api call 
         fetch('https://api.mydomain.com')
             .then(response=>response.json())
-            .then(data=>this.setState({list:data}));
+            .then(data=>this.setState({list:data}));*/
     }
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.list !== nextState.list

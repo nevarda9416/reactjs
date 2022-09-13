@@ -4,6 +4,7 @@ import './App.css';
 import Welcome from './components/Welcome';
 import Clothes from './components/Clothes'; // Import component vào
 import List from './components/List'; // Import component vào
+import Students from './components/Students'; // Import component vào
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 const USDtoVND = function(props) {
@@ -70,7 +71,15 @@ const ComponentCha = (props) => {
 const MessageContext = React.createContext();
 class ComponentSuToChau extends Component {
   render(){
-  return <h1>Sư tổ Ông bảo sư tổ cháu là: '{this.context}'</h1>
+      var myStyle = {
+        fontSize: 80,
+        fontFamily: 'Courier',
+        color: '#003300'
+      }
+  return <div><h1>Sư tổ Ông bảo sư tổ cháu là: '{this.context}'</h1>
+  <h2>Training Institutes <span style={myStyle}>{25+20}</span></h2>
+  <p data-demoAttribute="demo">This website contains the best CS tutorials</p>
+  </div>
   }
 }
 ComponentSuToChau.contextType = MessageContext;
@@ -331,6 +340,7 @@ class App extends Component {
     }
     return(
       <React.Fragment>
+      <Students/>
     <div className="App">
       <ImageWithHoverOpacity1/>
       <ImageWithHoverOpacity2/>
