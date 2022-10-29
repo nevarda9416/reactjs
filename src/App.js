@@ -5,6 +5,8 @@ import Welcome from './components/Welcome';
 import Clothes from './components/Clothes'; // Import component vào
 import List from './components/List'; // Import component vào
 import Students from './components/Students'; // Import component vào
+import FunctionExample from './components/FunctionExample';
+import ClassExample from './components/ClassExample';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 const USDtoVND = function(props) {
@@ -13,6 +15,8 @@ const USDtoVND = function(props) {
   }  
   return (
     <div>
+      <FunctionExample/>
+      <ClassExample/>
       <span>USD</span>
       <input onChange={(e)=>{
         const usd = e.target.value;
