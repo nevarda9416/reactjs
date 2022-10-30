@@ -1,4 +1,7 @@
 import React, {FunctionComponent} from "react";
+interface Props {
+    showMessage?: any;
+}
 function FunctionDemo() {
     return (
         <div className="FunctionDemo">
@@ -6,6 +9,13 @@ function FunctionDemo() {
         </div>
     );
 }
-const FunctionExample: FunctionComponent<any> = () =>
-    <h1>Function Example!</h1>
-export default FunctionDemo;
+const FunctionExample = ({name = "Function Component", age = 1, showMessage}) => {
+    return (
+        <div>
+            <h2>Name: {name}</h2>
+            <p>Age: {age}</p>
+            <button onClick={()=>showMessage("Tus")}>Action</button>
+        </div>
+    )
+}
+export default FunctionExample;

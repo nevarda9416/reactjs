@@ -1,7 +1,15 @@
+import { any } from "prop-types";
 import React, { Component } from "react"; // Component của React
-class ClassExample extends Component {
+import FunctionExample from "./FunctionExample";
+interface Props {
+    name: string;
+    age?: Number;
+    pet?: Dog;
+    address?: any;
+}
+class ClassExample extends Component<any, any> {
     // Không sử dụng this ở đây
-    constructor(props:any) {
+    constructor(props: Props) {
         // Sử dụng this trong contructor
         // Khi gọi super sẽ dùng được this, dùng this để truy cập 
         super(props); // super sẽ refer đến hàm khởi tạo của class cha (parent class constructor: React.Component)
@@ -10,9 +18,21 @@ class ClassExample extends Component {
             content: 'Hello World!'
         };
     }
+    showMessageFunction = (name: string) => {
+        alert("Hello, I'm " + name);
+    }
+    static defaultProps = {
+        name: "Tên mặc định",
+        age: 1,
+        address: "Việt Nam",
+    }
     render() {
         return (
-            <h1>{this.state.content}</h1>
+            <div>
+                <h1>I'm Parent</h1>
+                <FunctionExample showMessage={this.showMessageFunction}/>
+                <h2>{this.props.address}</h2>
+            </div>
         );
     }
 }
