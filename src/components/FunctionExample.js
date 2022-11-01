@@ -9,12 +9,12 @@ function FunctionDemo() {
         </div>
     );
 }
-const FunctionExample = ({name = "Function Component", age = 1, showMessage}) => {
+const FunctionExample = ({name = "ClassExample Component", age = 18, showMessage}) => {
     return (
         <div>
             <h2>Name: {name}</h2>
             <p>Age: {age}</p>
-            <button onClick={()=>showMessage("Tus")}>Action</button>
+            <button onClick={()=>showMessage("Tú")}>Action</button>
         </div>
     )
 }
