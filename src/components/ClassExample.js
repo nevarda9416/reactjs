@@ -7,7 +7,10 @@ interface Props {
     pet?: Dog;
     address?: any;
 }
-class ClassExample extends Component<any, any> {
+interface State {
+    status?: String;
+}
+class ClassExample extends Component<any, any, State> {
     // Không sử dụng this ở đây
     constructor(props: Props) {
         // Sử dụng this trong contructor
@@ -15,8 +18,19 @@ class ClassExample extends Component<any, any> {
         super(props); // super sẽ refer đến hàm khởi tạo của class cha (parent class constructor: React.Component)
         this.props = props;
         this.state = {
+            status: 'Đang học',
             content: 'Hello World!'
         };
+    }
+    changeStatus = () => {
+        this.setState({
+            status: this.state.status === 'Đang học' ? 'State phải gắn trong function tự định nghĩa' : 'Đang học'
+        });
+    }
+    componentDidMount() {
+        this.setState({
+            status: this.state.status === 'Đang học' ? 'State phải gắn trong lifecycle' : 'Đang học'
+        });
     }
     showMessageFunction = (name: string) => {
         alert("Hello, I'm " + name);
@@ -32,6 +46,8 @@ class ClassExample extends Component<any, any> {
                 <h1>I'm Parent</h1>
                 <FunctionExample showMessage={this.showMessageFunction}/>
                 <h2>{this.props.address}</h2>
+                <h3>{this.state.status}</h3>
+                <button onClick={()=>this.changeStatus()}>Thay đổi trạng thái</button>
             </div>
         );
     }
