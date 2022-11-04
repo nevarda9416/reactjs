@@ -26,9 +26,7 @@ const FunctionExample = ({name = "ClassExample Component", age = 18, showMessage
                             <NavLink exact activeClassName="myStyle" to="/user">User</NavLink>
                         </li>
                     </ul>
-                    <Routes>
-                        <Route exact path="/home"/>
-                    </Routes>
+                    <Prompt when={true} message={(location)=>(`Bạn có chắc muốn đi tới ${location.pathname}`)}></Prompt>
                 </div>
             </BrowserRouter>
             <h2>Name: {name}</h2>

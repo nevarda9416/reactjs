@@ -1,7 +1,7 @@
-import { any } from "prop-types";
 import React, { Component } from "react"; // Component của React
 import FunctionExample from "./FunctionExample";
 import axios from 'axios';
+import Personal from "../features/services/Personal";
 interface Props {
     name: string;
     age?: Number;
@@ -134,9 +134,7 @@ class ClassExample extends Component<any, any, State> {
             return (
                 <div>
                     <h1>Random person</h1>
-                    <ul>
-                        {this.state.persons.map(person => <li>{person.name}</li>)}
-                    </ul>
+                    <Personal getData={this.getData}/>
                     {data.map(item => (
                         <p>
                             <b>Gender:</b> {item.gender}<br />
