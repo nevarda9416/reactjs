@@ -1,6 +1,7 @@
 import { any } from "prop-types";
 import React, { Component } from "react"; // Component của React
 import FunctionExample from "./FunctionExample";
+import axios from 'axios';
 interface Props {
     name: string;
     age?: Number;
@@ -22,7 +23,8 @@ class ClassExample extends Component<any, any, State> {
             items: [],
             data: [],
             status: 'Đang học',
-            content: 'Hello World!'
+            content: 'Hello World!',
+            persons: []
         };
         // Need to bind this.loadData in the component constructor
         this.loadData = this.loadData.bind(this);
@@ -81,6 +83,12 @@ class ClassExample extends Component<any, any, State> {
             )
         this.loadData();
         setInterval(this.loadData, 4000);
+        axios.get(`https://jsonplaceholder.typicode.com/users`)
+            .then(res => {
+                const persons = res.data;
+                this.setState({ persons });
+            })
+            .catch(error => console.log(error));
     }
     // 3.2
     componentWillReceiveProps() {
@@ -126,6 +134,9 @@ class ClassExample extends Component<any, any, State> {
             return (
                 <div>
                     <h1>Random person</h1>
+                    <ul>
+                        {this.state.persons.map(person => <li>{person.name}</li>)}
+                    </ul>
                     {data.map(item => (
                         <p>
                             <b>Gender:</b> {item.gender}<br />
