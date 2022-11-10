@@ -1,7 +1,7 @@
 import React from "react";
 import Script from "react-load-script";
 
-export default function GoogleTrends({ type, keyword, url }) {
+export default function GoogleTrend({ type, keyword, url }) {
   const handleScriptLoad = _ => {
     window.trends.embed.renderExploreWidgetTo(
       document.getElementById("widget"),

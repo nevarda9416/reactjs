@@ -12,6 +12,7 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
+  cilGraph
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -34,7 +35,7 @@ const _nav = [
     component: CNavItem,
     name: 'Google Trend',
     to: '/google/trend',
-    icon: <CIcon icon={cilDrop} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
