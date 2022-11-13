@@ -12,7 +12,8 @@ import {
   cilPuzzle,
   cilSpeedometer,
   cilStar,
-  cilGraph
+  cilGraph,
+  cilBookmark
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -26,6 +27,16 @@ const _nav = [
       color: 'info',
       text: 'NEW',
     },
+  },
+  {
+    component: CNavTitle,
+    name: 'Quản lý',
+  },
+  {
+    component: CNavItem,
+    name: 'Danh mục sản phẩm',
+    to: '/category',
+    icon: <CIcon icon={cilBookmark} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
