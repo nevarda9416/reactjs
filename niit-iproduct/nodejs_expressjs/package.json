@@ -1,0 +1,25 @@
+{
+  "name": "expressjs_dev",
+  "version": "1.0.0",
+  "description": "ExpressJS Dev",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://nevarda9416@bitbucket.org/nevarda9416/expressjs_dev.git"
+  },
+  "author": "DAO TIEN TU",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/nevarda9416/expressjs_dev#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.3",
+    "express": "^4.17.1",
+    "hbs": "^4.1.1",
+    "mysql": "^2.18.1",
+    "node-couchdb": "^1.3.0"
+  }
+}
