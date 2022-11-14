@@ -8,16 +8,23 @@ app.get('/', function (req, res) {
         if (error) throw error;
         const dbo = database.db('niit-iproduct');
         const myobj = [
-            { name: 'Smartphones', description: 'Smartphones'},
-            { name: 'Máy tính bảng', description: 'Máy tính bảng'},
-            { name: 'Điện thoại phổ thông', description: 'Điện thoại phổ thông'},
-          ];
+            { name: 'Smartphones', dbname: 'smartphones', description: 'Smartphones' },
+            { name: 'Máy tính bảng', dbname: 'maytinhbang', description: 'Máy tính bảng' },
+            { name: 'Điện thoại phổ thông', dbname: 'dienthoaiphothong', description: 'Điện thoại phổ thông' },
+        ];
         console.log('Database created!');
-        dbo.collection('categories').insertMany(myobj, function (error, response) {
-            if (error) throw error;
-            console.log('Collection created! Number of documents inserted: ' + response.insertedCount);
+        myobj.forEach((item) => {
+            dbo.collection('categories').updateOne({ dbname: item.dbname }, { $set: item }, { upsert: true }, function (error, response) {
+                if (error) throw error;
+                console.log('Collection created! Documents inserted or updated: ' + item.name);
+            });
         });
-        setTimeout(() => {database.close()}, 3000);
+        dbo.collection('categories').findOne({ dbname: 'dienthoaiphothong' }, function (error, response) {
+            if (error) throw error;
+            console.log('Category name: ' + response.name);
+            if (response.name !== '')
+                setTimeout(() => { database.close() }, 3000);
+        });
     })
     res.send('Method: ' + req.method + '<h1>Hello MongoDB!</h1>')
 })
