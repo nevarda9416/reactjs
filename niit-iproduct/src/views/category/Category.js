@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     CCard,
     CCardBody,
@@ -22,6 +22,17 @@ import axios from 'axios';
 const Category = () => {
     const [validated, setValidated] = useState(false)
     const [persons, setPersons] = useState({ hits: [] })
+    useEffect(() => {
+        axios("http://localhost:3001/categories")
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
+            .then(res => {
+                setPersons(res);
+            })
+            .catch(error => console.log(error));
+    }, [])
     const handleSubmit = (event) => {
         const form = event.currentTarget
         if (form.checkValidity() === false) {
@@ -30,12 +41,16 @@ const Category = () => {
             event.stopPropagation()
         } else {
             setValidated(false)
-            axios("https://hn.algolia.com/api/v1/search?query=redux")
+            const category = {
+                name: form.categoryName.value,
+                dbname: form.categoryName.value,
+                description: form.categoryDescription.value
+            };
+            console.log(category);
+            axios.post("http://localhost:3001/categories/add", { category })
                 .then(res => {
-                    return res.data;
-                })
-                .then(res => {
-                    setPersons(res);
+                    console.log(res);
+                    return res;
                 })
                 .catch(error => console.log(error));
         }
@@ -67,24 +82,24 @@ const Category = () => {
                 </CCard>
             </CCol>
             <CCol xs={8}>
-            <CTable bordered borderColor='primary'>
-                <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Title</CTableHeaderCell>
-                    <CTableHeaderCell scope="col">Url</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                    {!validated && persons.hits.map(item => (
-                        <CTableRow>                            
-                            <CTableHeaderCell scope="row">{item.objectID}</CTableHeaderCell>
-                            <CTableDataCell>{item.title}</CTableDataCell>
-                            <CTableDataCell>{item.url}</CTableDataCell>   
+                <CTable bordered borderColor='primary'>
+                    <CTableHead>
+                        <CTableRow>
+                            <CTableHeaderCell scope="col">ID</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Description</CTableHeaderCell>
                         </CTableRow>
-                    ))}                               
-                </CTableBody>
-              </CTable>
+                    </CTableHead>
+                    <CTableBody>
+                        {!validated && persons.map && persons.map(item => (
+                            <CTableRow>
+                                <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
+                                <CTableDataCell>{item.name}</CTableDataCell>
+                                <CTableDataCell>{item.description}</CTableDataCell>
+                            </CTableRow>
+                        ))}
+                    </CTableBody>
+                </CTable>
             </CCol>
         </CRow>
     )
