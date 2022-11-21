@@ -33,6 +33,7 @@ app.get('/categories', function (req, res) {
     //res.send('Method: ' + req.method + '<h1>Hello MongoDB!</h1>')
 })
 app.post('/categories/add', function (req, res) {
+    console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
     console.log(req.body);
     const listingQuery = { dbname: req.body.dbname };
     const updates = {
@@ -47,8 +48,8 @@ app.post('/categories/add', function (req, res) {
         const dbo = database.db('niit-iproduct');
         dbo.collection('categories').updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
             if (error) throw error;
-            console.log('Documents inserted or updated: ' + response.name);
-            res.jsonp(response.name);
+            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+            res.jsonp(response);
         });
     })
 })

@@ -54,7 +54,16 @@ const Category = () => {
             };
             axios.post("http://localhost:3001/categories/add", category, config)
                 .then(res => {
-                    console.log(res);
+                    console.log(res);                    
+                    axios("http://localhost:3001/categories")
+                    .then(res => {
+                        console.log(res.data);
+                        return res.data;
+                    })
+                    .then(res => {
+                        setPersons(res);
+                    })
+                    .catch(error => console.log(error));
                     return res;
                 })
                 .catch(error => console.log(error));
