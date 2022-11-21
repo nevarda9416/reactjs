@@ -47,7 +47,12 @@ const Category = () => {
                 description: form.categoryDescription.value
             };
             console.log(category);
-            axios.post("http://localhost:3001/categories/add", { category })
+            // Generate a random number and convert it to base 36 (0-9a-z)
+            const token = Math.random().toString(36).substr(2); // remove `0.`
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+            axios.post("http://localhost:3001/categories/add", category, config)
                 .then(res => {
                     console.log(res);
                     return res;

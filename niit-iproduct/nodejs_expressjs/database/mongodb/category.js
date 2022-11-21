@@ -33,13 +33,13 @@ app.get('/categories', function (req, res) {
     //res.send('Method: ' + req.method + '<h1>Hello MongoDB!</h1>')
 })
 app.post('/categories/add', function (req, res) {
-    console.log(req.body.category);
-    const listingQuery = { dbname: req.body.category.dbname };
+    console.log(req.body);
+    const listingQuery = { dbname: req.body.dbname };
     const updates = {
         $set: {
-            name: req.body.category.name,
-            dbname: req.body.category.dbname,
-            description: req.body.category.description,
+            name: req.body.name,
+            dbname: req.body.dbname,
+            description: req.body.description,
         }
     };
     mongoClient.connect(url, function (error, database) {
