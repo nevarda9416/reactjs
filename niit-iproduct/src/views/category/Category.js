@@ -23,7 +23,7 @@ const Category = () => {
     const [validated, setValidated] = useState(false)
     const [persons, setPersons] = useState({ hits: [] })
     useEffect(() => {
-        axios("http://localhost:3001/categories")
+        axios("http://localhost:3002/categories")
             .then(res => {
                 console.log(res.data);
                 return res.data;
@@ -52,10 +52,10 @@ const Category = () => {
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
-            axios.post("http://localhost:3001/categories/add", category, config)
+            axios.post("http://localhost:3002/categories/add", category, config)
                 .then(res => {
                     console.log(res);                    
-                    axios("http://localhost:3001/categories")
+                    axios("http://localhost:3002/categories")
                     .then(res => {
                         console.log(res.data);
                         return res.data;

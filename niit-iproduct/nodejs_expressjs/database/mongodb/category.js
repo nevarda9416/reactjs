@@ -53,6 +53,6 @@ app.post('/categories/add', function (req, res) {
         });
     })
 })
-app.listen(3001, '127.0.0.1', function () {
-    console.log('Example app listening on port 3001!')
+app.listen(3002, '127.0.0.1', function () {
+    console.log('Example app listening on port 3002!')
 })

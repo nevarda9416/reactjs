@@ -40,7 +40,7 @@ const _nav = [
   },
   {
     component: CNavTitle,
-    name: 'Theme',
+    name: 'Dữ liệu',
   },
   {
     component: CNavItem,

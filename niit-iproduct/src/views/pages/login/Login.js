@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, {useState} from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -15,8 +15,41 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import axios from 'axios'
 
 const Login = () => {
+  const [validated, setValidated] = useState(false)
+  const navigate = useNavigate();
+  const handleSubmit = (event) => {
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+        setValidated(true)
+        event.preventDefault()
+        event.stopPropagation()
+    } else {
+        setValidated(false)
+        const user = {
+            username: form.username.value,
+            password: form.password.value,
+        };
+        console.log(user);
+        // Generate a random number and convert it to base 36 (0-9a-z)
+        const token = Math.random().toString(36).substr(2); // remove `0.`
+        const config = {
+            headers: { Authorization: `Bearer ${token}` }
+        };
+        axios.post("http://localhost:3001/admin/login", user, config)
+            .then(res => {
+                console.log(res);
+                if (res.data.user === true) {
+                  navigate ('/dashboard');
+                } else {
+                  return res;
+                }
+            })
+            .catch(error => console.log(error));
+    }
+  }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -25,14 +58,14 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  <CForm noValidate validated={validated} onSubmit={handleSubmit}>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput placeholder="Username" autoComplete="username" id="username" required/>
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -42,11 +75,11 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
-                      />
+                        id="password" required/>
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton color="primary" className="px-4">
+                        <CButton color="primary" className="px-4" type="submit">
                           Login
                         </CButton>
                       </CCol>

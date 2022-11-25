@@ -4,7 +4,8 @@
   "description": "ExpressJS Dev",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./database/mongodb/user.js && node ./database/mongodb/category.js"
   },
   "repository": {
     "type": "git",
