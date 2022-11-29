@@ -19,8 +19,8 @@ import {
 } from '@coreui/react';
 import axios from 'axios';
 
-const url = process.env.APP_URL;
-const port = process.env.PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
+const url = process.env.REACT_APP_URL;
+const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const Category = () => {
     const [validated, setValidated] = useState(false)
     const [persons, setPersons] = useState({ hits: [] })
