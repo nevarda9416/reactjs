@@ -1,19 +1,17 @@
 const express = require('express');
-const cors = require('cors');
 const app = express();
-const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017/';
+const path = require('path');
+require('dotenv').config({path: path.resolve(__dirname, '../../../../.env')});
+const env = process.env;
+const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':'+ env.PORT_DATABASE_MONGO + '/';
+const port = env.PORT_DATABASE_MONGO_USER_SEEDING_DATA;
 const crypto = require('crypto');
-const { get } = require('https');
 const getHashedPassword = (password) => {
     const hash = crypto.createHash('sha256').update(password).digest('base64');
     return hash;
 }
 
-app.use(cors())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/users/create', function (req, res) {
     const listingQuery = { username: 'admin' };
     const listUsers = {
@@ -30,21 +28,6 @@ app.get('/users/create', function (req, res) {
         });
     })
 })
-// https://stackabuse.com/handling-authentication-in-express-js/
-app.post('/admin/login', (req, res) => {
-    const {username, password} = req.body;
-    const hashedPassword = getHashedPassword(password);
-    mongoClient.connect(url, function (error, database) {
-        if (error) throw error;
-        const dbo = database.db('niit-iproduct');
-        dbo.collection('users').findOne({ username: username, password: hashedPassword }, function (error, response) {
-            if (error) throw error;
-            if (response.username != '') {
-                res.jsonp({user:true});
-            }
-        });
-    })
-})
-app.listen(3003, '127.0.0.1', function () {
-    console.log('Example app listening on port 3003!')
+app.listen(port, env.SERVER_NAME, function () {
+    console.log('Example app listening on port ' + port + '!')
 })

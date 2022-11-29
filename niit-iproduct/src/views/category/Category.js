@@ -19,11 +19,13 @@ import {
 } from '@coreui/react';
 import axios from 'axios';
 
+const url = process.env.APP_URL;
+const port = process.env.PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const Category = () => {
     const [validated, setValidated] = useState(false)
     const [persons, setPersons] = useState({ hits: [] })
     useEffect(() => {
-        axios("http://localhost:3002/categories")
+        axios(url + ':' + port + '/categories')
             .then(res => {
                 console.log(res.data);
                 return res.data;
@@ -52,10 +54,10 @@ const Category = () => {
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
-            axios.post("http://localhost:3002/categories/add", category, config)
+            axios.post(url + ':' + port + '/categories/add', category, config)
                 .then(res => {
                     console.log(res);                    
-                    axios("http://localhost:3002/categories")
+                    axios(url + ':' + port + '/categories')
                     .then(res => {
                         console.log(res.data);
                         return res.data;

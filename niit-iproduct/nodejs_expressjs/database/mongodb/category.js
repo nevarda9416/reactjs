@@ -3,7 +3,11 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
-const url = 'mongodb://localhost:27017/';
+const path = require('path');
+require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
+const env = process.env;
+const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':'+ env.PORT_DATABASE_MONGO + '/';
+const port = env.PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 
 app.use(cors())
 app.use(bodyParser.json());
@@ -53,6 +57,6 @@ app.post('/categories/add', function (req, res) {
         });
     })
 })
-app.listen(3002, '127.0.0.1', function () {
-    console.log('Example app listening on port 3002!')
+app.listen(port, env.SERVER_NAME, function () {
+    console.log('Example app listening on port ' + port + '!')
 })

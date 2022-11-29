@@ -17,6 +17,8 @@ import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import axios from 'axios'
 
+const url = process.env.REACT_APP_URL;
+const port = process.env.REACT_APP_PORT_DATABASE_MONGO_USER_CRUD_DATA;
 const Login = () => {
   const [validated, setValidated] = useState(false)
   const navigate = useNavigate();
@@ -38,7 +40,7 @@ const Login = () => {
         const config = {
             headers: { Authorization: `Bearer ${token}` }
         };
-        axios.post("http://localhost:3001/admin/login", user, config)
+        axios.post(url + ':' + port + '/admin/login', user, config)
             .then(res => {
                 console.log(res);
                 if (res.data.user === true) {
