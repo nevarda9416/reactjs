@@ -57,6 +57,20 @@ app.post('/categories/add', function (req, res) {
         });
     })
 })
+app.get('/categories/edit/:id', function (req, res) {
+    const _id = req.id;
+    mongoClient.connect(url, function (error, database) {
+        if (error) throw error;
+        const dbo = database.db('niit-iproduct');
+        dbo.collection('categories').findOne({ _id: _id }, function (error, response) {
+            if (error) throw error;
+            if (response) {
+                setTimeout(() => { database.close() }, 3000);
+                res.jsonp(response);
+            }
+        });
+    })
+})
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')
 })

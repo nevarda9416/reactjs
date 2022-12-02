@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { NavLink, useParams } from 'react-router-dom';
 import {
     CCard,
     CCardBody,
@@ -15,8 +16,13 @@ import {
     CTableDataCell,
     CTableHead,
     CTableHeaderCell,
-    CTableRow,
+    CTableRow
 } from '@coreui/react';
+import {
+    cilPencil,
+    cilTrash
+} from '@coreui/icons'
+import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 
 const url = process.env.REACT_APP_URL;
@@ -24,6 +30,31 @@ const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const Category = () => {
     const [validated, setValidated] = useState(false)
     const [persons, setPersons] = useState({ hits: [] })
+    const {action, id} = useParams();
+    if (action === 'edit') {
+        console.log(action + ' ' + id);
+        axios(url + ':' + port + '/categories/edit/' + id)
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
+            .then(res => {
+                setPersons(res);
+            })
+            .catch(error => console.log(error));
+    }
+    if (action === 'delete') {
+        console.log(action + ' ' + id);
+        axios(url + ':' + port + '/categories/delete/' + id)
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
+            .then(res => {
+                setPersons(res);
+            })
+            .catch(error => console.log(error));
+    }
     useEffect(() => {
         axios(url + ':' + port + '/categories')
             .then(res => {
@@ -104,6 +135,7 @@ const Category = () => {
                             <CTableHeaderCell scope="col">ID</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Name</CTableHeaderCell>
                             <CTableHeaderCell scope="col">Description</CTableHeaderCell>
+                            <CTableHeaderCell scope="col">Action</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
@@ -112,9 +144,13 @@ const Category = () => {
                                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                                 <CTableDataCell>{item.name}</CTableDataCell>
                                 <CTableDataCell>{item.description}</CTableDataCell>
+                                <CTableDataCell>
+                                    <NavLink exact to={`/category/edit/${item._id}`}><CIcon icon={cilPencil}/></NavLink>&nbsp;&nbsp;
+                                    <NavLink exact to={`/category/delete/${item._id}`}><CIcon icon={cilTrash}/></NavLink>
+                                </CTableDataCell>
                             </CTableRow>
                         ))}
-                    </CTableBody>
+                    </CTableBody> 
                 </CTable>
             </CCol>
         </CRow>
