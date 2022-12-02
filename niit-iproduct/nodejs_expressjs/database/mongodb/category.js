@@ -4,6 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
 const path = require('path');
+const { ObjectId } = require('mongodb');
 require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
 const env = process.env;
 const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':'+ env.PORT_DATABASE_MONGO + '/';
@@ -58,16 +59,16 @@ app.post('/categories/add', function (req, res) {
     })
 })
 app.get('/categories/edit/:id', function (req, res) {
-    const _id = req.id;
+    const _id = req.params.id;
     mongoClient.connect(url, function (error, database) {
         if (error) throw error;
         const dbo = database.db('niit-iproduct');
-        dbo.collection('categories').findOne({ _id: _id }, function (error, response) {
+        dbo.collection('categories').findOne({ _id: new ObjectId(_id) }, function (error, response) {
             if (error) throw error;
-            if (response) {
-                setTimeout(() => { database.close() }, 3000);
+            //if (response) {
                 res.jsonp(response);
-            }
+                setTimeout(() => { database.close() }, 3000);
+            //}
         });
     })
 })
