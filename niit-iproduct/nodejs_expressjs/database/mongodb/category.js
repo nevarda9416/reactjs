@@ -72,6 +72,38 @@ app.get('/categories/edit/:id', function (req, res) {
         });
     })
 })
+app.post('/categories/edit/:id', function (req, res) {
+    const listingQuery = { _id: new ObjectId(req.params.id) };
+    const updates = {
+        $set: {
+            name: req.body.name,
+            dbname: req.body.dbname,
+            description: req.body.description,
+        }
+    };
+    mongoClient.connect(url, function (error, database) {
+        if (error) throw error;
+        const dbo = database.db('niit-iproduct');
+        dbo.collection('categories').updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+            if (error) throw error;
+            console.log('Category updated: ' + JSON.stringify(response));
+            res.jsonp(response);
+        });
+    })
+})
+app.get('/categories/delete/:id', function (req, res) {
+    const listingQuery = { _id: new ObjectId(req.params.id) };
+    mongoClient.connect(url, function (error, database) {
+        if (error) throw error;
+        const dbo = database.db('niit-iproduct');
+        dbo.collection('categories').deleteOne(listingQuery, function (error, response) {
+            if (error) throw error;
+            console.log('Category deleted');
+            res.jsonp(response);
+            database.close();
+        });
+    })
+})
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')
 })

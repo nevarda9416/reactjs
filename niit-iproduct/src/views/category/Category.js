@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { React, useEffect, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom';
 import {
     CCard,
@@ -29,43 +29,50 @@ const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const Category = () => {
     const [validated, setValidated] = useState(false)
-    const [persons, setPersons] = useState({ hits: [] })
-    const {action, id} = useParams();
-    if (action === 'edit') {
-        console.log(action + ' ' + id);
-        axios(url + ':' + port + '/categories/edit/' + id)
-            .then(res => {
-                console.log(res.data);
-                return res.data;
-            })
-            .then(res => {
-                setPersons(res);
-            })
-            .catch(error => console.log(error));
-    }
-    if (action === 'delete') {
-        console.log(action + ' ' + id);
-        axios(url + ':' + port + '/categories/delete/' + id)
-            .then(res => {
-                console.log(res.data);
-                return res.data;
-            })
-            .then(res => {
-                setPersons(res);
-            })
-            .catch(error => console.log(error));
-    }
+    const [categories, setCategories] = useState({ hits: [] })
+    const [category, setCategory] = useState({ hits: [] })
+
+    const { action, id } = useParams();
     useEffect(() => {
+        console.log(action);
+        if (action === 'edit') {
+            console.log(action + ' ' + id);
+            axios(url + ':' + port + '/categories/edit/' + id)
+                .then(res => {
+                    console.log(res.data);
+                    setCategory(res.data);
+                })
+                .catch(error => console.log(error));
+        }
+        if (action === 'delete') {
+            console.log(action + ' ' + id);
+            axios(url + ':' + port + '/categories/delete/' + id)
+                .then(res => {
+                    console.log(res.data);
+                    setCategory(res.data);
+                })
+                .catch(error => console.log(error));
+        }
         axios(url + ':' + port + '/categories')
             .then(res => {
                 console.log(res.data);
                 return res.data;
             })
             .then(res => {
-                setPersons(res);
+                setCategories(res);
             })
             .catch(error => console.log(error));
     }, [])
+    const changeInput = (value) => {
+        setCategory({
+            name: value
+        })
+    }
+    const chnageTextarea = (value) => {
+        setCategory({
+            description: value
+        })
+    }
     const handleSubmit = (event) => {
         const form = event.currentTarget
         if (form.checkValidity() === false) {
@@ -85,21 +92,39 @@ const Category = () => {
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
-            axios.post(url + ':' + port + '/categories/add', category, config)
+            if (action === 'edit') {
+                axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
                 .then(res => {
-                    console.log(res);                    
+                    console.log(res);
                     axios(url + ':' + port + '/categories')
-                    .then(res => {
-                        console.log(res.data);
-                        return res.data;
-                    })
-                    .then(res => {
-                        setPersons(res);
-                    })
-                    .catch(error => console.log(error));
+                        .then(res => {
+                            console.log(res.data);
+                            return res.data;
+                        })
+                        .then(res => {
+                            setCategories(res);
+                        })
+                        .catch(error => console.log(error));
                     return res;
                 })
                 .catch(error => console.log(error));
+            } else {
+                axios.post(url + ':' + port + '/categories/add', category, config)
+                    .then(res => {
+                        console.log(res);
+                        axios(url + ':' + port + '/categories')
+                            .then(res => {
+                                console.log(res.data);
+                                return res.data;
+                            })
+                            .then(res => {
+                                setCategories(res);
+                            })
+                            .catch(error => console.log(error));
+                        return res;
+                    })
+                    .catch(error => console.log(error));
+            }
         }
     }
     return (
@@ -113,11 +138,11 @@ const Category = () => {
                         <CForm noValidate validated={validated} onSubmit={handleSubmit}>
                             <div className="mb-3">
                                 <CFormLabel htmlFor="categoryName">Tên danh mục</CFormLabel>
-                                <CFormInput type="text" feedbackInvalid="Vui lòng nhập tên danh mục" id="categoryName" required />
+                                <CFormInput onChange={e => changeInput(e.target.value)} type="text" feedbackInvalid="Vui lòng nhập tên danh mục" id="categoryName" value={category.name} required />
                             </div>
                             <div className="mb-3">
                                 <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
-                                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required></CFormTextarea>
+                                <CFormTextarea onChange={e => chnageTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description}></CFormTextarea>
                             </div>
                             <div className="col-auto">
                                 <CButton type="submit" className="mb-3">
@@ -139,18 +164,18 @@ const Category = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {!validated && persons.map && persons.map(item => (
+                        {!validated && categories.map && categories.map(item => (
                             <CTableRow>
                                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                                 <CTableDataCell>{item.name}</CTableDataCell>
                                 <CTableDataCell>{item.description}</CTableDataCell>
                                 <CTableDataCell>
-                                    <NavLink exact to={`/category/edit/${item._id}`}><CIcon icon={cilPencil}/></NavLink>&nbsp;&nbsp;
-                                    <NavLink exact to={`/category/delete/${item._id}`}><CIcon icon={cilTrash}/></NavLink>
+                                    <NavLink to={`/category/edit/${item._id}`}><CIcon icon={cilPencil} /></NavLink>&nbsp;&nbsp;
+                                    <NavLink to={`/category/delete/${item._id}`}><CIcon icon={cilTrash} /></NavLink>
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
-                    </CTableBody> 
+                    </CTableBody>
                 </CTable>
             </CCol>
         </CRow>
