@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useState, setState, useCallback } from 'react'
 import { NavLink, useParams } from 'react-router-dom';
 import {
     CCard,
@@ -24,6 +24,7 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
+import Pagination from 'src/components/Pagination';
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -31,10 +32,33 @@ const Category = () => {
     const [validated, setValidated] = useState(false)
     const [categories, setCategories] = useState({ hits: [] })
     const [category, setCategory] = useState({ hits: [] })
-
     const { action, id } = useParams();
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalCategories, setTotalCategories ] = useState(0);
+    let LIMIT = 4;
+    const onPageChanged = useCallback((event, page) => {
+            event.preventDefault();
+            setCurrentPage(page);
+            axios(url + ':' + port + '/categories')
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
+            .then(res => {           
+                console.log(currentPage); 
+                setTotalCategories(res.length);
+                res = res.slice(
+                    (currentPage - 1) * LIMIT,
+                    (currentPage - 1) * LIMIT + LIMIT
+                );
+                setCategories(res);
+            })
+            .catch(error => console.log(error));
+        }
+    );
     useEffect(() => {
-        console.log(action);
+        console.log('Action: ' + action);
         if (action === 'edit') {
             console.log(action + ' ' + id);
             axios(url + ':' + port + '/categories/edit/' + id)
@@ -58,7 +82,13 @@ const Category = () => {
                 console.log(res.data);
                 return res.data;
             })
-            .then(res => {
+            .then(res => {           
+                console.log(currentPage); 
+                setTotalCategories(res.length);
+                res = res.slice(
+                    (currentPage - 1) * LIMIT,
+                    (currentPage - 1) * LIMIT + LIMIT
+                );
                 setCategories(res);
             })
             .catch(error => console.log(error));
@@ -68,7 +98,7 @@ const Category = () => {
             name: value
         })
     }
-    const chnageTextarea = (value) => {
+    const changeTextarea = (value) => {
         setCategory({
             description: value
         })
@@ -142,7 +172,7 @@ const Category = () => {
                             </div>
                             <div className="mb-3">
                                 <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
-                                <CFormTextarea onChange={e => chnageTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description}></CFormTextarea>
+                                <CFormTextarea onChange={e => changeTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description}></CFormTextarea>
                             </div>
                             <div className="col-auto">
                                 <CButton type="submit" className="mb-3">
@@ -177,6 +207,15 @@ const Category = () => {
                         ))}
                     </CTableBody>
                 </CTable>
+                <div className="pagination-wrapper">
+                    <Pagination
+                        totalRecords={5}
+                        pageLimit={LIMIT}
+                        pageNeighbours={2}
+                        onPageChanged={onPageChanged}
+                        currentPage={currentPage}
+                    />
+                </div>
             </CCol>
         </CRow>
     )

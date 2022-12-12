@@ -26,8 +26,8 @@ const Login = () => {
     const form = event.currentTarget
     if (form.checkValidity() === false) {
         setValidated(true)
-        event.preventDefault()
-        event.stopPropagation()
+        //event.preventDefault()
+        //event.stopPropagation()
     } else {
         setValidated(false)
         const user = {
@@ -67,7 +67,7 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" id="username" required/>
+                      <CFormInput placeholder="Username" autoComplete="off" id="username" required/>
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -76,7 +76,7 @@ const Login = () => {
                       <CFormInput
                         type="password"
                         placeholder="Password"
-                        autoComplete="current-password"
+                        autoComplete="off"
                         id="password" required/>
                     </CInputGroup>
                     <CRow>
