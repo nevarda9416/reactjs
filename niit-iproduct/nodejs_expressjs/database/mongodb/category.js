@@ -5,14 +5,27 @@ const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
 const path = require('path');
 const { ObjectId } = require('mongodb');
-require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const env = process.env;
-const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':'+ env.PORT_DATABASE_MONGO + '/';
+const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':' + env.PORT_DATABASE_MONGO + '/';
 const port = env.PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// Find category name like input data
+app.get('/categories/find', function (req, res) {
+    var name = req.params.name;
+    mongoClient.connect(url, function (error, database) {
+        if (error) throw error;
+        const dbo = database.db('niit-iproduct');
+        dbo.collection('categories').find({ 'name': RegExp(name, 'i') }).toArray(function (error, response) {
+            if (error) throw error;
+            res.jsonp(response);
+            setTimeout(() => { database.close() }, 3000);
+        });
+    })
+});
 app.get('/categories', function (req, res) {
     const myobj = [
         { name: 'Smartphones', dbname: 'smartphones', description: 'Smartphones' },
