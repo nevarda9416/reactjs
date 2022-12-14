@@ -10,7 +10,7 @@ const env = process.env;
 const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':' + env.PORT_DATABASE_MONGO + '/';
 const port = env.PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // Find category name like input data
@@ -27,11 +27,6 @@ app.get('/categories/find', function (req, res) {
     })
 });
 app.get('/categories', function (req, res) {
-    const myobj = [
-        { name: 'Smartphones', dbname: 'smartphones', description: 'Smartphones' },
-        { name: 'Máy tính bảng', dbname: 'maytinhbang', description: 'Máy tính bảng' },
-        { name: 'Điện thoại phổ thông', dbname: 'dienthoaiphothong', description: 'Điện thoại phổ thông' },
-    ];
     mongoClient.connect(url, function (error, database) {
         if (error) throw error;
         const dbo = database.db('niit-iproduct');
@@ -48,8 +43,7 @@ app.get('/categories', function (req, res) {
             }
         });
     })
-    //res.send('Method: ' + req.method + '<h1>Hello MongoDB!</h1>')
-})
+});
 app.post('/categories/add', function (req, res) {
     console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
     console.log(req.body);
