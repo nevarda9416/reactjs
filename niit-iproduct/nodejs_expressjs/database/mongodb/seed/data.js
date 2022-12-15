@@ -12,7 +12,7 @@ const port = env.PORT_DATABASE_MONGO_USER_SEEDING_DATA;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.get('/categories/create', function (req, res) {
+app.get('/data/create', function (req, res) {
   const listCategories = [
     {name: 'Smartphones', dbname: 'smartphones', description: 'Smartphones'},
     {name: 'Máy tính bảng', dbname: 'maytinhbang', description: 'Máy tính bảng'},
@@ -36,10 +36,7 @@ app.get('/categories/create', function (req, res) {
         res.jsonp({success: true});
       });
     });
-  })
-});
-// List sample products
-app.get('/products/create', function (req, res) {
+  });
   const listingQuery = {name: 'mac air m1'};
   const listProducts = {
     $set: {
@@ -59,6 +56,7 @@ app.get('/products/create', function (req, res) {
       system_id: null
     }
   };
+// List sample products
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db('niit-iproduct');
