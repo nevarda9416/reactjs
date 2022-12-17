@@ -10,11 +10,10 @@ const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':'+ env.PORT
 const port = env.PORT_DATABASE_MONGO_USER_CRUD_DATA;
 const crypto = require('crypto');
 const getHashedPassword = (password) => {
-    const hash = crypto.createHash('sha256').update(password).digest('base64');
-    return hash;
-}
+  return crypto.createHash('sha256').update(password).digest('base64');
+};
 
-app.use(cors())
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -32,7 +31,7 @@ app.post('/admin/login', (req, res) => {
             }
         });
     })
-})
+});
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')
-})
+});
