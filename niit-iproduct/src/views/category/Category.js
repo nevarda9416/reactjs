@@ -25,6 +25,8 @@ import {
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import Pagination from 'src/components/Pagination';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -38,25 +40,24 @@ const Category = () => {
     const [totalCategories, setTotalCategories ] = useState(0);
     let LIMIT = 4;
     const onPageChanged = useCallback((event, page) => {
-            event.preventDefault();
-            setCurrentPage(page);
-            axios(url + ':' + port + '/categories')
-            .then(res => {
-                console.log(res.data);
-                return res.data;
-            })
-            .then(res => {           
-                console.log(currentPage); 
-                setTotalCategories(res.length);
-                res = res.slice(
-                    (currentPage - 1) * LIMIT,
-                    (currentPage - 1) * LIMIT + LIMIT
-                );
-                setCategories(res);
-            })
-            .catch(error => console.log(error));
-        }
-    );
+        event.preventDefault();
+        setCurrentPage(page);
+        axios(url + ':' + port + '/categories')
+        .then(res => {
+            console.log(res.data);
+            return res.data;
+        })
+        .then(res => {
+            console.log(currentPage);
+            setTotalCategories(res.length);
+            res = res.slice(
+                (currentPage - 1) * LIMIT,
+                (currentPage - 1) * LIMIT + LIMIT
+            );
+            setCategories(res);
+        })
+        .catch(error => console.log(error));
+    });
     useEffect(() => {
         console.log('Action: ' + action);
         if (action === 'edit') {
@@ -82,8 +83,8 @@ const Category = () => {
                 console.log(res.data);
                 return res.data;
             })
-            .then(res => {           
-                console.log(currentPage); 
+            .then(res => {
+                console.log(currentPage);
                 setTotalCategories(res.length);
                 res = res.slice(
                     (currentPage - 1) * LIMIT,
@@ -92,25 +93,25 @@ const Category = () => {
                 setCategories(res);
             })
             .catch(error => console.log(error));
-    }, [])
+    }, []);
     const changeInput = (value) => {
         setCategory({
             name: value
         })
-    }
+    };
     const changeTextarea = (value) => {
         setCategory({
             description: value
         })
-    }
+    };
     const handleSubmit = (event) => {
-        const form = event.currentTarget
+        const form = event.currentTarget;console.log(form);
         if (form.checkValidity() === false) {
-            setValidated(true)
-            event.preventDefault()
-            event.stopPropagation()
+            setValidated(true);
+            event.preventDefault();
+            event.stopPropagation();
         } else {
-            setValidated(false)
+            setValidated(false);
             const category = {
                 name: form.categoryName.value,
                 dbname: form.categoryName.value,
@@ -156,7 +157,7 @@ const Category = () => {
                     .catch(error => console.log(error));
             }
         }
-    }
+    };
     return (
         <CRow>
             <CCol xs={4}>
@@ -172,7 +173,26 @@ const Category = () => {
                             </div>
                             <div className="mb-3">
                                 <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
-                                <CFormTextarea onChange={e => changeTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description}></CFormTextarea>
+                                <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description}/>
+                                <CKEditor
+                                  editor={ ClassicEditor }
+                                  required
+                                  onReady={ editor => {
+                                    // You can store the "editor" and use when it is needed.
+                                    editor.setData(category.description);
+                                  } }
+                                  onChange={ ( event, editor ) => {
+                                    const data = editor.getData();
+                                    console.log( { event, editor, data } );
+                                    changeTextarea(data);
+                                  } }
+                                  onBlur={ ( event, editor ) => {
+                                    console.log( 'Blur.', editor );
+                                  } }
+                                  onFocus={ ( event, editor ) => {
+                                    console.log( 'Focus.', editor );
+                                  } }
+                                />
                             </div>
                             <div className="col-auto">
                                 <CButton type="submit" className="mb-3">
