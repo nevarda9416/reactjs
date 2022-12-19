@@ -15,11 +15,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 // Find category name like input data
 app.get('/categories/find', function (req, res) {
-    var name = req.params.name;
-    mongoClient.connect(url, function (error, database) {
+  const search_name = req.query.name;
+  mongoClient.connect(url, function (error, database) {
         if (error) throw error;
         const dbo = database.db('niit-iproduct');
-        dbo.collection('categories').find({ 'name': RegExp(name, 'i') }).toArray(function (error, response) {
+        dbo.collection('categories').find({ name: new RegExp(search_name, 'i') }).toArray(function (error, response) {
             if (error) throw error;
             res.jsonp(response);
             setTimeout(() => { database.close() }, 3000);

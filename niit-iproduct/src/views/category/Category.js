@@ -34,6 +34,7 @@ const Category = () => {
     const [validated, setValidated] = useState(false)
     const [categories, setCategories] = useState({ hits: [] })
     const [category, setCategory] = useState({ hits: [] })
+    const [categorySearch, setCategorySearch] = useState({ hits: [] })
     const { action, id } = useParams();
 
     const [currentPage, setCurrentPage] = useState(1);
@@ -98,6 +99,26 @@ const Category = () => {
         setCategory({
             name: value
         })
+    };
+    const changeInputSearch = (value) => {
+        setCategorySearch({
+          name: value
+        });
+        axios(url + ':' + port + '/categories/find?name=' + value)
+          .then(res => {
+            console.log(res.data);
+            return res.data;
+          })
+          .then(res => {
+            console.log(currentPage);
+            setTotalCategories(res.length);
+            res = res.slice(
+              (currentPage - 1) * LIMIT,
+              (currentPage - 1) * LIMIT + LIMIT
+            );
+            setCategories(res);
+          })
+          .catch(error => console.log(error));
     };
     const changeTextarea = (value) => {
         setCategory({
@@ -204,6 +225,10 @@ const Category = () => {
                 </CCard>
             </CCol>
             <CCol xs={8}>
+                <div className="mb-3">
+                  <CFormLabel htmlFor="categoryName">Tìm kiếm danh mục</CFormLabel>
+                  <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" placeholder="Vui lòng nhập tên danh mục" value={categorySearch.name} required />
+                </div>
                 <CTable bordered borderColor='primary'>
                     <CTableHead>
                         <CTableRow>
