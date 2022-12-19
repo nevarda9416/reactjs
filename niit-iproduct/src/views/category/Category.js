@@ -218,7 +218,13 @@ const Category = () => {
                             <CTableRow>
                                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                                 <CTableDataCell>{item.name}</CTableDataCell>
-                                <CTableDataCell>{item.description}</CTableDataCell>
+                                <CTableDataCell>
+                                  {item.description &&
+                                    <span>
+                                      {item.description.replace(/<[^>]+>/g, '')}
+                                    </span>
+                                  }
+                                </CTableDataCell>
                                 <CTableDataCell>
                                     <NavLink to={`/category/edit/${item._id}`}><CIcon icon={cilPencil} /></NavLink>&nbsp;&nbsp;
                                     <NavLink to={`/category/delete/${item._id}`}><CIcon icon={cilTrash} /></NavLink>
