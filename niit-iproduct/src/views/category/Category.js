@@ -27,6 +27,7 @@ import axios from 'axios';
 import Pagination from 'src/components/Pagination';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import AxiosClient from "../../services/API/AxiosClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -43,17 +44,17 @@ const Category = () => {
     const onPageChanged = useCallback((event, page) => {
         event.preventDefault();
         setCurrentPage(page);
-        axios(url + ':' + port + '/categories')
+        axios.get(url + ':' + port + '/categories')
         .then(res => {
             console.log(res.data);
             return res.data;
         })
         .then(res => {
-            console.log(currentPage);
+            console.log(page);
             setTotalCategories(res.length);
             res = res.slice(
-                (currentPage - 1) * LIMIT,
-                (currentPage - 1) * LIMIT + LIMIT
+                (page - 1) * LIMIT,
+                (page - 1) * LIMIT + LIMIT
             );
             setCategories(res);
         })
@@ -63,7 +64,7 @@ const Category = () => {
         console.log('Action: ' + action);
         if (action === 'edit') {
             console.log(action + ' ' + id);
-            axios(url + ':' + port + '/categories/edit/' + id)
+            axios.get(url + ':' + port + '/categories/edit/' + id)
                 .then(res => {
                     console.log(res.data);
                     setCategory(res.data);
@@ -72,14 +73,15 @@ const Category = () => {
         }
         if (action === 'delete') {
             console.log(action + ' ' + id);
-            axios(url + ':' + port + '/categories/delete/' + id)
+            axios.get(url + ':' + port + '/categories/delete/' + id)
                 .then(res => {
                     console.log(res.data);
                     setCategory(res.data);
                 })
                 .catch(error => console.log(error));
         }
-        axios(url + ':' + port + '/categories')
+
+      AxiosClient.get(url + ':' + port + '/categories')
             .then(res => {
                 console.log(res.data);
                 return res.data;
@@ -104,7 +106,7 @@ const Category = () => {
         setCategorySearch({
           name: value
         });
-        axios(url + ':' + port + '/categories/find?name=' + value)
+        axios.get(url + ':' + port + '/categories/find?name=' + value)
           .then(res => {
             console.log(res.data);
             return res.data;
@@ -148,7 +150,7 @@ const Category = () => {
                 axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
                 .then(res => {
                     console.log(res);
-                    axios(url + ':' + port + '/categories')
+                    axios.get(url + ':' + port + '/categories')
                         .then(res => {
                             console.log(res.data);
                             return res.data;
@@ -164,7 +166,7 @@ const Category = () => {
                 axios.post(url + ':' + port + '/categories/add', category, config)
                     .then(res => {
                         console.log(res);
-                        axios(url + ':' + port + '/categories')
+                        axios.get(url + ':' + port + '/categories')
                             .then(res => {
                                 console.log(res.data);
                                 return res.data;
