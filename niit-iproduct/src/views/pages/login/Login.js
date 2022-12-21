@@ -26,8 +26,8 @@ const Login = () => {
     const form = event.currentTarget
     if (form.checkValidity() === false) {
         setValidated(true)
-        //event.preventDefault()
-        //event.stopPropagation()
+        event.preventDefault()
+        event.stopPropagation()
     } else {
         setValidated(false)
         const user = {
@@ -40,6 +40,8 @@ const Login = () => {
         const config = {
             headers: { Authorization: `Bearer ${token}` }
         };
+      event.preventDefault()
+      event.stopPropagation()
         axios.post(url + ':' + port + '/admin/login', user, config)
             .then(res => {
                 console.log(res);
