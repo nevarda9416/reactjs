@@ -1,5 +1,5 @@
 import { React, useEffect, useState, setState, useCallback } from 'react'
-import { NavLink, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
     CCard,
     CCardBody,
@@ -39,26 +39,32 @@ const Category = () => {
     const { action, id } = useParams();
 
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalCategories, setTotalCategories ] = useState(0);
+    const [totalCategories, setTotalCategories] = useState(0);
     let LIMIT = 4;
+
+    // Generate a random number and convert it to base 36 (0-9a-z)
+    const token = Math.random().toString(36).substr(2); // remove `0.`
+    const config = {
+        headers: { Authorization: `Bearer ${token}` }
+    };
     const onPageChanged = useCallback((event, page) => {
         event.preventDefault();
         setCurrentPage(page);
         axios.get(url + ':' + port + '/categories')
-        .then(res => {
-            console.log(res.data);
-            return res.data;
-        })
-        .then(res => {
-            console.log(page);
-            setTotalCategories(res.length);
-            res = res.slice(
-                (page - 1) * LIMIT,
-                (page - 1) * LIMIT + LIMIT
-            );
-            setCategories(res);
-        })
-        .catch(error => console.log(error));
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
+            .then(res => {
+                console.log(page);
+                setTotalCategories(res.length);
+                res = res.slice(
+                    (page - 1) * LIMIT,
+                    (page - 1) * LIMIT + LIMIT
+                );
+                setCategories(res);
+            })
+            .catch(error => console.log(error));
     });
     useEffect(() => {
         console.log('Action: ' + action);
@@ -81,7 +87,7 @@ const Category = () => {
                 .catch(error => console.log(error));
         }
 
-      AxiosClient.get(url + ':' + port + '/categories')
+        axios.get(url + ':' + port + '/categories')
             .then(res => {
                 console.log(res.data);
                 return res.data;
@@ -104,23 +110,23 @@ const Category = () => {
     };
     const changeInputSearch = (value) => {
         setCategorySearch({
-          name: value
+            name: value
         });
         axios.get(url + ':' + port + '/categories/find?name=' + value)
-          .then(res => {
-            console.log(res.data);
-            return res.data;
-          })
-          .then(res => {
-            console.log(currentPage);
-            setTotalCategories(res.length);
-            res = res.slice(
-              (currentPage - 1) * LIMIT,
-              (currentPage - 1) * LIMIT + LIMIT
-            );
-            setCategories(res);
-          })
-          .catch(error => console.log(error));
+            .then(res => {
+                console.log(res.data);
+                return res.data;
+            })
+            .then(res => {
+                console.log(currentPage);
+                setTotalCategories(res.length);
+                res = res.slice(
+                    (currentPage - 1) * LIMIT,
+                    (currentPage - 1) * LIMIT + LIMIT
+                );
+                setCategories(res);
+            })
+            .catch(error => console.log(error));
     };
     const changeTextarea = (value) => {
         setCategory({
@@ -128,7 +134,7 @@ const Category = () => {
         })
     };
     const handleSubmit = (event) => {
-        const form = event.currentTarget;console.log(form);
+        const form = event.currentTarget; console.log(form);
         if (form.checkValidity() === false) {
             setValidated(true);
             event.preventDefault();
@@ -141,27 +147,22 @@ const Category = () => {
                 description: form.categoryDescription.value
             };
             console.log(category);
-            // Generate a random number and convert it to base 36 (0-9a-z)
-            const token = Math.random().toString(36).substr(2); // remove `0.`
-            const config = {
-                headers: { Authorization: `Bearer ${token}` }
-            };
             if (action === 'edit') {
                 axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
-                .then(res => {
-                    console.log(res);
-                    axios.get(url + ':' + port + '/categories')
-                        .then(res => {
-                            console.log(res.data);
-                            return res.data;
-                        })
-                        .then(res => {
-                            setCategories(res);
-                        })
-                        .catch(error => console.log(error));
-                    return res;
-                })
-                .catch(error => console.log(error));
+                    .then(res => {
+                        console.log(res);
+                        axios.get(url + ':' + port + '/categories')
+                            .then(res => {
+                                console.log(res.data);
+                                return res.data;
+                            })
+                            .then(res => {
+                                setCategories(res);
+                            })
+                            .catch(error => console.log(error));
+                        return res;
+                    })
+                    .catch(error => console.log(error));
             } else {
                 axios.post(url + ':' + port + '/categories/add', category, config)
                     .then(res => {
@@ -181,6 +182,27 @@ const Category = () => {
             }
         }
     };
+    const editItem = (event, id) => {
+        axios.get(url + ':' + port + '/categories/edit/' + id)
+            .then(res => {
+                console.log(res.data);
+                setCategory(res.data);
+            })
+            .catch(error => console.log(error));
+    };
+    const onAfterLoad = (e) => {    
+        console.log(e);    
+        //setCategory({description: e.editor});
+        e.setData(category.description);
+    }
+    const deleteItem = (event, id) => {
+        axios.get(url + ':' + port + '/categories/delete/' + id)
+            .then(res => {
+                console.log(res.data);
+                setCategory(res.data);
+            })
+            .catch(error => console.log(error));
+    };
     return (
         <CRow>
             <CCol xs={4}>
@@ -196,25 +218,25 @@ const Category = () => {
                             </div>
                             <div className="mb-3">
                                 <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
-                                <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description}/>
+                                <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)} feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required value={category.description} />
                                 <CKEditor
-                                  editor={ ClassicEditor }
-                                  required
-                                  onReady={ editor => {
-                                    // You can store the "editor" and use when it is needed.
-                                    editor.setData(category.description);
-                                  } }
-                                  onChange={ ( event, editor ) => {
-                                    const data = editor.getData();
-                                    console.log( { event, editor, data } );
-                                    changeTextarea(data);
-                                  } }
-                                  onBlur={ ( event, editor ) => {
-                                    console.log( 'Blur.', editor );
-                                  } }
-                                  onFocus={ ( event, editor ) => {
-                                    console.log( 'Focus.', editor );
-                                  } }
+                                    editor={ClassicEditor}
+                                    required
+                                    onReady={editor => {
+                                        // You can store the "editor" and use when it is needed.
+                                        onAfterLoad(editor);
+                                    }}
+                                    onChange={(event, editor) => {
+                                        const data = editor.getData();
+                                        console.log({ event, editor, data });
+                                        changeTextarea(data);
+                                    }}
+                                    onBlur={(event, editor) => {
+                                        console.log('Blur.', editor);
+                                    }}
+                                    onFocus={(event, editor) => {
+                                        console.log('Focus.', editor);
+                                    }}
                                 />
                             </div>
                             <div className="col-auto">
@@ -228,8 +250,8 @@ const Category = () => {
             </CCol>
             <CCol xs={8}>
                 <div className="mb-3">
-                  <CFormLabel htmlFor="categoryName">Tìm kiếm danh mục</CFormLabel>
-                  <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" placeholder="Vui lòng nhập tên danh mục" value={categorySearch.name} required />
+                    <CFormLabel htmlFor="categoryName">Tìm kiếm danh mục</CFormLabel>
+                    <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" placeholder="Vui lòng nhập tên danh mục" value={categorySearch.name} required />
                 </div>
                 <CTable bordered borderColor='primary'>
                     <CTableHead>
@@ -246,15 +268,15 @@ const Category = () => {
                                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                                 <CTableDataCell>{item.name}</CTableDataCell>
                                 <CTableDataCell>
-                                  {item.description &&
-                                    <span>
-                                      {item.description.replace(/<[^>]+>/g, '')}
-                                    </span>
-                                  }
+                                    {item.description &&
+                                        <span>
+                                            {item.description.replace(/<[^>]+>/g, '')}
+                                        </span>
+                                    }
                                 </CTableDataCell>
                                 <CTableDataCell>
-                                    <NavLink to={`/category/edit/${item._id}`}><CIcon icon={cilPencil} /></NavLink>&nbsp;&nbsp;
-                                    <NavLink to={`/category/delete/${item._id}`}><CIcon icon={cilTrash} /></NavLink>
+                                    <Link to={`/category/edit/${item._id}`} onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil} /></Link>&nbsp;&nbsp;
+                                    <Link to={`/category/delete/${item._id}`} onClick={e => deleteItem(e, item._id)}><CIcon icon={cilTrash} /></Link>
                                 </CTableDataCell>
                             </CTableRow>
                         ))}
