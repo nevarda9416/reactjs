@@ -97,7 +97,7 @@ app.post('/categories/edit/:id', function (req, res) {
             res.jsonp(response);
         });
     })
-})
+});
 app.get('/categories/delete/:id', function (req, res) {
     const listingQuery = { _id: new ObjectId(req.params.id) };
     mongoClient.connect(url, function (error, database) {
@@ -110,7 +110,7 @@ app.get('/categories/delete/:id', function (req, res) {
             database.close();
         });
     })
-})
+});
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')
-})
+});
