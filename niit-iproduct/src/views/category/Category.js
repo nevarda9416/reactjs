@@ -27,7 +27,7 @@ import axios from 'axios';
 import Pagination from 'src/components/Pagination';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import AxiosClient from "../../services/API/AxiosClient";
+import {getAll,getById} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -40,37 +40,39 @@ const Category = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCategories, setTotalCategories] = useState(0);
-  let LIMIT = 4;
+  let LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
 
   // Generate a random number and convert it to base 36 (0-9a-z)
   const token = Math.random().toString(36).substr(2); // remove `0.`
   const config = {
     headers: {Authorization: `Bearer ${token}`}
   };
-  const onPageChanged = useCallback((event, page) => {
-    event.preventDefault();
-    setCurrentPage(page);
-    axios.get(url + ':' + port + '/categories')
-      .then(res => {
-        console.log(res.data);
-        return res.data;
-      })
-      .then(res => {
-        console.log(page);
-        setTotalCategories(res.length);
-        res = res.slice(
-          (page - 1) * LIMIT,
-          (page - 1) * LIMIT + LIMIT
-        );
-        setCategories(res);
-      })
-      .catch(error => console.log(error));
-  });
   const [state, setState] = useState({
     editor: null
   });
+  const onPageChanged = useCallback((event, page) => {
+    event.preventDefault();
+    setCurrentPage(page);
+    loadData(page);
+  });
+  const loadData = (page) => {
+      axios.get(url + ':' + port + '/categories')
+        .then(res => {
+          console.log(res.data);
+          return res.data;
+        })
+        .then(res => {
+          console.log(page);
+          setTotalCategories(res.length);
+          res = res.slice(
+            (page - 1) * LIMIT,
+            (page - 1) * LIMIT + LIMIT
+          );
+          setCategories(res);
+        })
+        .catch(error => console.log(error));
+  };
   useEffect(() => {
-    console.log('Action: ' + action);
     const editor = (
       <CKEditor
         editor={ClassicEditor}
@@ -89,21 +91,7 @@ const Category = () => {
       />
     );
     setState({...state, editor: editor});
-    axios.get(url + ':' + port + '/categories')
-      .then(res => {
-        console.log(res.data);
-        return res.data;
-      })
-      .then(res => {
-        console.log(currentPage);
-        setTotalCategories(res.length);
-        res = res.slice(
-          (currentPage - 1) * LIMIT,
-          (currentPage - 1) * LIMIT + LIMIT
-        );
-        setCategories(res);
-      })
-      .catch(error => console.log(error));
+    loadData(currentPage);
   }, []);
   const changeInput = (value) => {
     setCategory({
@@ -154,15 +142,7 @@ const Category = () => {
         axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
           .then(res => {
             console.log(res);
-            axios.get(url + ':' + port + '/categories')
-              .then(res => {
-                console.log(res.data);
-                return res.data;
-              })
-              .then(res => {
-                setCategories(res);
-              })
-              .catch(error => console.log(error));
+            loadData(1);
             return res;
           })
           .catch(error => console.log(error));
@@ -170,15 +150,7 @@ const Category = () => {
         axios.post(url + ':' + port + '/categories/add', category, config)
           .then(res => {
             console.log(res);
-            axios.get(url + ':' + port + '/categories')
-              .then(res => {
-                console.log(res.data);
-                return res.data;
-              })
-              .then(res => {
-                setCategories(res);
-              })
-              .catch(error => console.log(error));
+            loadData(1);
             return res;
           })
           .catch(error => console.log(error));
@@ -212,6 +184,8 @@ const Category = () => {
           />
         );
         setState({...state, editor: editor});
+        setCurrentPage(1);
+        loadData(1);
       })
       .catch(error => console.log(error));
   };
@@ -220,21 +194,8 @@ const Category = () => {
       .then(res => {
         console.log(res.data);
         setCategory(res.data);
-        axios.get(url + ':' + port + '/categories')
-          .then(res => {
-            console.log(res.data);
-            return res.data;
-          })
-          .then(res => {
-            console.log(currentPage);
-            setTotalCategories(res.length);
-            res = res.slice(
-              (currentPage - 1) * LIMIT,
-              (currentPage - 1) * LIMIT + LIMIT
-            );
-            setCategories(res);
-          })
-          .catch(error => console.log(error));
+        setCurrentPage(1);
+        loadData(1);
       })
       .catch(error => console.log(error));
   };
