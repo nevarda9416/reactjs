@@ -27,7 +27,7 @@ import axios from 'axios';
 import Pagination from 'src/components/Pagination';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {getAll,getById} from "../../services/API/Category/CategoryClient";
+import {getAll} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -56,21 +56,15 @@ const Category = () => {
     loadData(page);
   });
   const loadData = (page) => {
-      axios.get(url + ':' + port + '/categories')
-        .then(res => {
-          console.log(res.data);
-          return res.data;
-        })
-        .then(res => {
-          console.log(page);
-          setTotalCategories(res.length);
-          res = res.slice(
-            (page - 1) * LIMIT,
-            (page - 1) * LIMIT + LIMIT
-          );
-          setCategories(res);
-        })
-        .catch(error => console.log(error));
+    let res = getAll(page);
+    res = res.then((res) => {
+      setTotalCategories(res.length);
+      res = res.slice(
+        (page - 1) * LIMIT,
+        (page - 1) * LIMIT + LIMIT
+      );
+      setCategories(res);
+    });
   };
   useEffect(() => {
     const editor = (
@@ -91,7 +85,7 @@ const Category = () => {
       />
     );
     setState({...state, editor: editor});
-    loadData(currentPage);
+    loadData(1);
   }, []);
   const changeInput = (value) => {
     setCategory({
