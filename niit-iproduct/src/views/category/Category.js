@@ -27,7 +27,7 @@ import axios from 'axios';
 import Pagination from 'src/components/Pagination';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {getAll} from "../../services/API/Category/CategoryClient";
+import {getAll, update} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -36,7 +36,8 @@ const Category = () => {
   const [categories, setCategories] = useState({hits: []});
   const [category, setCategory] = useState({hits: []});
   const [categorySearch, setCategorySearch] = useState({hits: []});
-  const {action, id} = useParams();
+  const [id, setId] = useState(0);
+  const [action, setAction] = useState({hits: []});
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCategories, setTotalCategories] = useState(0);
@@ -120,10 +121,10 @@ const Category = () => {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     console.log(form);
+    event.preventDefault();
+    event.stopPropagation();
     if (form.checkValidity() === false) {
       setValidated(true);
-      event.preventDefault();
-      event.stopPropagation();
     } else {
       setValidated(false);
       const category = {
@@ -131,20 +132,17 @@ const Category = () => {
         dbname: form.categoryName.value,
         description: form.categoryDescription.value
       };
-      console.log(category);
+      console.log(action);
       if (action === 'edit') {
-        axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
-          .then(res => {
-            console.log(res);
-            loadData(1);
-            return res;
-          })
-          .catch(error => console.log(error));
+        update(id, category, config);
+        console.log(currentPage);
+        loadData(currentPage);
       } else {
         axios.post(url + ':' + port + '/categories/add', category, config)
           .then(res => {
             console.log(res);
-            loadData(1);
+            setCurrentPage(1);
+            loadData(currentPage);
             return res;
           })
           .catch(error => console.log(error));
@@ -152,6 +150,8 @@ const Category = () => {
     }
   };
   const editItem = (event, id) => {
+    setId(id);
+    setAction('edit');
     axios.get(url + ':' + port + '/categories/edit/' + id)
       .then(res => {
         setCategory(res.data);
@@ -178,8 +178,6 @@ const Category = () => {
           />
         );
         setState({...state, editor: editor});
-        setCurrentPage(1);
-        loadData(1);
       })
       .catch(error => console.log(error));
   };
@@ -188,10 +186,10 @@ const Category = () => {
       .then(res => {
         console.log(res.data);
         setCategory(res.data);
-        setCurrentPage(1);
         loadData(1);
       })
       .catch(error => console.log(error));
+    setAction({'action':'delete'});
   };
   return (
     <CRow>

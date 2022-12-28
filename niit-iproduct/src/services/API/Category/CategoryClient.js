@@ -26,8 +26,13 @@ const create = (params) => {
 
 };
 
-const update = (id, params) => {
-
+const update = (id, category, config) => {
+  const response = axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
+    .then(res => {
+      console.log(category);
+      return res;
+    })
+    .catch(error => console.log(error));
 };
 
-export {getAll}
+export {getAll, update}
