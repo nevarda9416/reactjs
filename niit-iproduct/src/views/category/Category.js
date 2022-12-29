@@ -1,5 +1,5 @@
 import {React, useEffect, useState, useCallback} from 'react'
-import {Link, useParams} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -27,7 +27,7 @@ import axios from 'axios';
 import Pagination from 'src/components/Pagination';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {getAll, update} from "../../services/API/Category/CategoryClient";
+import {getAll, update, deleteById} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -40,8 +40,8 @@ const Category = () => {
   const [action, setAction] = useState({hits: []});
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCategories, setTotalCategories] = useState(0);
-  let LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
+  const [totalCategories, setTotalCategories] = useState(15);
+  const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
 
   // Generate a random number and convert it to base 36 (0-9a-z)
   const token = Math.random().toString(36).substr(2); // remove `0.`
@@ -59,11 +59,13 @@ const Category = () => {
   const loadData = (page) => {
     let res = getAll(page);
     res = res.then((res) => {
+      console.log(res);
       setTotalCategories(res.length);
       res = res.slice(
-        (page - 1) * LIMIT,
-        (page - 1) * LIMIT + LIMIT
+        (page - 1) * 2,
+        (page - 1) * 2 + 2
       );
+      console.log(res);
       setCategories(res);
     });
   };
@@ -121,8 +123,8 @@ const Category = () => {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     console.log(form);
-    event.preventDefault();
-    event.stopPropagation();
+    //event.preventDefault();
+    //event.stopPropagation();
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
@@ -136,6 +138,7 @@ const Category = () => {
       if (action === 'edit') {
         update(id, category, config);
         console.log(currentPage);
+        setCurrentPage(currentPage);
         loadData(currentPage);
       } else {
         axios.post(url + ':' + port + '/categories/add', category, config)
@@ -182,14 +185,11 @@ const Category = () => {
       .catch(error => console.log(error));
   };
   const deleteItem = (event, id) => {
-    axios.get(url + ':' + port + '/categories/delete/' + id)
-      .then(res => {
-        console.log(res.data);
-        setCategory(res.data);
-        loadData(1);
-      })
-      .catch(error => console.log(error));
+    setId(id);
     setAction({'action':'delete'});
+    deleteById(id);
+    setCurrentPage(currentPage);
+    loadData(currentPage);
   };
   return (
     <CRow>
@@ -265,7 +265,7 @@ const Category = () => {
         </CTable>
         <div className="pagination-wrapper">
           <Pagination
-            totalRecords={5}
+            totalRecords={totalCategories}
             pageLimit={LIMIT}
             pageNeighbours={2}
             onPageChanged={onPageChanged}

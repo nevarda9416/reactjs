@@ -14,25 +14,22 @@ const getById = (id) => {
   return id;
 };
 
-const deleteById = (id) => {
-
-};
-
-const deleteMany = (id) => {
-
-};
-
 const create = (params) => {
 
 };
 
 const update = (id, category, config) => {
-  const response = axios.post(url + ':' + port + '/categories/edit/' + id, category, config)
-    .then(res => {
-      console.log(category);
-      return res;
-    })
-    .catch(error => console.log(error));
+  const response = axios.post(url + ':' + port + '/categories/edit/' + id, category, config);
+  return response.data;
 };
 
-export {getAll, update}
+const deleteById = (id) => {
+  const response = axios.get(url + ':' + port + '/categories/delete/' + id);
+  return response.data;
+};
+
+const deleteMany = (ids) => {
+
+};
+
+export {getAll, update, deleteById}

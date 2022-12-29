@@ -30,12 +30,12 @@ app.get('/categories', function (req, res) {
     mongoClient.connect(url, function (error, database) {
         if (error) throw error;
         const dbo = database.db('niit-iproduct');
-        console.log('Database created!');
-        dbo.collection('categories').findOne({ dbname: 'dienthoaiphothong' }, function (error, response) {
-            if (error) throw error;
-            if (response) console.log('Category name: ' + response.name);
-        });
-        dbo.collection('categories').find({}).toArray(function (error, response) {
+        // console.log('Database created!');
+        // dbo.collection('categories').findOne({ dbname: 'dienthoaiphothong' }, function (error, response) {
+        //     if (error) throw error;
+        //     if (response) console.log('Category name: ' + response.name);
+        // });
+        dbo.collection('categories').find({}).sort({_id:-1}).toArray(function (error, response) {
             if (error) throw error;
             if (response) {
                 setTimeout(() => { database.close() }, 3000);
