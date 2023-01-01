@@ -40,7 +40,7 @@ const Category = () => {
   const [action, setAction] = useState({hits: []});
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalCategories, setTotalCategories] = useState(15);
+  const [totalCategories, setTotalCategories] = useState(0);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
 
   // Generate a random number and convert it to base 36 (0-9a-z)
@@ -51,6 +51,7 @@ const Category = () => {
   const [state, setState] = useState({
     editor: null
   });
+
   const onPageChanged = useCallback((event, page) => {
     event.preventDefault();
     setCurrentPage(page);
@@ -59,7 +60,7 @@ const Category = () => {
   const loadData = (page) => {
     let res = getAll(page);
     res = res.then((res) => {
-      console.log(res);
+      console.log(res.length);
       setTotalCategories(res.length);
       res = res.slice(
         (page - 1) * 2,
@@ -240,8 +241,8 @@ const Category = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {!validated && categories.map && categories.map(item => (
-              <CTableRow>
+            {!validated && categories.map && categories.map((item, i) => (
+              <CTableRow key={i}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>

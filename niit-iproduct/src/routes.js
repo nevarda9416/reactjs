@@ -55,8 +55,8 @@ const Widgets = React.lazy(() => import('./views/widgets/Widgets'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/category', name: 'Danh mục sản phẩm', element: Category },
-  { path: '/category/:action/:id', name: 'Danh mục sản phẩm', element: Category },
+  { path: '/categories', name: 'Danh mục sản phẩm', element: Category },
+  { path: '/categories/:action/:id', name: 'Danh mục sản phẩm', element: Category },
   { path: '/theme', name: 'Theme', element: Colors, exact: true },
   { path: '/google/trend', name: 'Google Trend', element: GoogleTrend },
   { path: '/theme/colors', name: 'Colors', element: Colors },
