@@ -26,13 +26,12 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {update, deleteById} from "../../services/API/Category/CategoryClient";
+import {create, update, deleteById} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const Category = () => {
   const [validated, setValidated] = useState(false);
-  const [category, setCategory] = useState({hits: []});
   const [categorySearch, setCategorySearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
@@ -48,16 +47,16 @@ const Category = () => {
   const loadData = async () => {
     const data = await axios.get(url + ':' + port + '/categories');
     const dataJ = await data.data;
-    setPost(dataJ);
+    setCategory(dataJ);
   };
-  const [post, setPost] = useState([]);
+  const [category, setCategory] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [postPerPage] = useState(LIMIT);
-  const lastPost = number * postPerPage;
-  const firstPost = lastPost - postPerPage;
-  const currentPost = post.slice(firstPost, lastPost);
+  const [categoryPerPage] = useState(LIMIT);
+  const lastCategory = number * categoryPerPage;
+  const firstCategory = lastCategory - categoryPerPage;
+  const currentCategory = category.slice(firstCategory, lastCategory);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(post.length / postPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(category.length / categoryPerPage); i++) {
     pageNumber.push(i);
   }
   const ChangePage = (pageNumber) => {
@@ -67,7 +66,7 @@ const Category = () => {
     const getData = async () => {
       const data = await axios.get(url + ':' + port + '/categories');
       const dataJ = await data.data;
-      setPost(dataJ);
+      setCategory(dataJ);
     };
     getData();
     const editor = (
@@ -100,7 +99,7 @@ const Category = () => {
     });
     const data = await axios.get(url + ':' + port + '/categories/find?name=' + value);
     const dataJ = await data.data;
-    setPost(dataJ);
+    setCategory(dataJ);
   };
   const changeTextarea = (value) => {
     setCategory({
@@ -124,13 +123,8 @@ const Category = () => {
         update(id, category, config);
         loadData();
       } else {
-        axios.post(url + ':' + port + '/categories/add', category, config)
-          .then(res => {
-            console.log(res);
-            loadData();
-            return res;
-          })
-          .catch(error => console.log(error));
+        create(category, config);
+        loadData();
       }
     }
   };
@@ -189,12 +183,12 @@ const Category = () => {
               </div>
               <div className="mb-3">
                 <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
-                <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
-                               feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
-                               value={category.description}/>
                 <div className={"w-64"} id={"ck-editor-text"}>
                   {state.editor}
                 </div>
+                <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
+                               feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
+                               value={category.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -221,7 +215,7 @@ const Category = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {!validated && currentPost.map((item, index) => (
+            {!validated && currentCategory.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>

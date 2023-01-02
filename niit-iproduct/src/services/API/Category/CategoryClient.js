@@ -8,8 +8,9 @@ const getById = (id) => {
   return id;
 };
 
-const create = (params) => {
-
+const create = (category, config) => {
+  const response = axios.post(url + ':' + port + '/categories/add', category, config);
+  return response.data;
 };
 
 const update = (id, category, config) => {
@@ -26,4 +27,4 @@ const deleteMany = (ids) => {
 
 };
 
-export {update, deleteById}
+export {create, update, deleteById}
