@@ -24,10 +24,9 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import Pagination from 'src/components/Pagination';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {getAll, update, deleteById} from "../../services/API/Category/CategoryClient";
+import {update, deleteById} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -38,8 +37,7 @@ const Category = () => {
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
-
-  // Generate a random number and convert it to base 36 (0-9a-z)
+  // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
   const token = Math.random().toString(36).substr(2); // remove `0.`
   const config = {
     headers: {Authorization: `Bearer ${token}`}
@@ -47,7 +45,6 @@ const Category = () => {
   const [state, setState] = useState({
     editor: null
   });
-
   const loadData = async () => {
     const data = await axios.get(url + ':' + port + '/categories');
     const dataJ = await data.data;
@@ -251,15 +248,13 @@ const Category = () => {
             onClick={() => setNumber(number - 1)}>
             Trước
           </button>
-          {pageNumber.map((Elem) => {
+          {pageNumber.map((element, index) => {
             return (
-              <>
-                <button
-                  className="px-3 py-1 m-1 text-center btn-outline-dark"
-                  onClick={() => ChangePage(Elem)}>
-                  {Elem}
-                </button>
-              </>
+              <button key={index}
+                      className="px-3 py-1 m-1 text-center btn-outline-dark"
+                      onClick={() => ChangePage(element)}>
+                {element}
+              </button>
             );
           })}
           <button
