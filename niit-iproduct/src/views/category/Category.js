@@ -1,4 +1,4 @@
-import {React, useEffect, useState, useCallback} from 'react'
+import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
 import {
   CCard,
@@ -33,14 +33,10 @@ const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const Category = () => {
   const [validated, setValidated] = useState(false);
-  const [categories, setCategories] = useState({hits: []});
   const [category, setCategory] = useState({hits: []});
   const [categorySearch, setCategorySearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
-
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalCategories, setTotalCategories] = useState(0);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
 
   // Generate a random number and convert it to base 36 (0-9a-z)
@@ -52,25 +48,31 @@ const Category = () => {
     editor: null
   });
 
-  const onPageChanged = useCallback((event, page) => {
-    event.preventDefault();
-    setCurrentPage(page);
-    loadData(page);
-  });
-  const loadData = (page) => {
-    let res = getAll(page);
-    res = res.then((res) => {
-      console.log(res.length);
-      setTotalCategories(res.length);
-      res = res.slice(
-        (page - 1) * 2,
-        (page - 1) * 2 + 2
-      );
-      console.log(res);
-      setCategories(res);
-    });
+  const loadData = async () => {
+    const data = await axios.get(url + ':' + port + '/categories');
+    const dataJ = await data.data;
+    setPost(dataJ);
+  };
+  const [post, setPost] = useState([]);
+  const [number, setNumber] = useState(1); // No of pages
+  const [postPerPage] = useState(LIMIT);
+  const lastPost = number * postPerPage;
+  const firstPost = lastPost - postPerPage;
+  const currentPost = post.slice(firstPost, lastPost);
+  const pageNumber = [];
+  for (let i = 1; i <= Math.ceil(post.length / postPerPage); i++) {
+    pageNumber.push(i);
+  }
+  const ChangePage = (pageNumber) => {
+    setNumber(pageNumber);
   };
   useEffect(() => {
+    const getData = async () => {
+      const data = await axios.get(url + ':' + port + '/categories');
+      const dataJ = await data.data;
+      setPost(dataJ);
+    };
+    getData();
     const editor = (
       <CKEditor
         editor={ClassicEditor}
@@ -89,32 +91,19 @@ const Category = () => {
       />
     );
     setState({...state, editor: editor});
-    loadData(1);
   }, []);
   const changeInput = (value) => {
     setCategory({
       name: value
     })
   };
-  const changeInputSearch = (value) => {
+  const changeInputSearch = async (value) => {
     setCategorySearch({
       name: value
     });
-    axios.get(url + ':' + port + '/categories/find?name=' + value)
-      .then(res => {
-        console.log(res.data);
-        return res.data;
-      })
-      .then(res => {
-        console.log(currentPage);
-        setTotalCategories(res.length);
-        res = res.slice(
-          (currentPage - 1) * LIMIT,
-          (currentPage - 1) * LIMIT + LIMIT
-        );
-        setCategories(res);
-      })
-      .catch(error => console.log(error));
+    const data = await axios.get(url + ':' + port + '/categories/find?name=' + value);
+    const dataJ = await data.data;
+    setPost(dataJ);
   };
   const changeTextarea = (value) => {
     setCategory({
@@ -124,8 +113,6 @@ const Category = () => {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     console.log(form);
-    //event.preventDefault();
-    //event.stopPropagation();
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
@@ -138,15 +125,12 @@ const Category = () => {
       console.log(action);
       if (action === 'edit') {
         update(id, category, config);
-        console.log(currentPage);
-        setCurrentPage(currentPage);
-        loadData(currentPage);
+        loadData();
       } else {
         axios.post(url + ':' + port + '/categories/add', category, config)
           .then(res => {
             console.log(res);
-            setCurrentPage(1);
-            loadData(currentPage);
+            loadData();
             return res;
           })
           .catch(error => console.log(error));
@@ -187,10 +171,9 @@ const Category = () => {
   };
   const deleteItem = (event, id) => {
     setId(id);
-    setAction({'action':'delete'});
+    setAction({'action': 'delete'});
     deleteById(id);
-    setCurrentPage(currentPage);
-    loadData(currentPage);
+    loadData();
   };
   return (
     <CRow>
@@ -241,15 +224,13 @@ const Category = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {!validated && categories.map && categories.map((item, i) => (
-              <CTableRow key={i}>
+            {!validated && currentPost.map((item, index) => (
+              <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>
                   {item.description &&
-                  <span>
-                                            {item.description.replace(/<[^>]+>/g, '')}
-                                        </span>
+                  <span>{item.description.replace(/<[^>]+>/g, '')}</span>
                   }
                 </CTableDataCell>
                 <CTableDataCell>
@@ -264,14 +245,28 @@ const Category = () => {
             ))}
           </CTableBody>
         </CTable>
-        <div className="pagination-wrapper">
-          <Pagination
-            totalRecords={totalCategories}
-            pageLimit={LIMIT}
-            pageNeighbours={2}
-            onPageChanged={onPageChanged}
-            currentPage={currentPage}
-          />
+        <div className="my-3 text-center">
+          <button
+            className="px-3 py-1 m-1 text-center btn-primary"
+            onClick={() => setNumber(number - 1)}>
+            Trước
+          </button>
+          {pageNumber.map((Elem) => {
+            return (
+              <>
+                <button
+                  className="px-3 py-1 m-1 text-center btn-outline-dark"
+                  onClick={() => ChangePage(Elem)}>
+                  {Elem}
+                </button>
+              </>
+            );
+          })}
+          <button
+            className="px-3 py-1 m-1 text-center btn-primary"
+            onClick={() => setNumber(number + 1)}>
+            Sau
+          </button>
         </div>
       </CCol>
     </CRow>
