@@ -182,6 +182,7 @@ const Product = () => {
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
+              {/* category_id */}
               <div className="mb-3">
                 <CFormLabel htmlFor="categoryName">Tên danh mục</CFormLabel>
                 <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryName" aria-label="Default select example" required>
@@ -191,20 +192,46 @@ const Product = () => {
                   <option value="3" disabled>Three</option>
                 </CFormSelect>
               </div>
+              {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productName">Tên sản phẩm</CFormLabel>
                 <CFormInput onChange={e => changeInput(e.target.value)} type="text"
                             feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={category.name}
                             required/>
               </div>
+              {/* short_description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
+                <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả ngắn</CFormLabel>
+                <CFormTextarea onChange={e => changeTextarea(e.target.value)}
+                               feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
+                               value={category.description}/>
+              </div>
+              {/* full_description */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả đầy đủ</CFormLabel>
                 <div className={"w-64"} id={"ck-editor-text"}>
                   {state.editor}
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
                                feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
                                value={category.description}/>
+              </div>
+              {/* unit */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="categoryName">Đơn vị</CFormLabel>
+                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryName" aria-label="Default select example" required>
+                  <option></option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3" disabled>Three</option>
+                </CFormSelect>
+              </div>
+              {/* price */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="productName">Giá</CFormLabel>
+                <CFormInput onChange={e => changeInput(e.target.value)} type="text"
+                            feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={category.name}
+                            required/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
