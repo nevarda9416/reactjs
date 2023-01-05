@@ -10,6 +10,7 @@ const env = process.env;
 const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
 const port = env.DATABASE_PORT_PRODUCT_CRUD_DATA;
 const dbname = env.DATABASE_NAME;
+const collection_name = env.COLLECTION_PRODUCT_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,7 +19,7 @@ app.get('/products', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('products').find({}).sort({_id: -1}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
       if (response) {
         setTimeout(() => {

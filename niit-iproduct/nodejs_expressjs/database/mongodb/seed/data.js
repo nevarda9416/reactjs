@@ -8,7 +8,7 @@ require('dotenv').config({path: path.resolve(__dirname, '../../../.env')});
 const env = process.env;
 const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
 const port = env.DATABASE_PORT_USER_SEEDING_DATA;
-
+const dbname = env.DATABASE_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -21,7 +21,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listCategories.forEach(value => {
       var listingQuery = {name: value.name};
       var category = {
@@ -59,7 +59,7 @@ app.get('/data/create', function (req, res) {
   };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     dbo.collection('products').updateOne(listingQuery, listProducts, {upsert: true}, function (error, response) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
@@ -73,7 +73,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listTags.forEach(value => {
       var listingQuery = {name: value.name};
       var tag = {
@@ -109,7 +109,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listCustomers.forEach(value => {
       var listingQuery = {username: value.username};
       var customer = {
@@ -160,7 +160,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listTrackings.forEach(value => {
       var listingQuery = {customer_id: value.customer_id};
       var tracking = {
@@ -197,7 +197,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listTrafficSources.forEach(value => {
       var listingQuery = {register_source: value.register_source};
       var traffic_source = {
@@ -232,7 +232,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listUsers.forEach(value => {
       var listingQuery = {email: value.email};
       var user = {
@@ -268,7 +268,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listActivites.forEach(value => {
       var listingQuery = {subject: value.subject};
       var activity = {
@@ -310,7 +310,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listSystems.forEach(value => {
       var listingQuery = {created_by: value.created_by};
       var system = {
@@ -347,7 +347,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listSeo.forEach(value => {
       var listingQuery = {meta_title: value.meta_title};
       var seo = {
@@ -376,7 +376,7 @@ app.get('/data/create', function (req, res) {
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
-    const dbo = database.db('niit-iproduct');
+    const dbo = database.db(dbname);
     listComments.forEach(value => {
       var listingQuery = {customer_id: value.customer_id};
       var comment = {

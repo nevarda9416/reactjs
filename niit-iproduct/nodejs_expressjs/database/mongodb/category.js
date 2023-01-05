@@ -10,6 +10,7 @@ const env = process.env;
 const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
 const port = env.DATABASE_PORT_CATEGORY_CRUD_DATA;
 const dbname = env.DATABASE_NAME;
+const collection_name = env.COLLECTION_CATEGORY_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -19,7 +20,7 @@ app.get('/categories/find', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('categories').find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       setTimeout(() => {
@@ -32,7 +33,7 @@ app.get('/categories', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('categories').find({}).sort({_id: -1}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
       if (response) {
         setTimeout(() => {
@@ -57,7 +58,7 @@ app.post('/categories/add', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('categories').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+    dbo.collection(collection_name).updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
@@ -69,7 +70,7 @@ app.get('/categories/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('categories').findOne({_id: new ObjectId(_id)}, function (error, response) {
+    dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       setTimeout(() => {
@@ -90,7 +91,7 @@ app.post('/categories/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('categories').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+    dbo.collection(collection_name).updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
       if (error) throw error;
       console.log('Category updated: ' + JSON.stringify(response));
       res.jsonp(response);
@@ -102,7 +103,7 @@ app.get('/categories/delete/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('categories').deleteOne(listingQuery, function (error, response) {
+    dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
       if (error) throw error;
       console.log('Category deleted');
       res.jsonp(response);
