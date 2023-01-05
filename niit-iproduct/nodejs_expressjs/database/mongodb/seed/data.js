@@ -6,8 +6,8 @@ const mongoClient = require('mongodb').MongoClient;
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname, '../../../.env')});
 const env = process.env;
-const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':' + env.PORT_DATABASE_MONGO + '/';
-const port = env.PORT_DATABASE_MONGO_USER_SEEDING_DATA;
+const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
+const port = env.DATABASE_PORT_USER_SEEDING_DATA;
 
 app.use(cors());
 app.use(bodyParser.json());

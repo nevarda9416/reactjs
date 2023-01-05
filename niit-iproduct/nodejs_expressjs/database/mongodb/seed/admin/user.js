@@ -4,13 +4,15 @@ const mongoClient = require('mongodb').MongoClient;
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname, '../../../../.env')});
 const env = process.env;
-const url = env.DATABASE_MONGO + '://' + env.HOST_DATABASE_MONGO + ':'+ env.PORT_DATABASE_MONGO + '/';
-const port = env.PORT_DATABASE_MONGO_USER_SEEDING_DATA;
+const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':'+ env.DATABASE_PORT + '/';
+const port = env.DATABASE_PORT_USER_SEEDING_DATA;
+const dbname = env.DATABASE_NAME;
+const collectname = env.COLLECTION_USER_NAME;
 const crypto = require('crypto');
 const getHashedPassword = (password) => {
     const hash = crypto.createHash('sha256').update(password).digest('base64');
     return hash;
-}
+};
 
 app.get('/users/create', function (req, res) {
     const listingQuery = { username: 'admin' };
@@ -27,7 +29,7 @@ app.get('/users/create', function (req, res) {
             res.jsonp(response);
         });
     })
-})
+});
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')
-})
+});
