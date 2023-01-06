@@ -27,14 +27,14 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {update, deleteById} from "../../services/API/Category/CategoryClient";
+import {update, deleteById} from "../../services/API/Product/ProductClient";
 
 const url = process.env.REACT_APP_URL;
-const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
+const category_port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
+const product_port = process.env.REACT_APP_PORT_DATABASE_MONGO_PRODUCT_CRUD_DATA;
 const Product = () => {
   const [validated, setValidated] = useState(false);
-  const [category, setCategory] = useState({hits: []});
-  const [categorySearch, setCategorySearch] = useState({hits: []});
+  const [productSearch, setProductSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
@@ -47,28 +47,34 @@ const Product = () => {
     editor: null
   });
   const loadData = async () => {
-    const data = await axios.get(url + ':' + port + '/categories');
+    const data = await axios.get(url + ':' + product_port + '/products');
     const dataJ = await data.data;
-    setPost(dataJ);
+    setProduct(dataJ);
   };
-  const [post, setPost] = useState([]);
+  const [load, setLoad] = useState(0);
+  const [category, setCategory] = useState([]);
+  const [product, setProduct] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [postPerPage] = useState(LIMIT);
-  const lastPost = number * postPerPage;
-  const firstPost = lastPost - postPerPage;
-  const currentPost = post.slice(firstPost, lastPost);
+  const [productPerPage] = useState(LIMIT);
+  const lastProduct = number * productPerPage;
+  const firstProduct = lastProduct - productPerPage;
+  const currentProduct = product.slice(firstProduct, lastProduct);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(post.length / postPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(product.length / productPerPage); i++) {
     pageNumber.push(i);
   }
-  const ChangePage = (pageNumber) => {
+  const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get(url + ':' + port + '/categories');
-      const dataJ = await data.data;
-      setPost(dataJ);
+      const dataC = await axios.get(url + ':' + category_port + '/categories');
+      const dataJC = await dataC.data;
+      setCategory(dataJC);
+      ////
+      const dataP = await axios.get(url + ':' + product_port + '/products');
+      const dataJP = await dataP.data;
+      setProduct(dataJP);
     };
     getData();
     const editor = (
@@ -89,22 +95,22 @@ const Product = () => {
       />
     );
     setState({...state, editor: editor});
-  }, []);
+  }, [load]);
   const changeInput = (value) => {
-    setCategory({
+    setProduct({
       name: value
     })
   };
   const changeInputSearch = async (value) => {
-    setCategorySearch({
+    setProductSearch({
       name: value
     });
-    const data = await axios.get(url + ':' + port + '/categories/find?name=' + value);
+    const data = await axios.get(url + ':' + product_port + '/products/find?name=' + value);
     const dataJ = await data.data;
-    setPost(dataJ);
+    setProduct(dataJ);
   };
   const changeTextarea = (value) => {
-    setCategory({
+    setProduct({
       description: value
     })
   };
@@ -115,17 +121,19 @@ const Product = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const category = {
-        name: form.categoryName.value,
-        dbname: form.categoryName.value,
-        description: form.categoryDescription.value
+      const product = {
+        category_id: form.categoryId.value,
+        name: form.productName.value,
+        short_description: form.productShortDescription.value,
+        full_description: form.productFullDescription.value,
+
       };
       console.log(action);
       if (action === 'edit') {
-        update(id, category, config);
+        update(id, product, config);
         loadData();
       } else {
-        axios.post(url + ':' + port + '/categories/add', category, config)
+        axios.post(url + ':' + product_port + '/products/add', product, config)
           .then(res => {
             console.log(res);
             loadData();
@@ -138,9 +146,9 @@ const Product = () => {
   const editItem = (event, id) => {
     setId(id);
     setAction('edit');
-    axios.get(url + ':' + port + '/categories/edit/' + id)
+    axios.get(url + ':' + product_port + '/products/edit/' + id)
       .then(res => {
-        setCategory(res.data);
+        setProduct(res.data);
         const editor = (
           <CKEditor
             editor={ClassicEditor}
@@ -171,7 +179,7 @@ const Product = () => {
     setId(id);
     setAction({'action': 'delete'});
     deleteById(id);
-    loadData();
+    setLoad(1);
   };
   return (
     <CRow>
@@ -182,55 +190,62 @@ const Product = () => {
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* category_id */}
+              {/* product_id */}
               <div className="mb-3">
-                <CFormLabel htmlFor="categoryName">Tên danh mục</CFormLabel>
-                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryName" aria-label="Default select example" required>
+                <CFormLabel htmlFor="categoryId">Tên danh mục</CFormLabel>
+                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryId" required>
                   <option></option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3" disabled>Three</option>
+                  {
+                  category.map((item, index) => (
+                    <option key={index} value={item._id}>{item.name}</option>
+                  ))
+                  }
                 </CFormSelect>
               </div>
               {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productName">Tên sản phẩm</CFormLabel>
                 <CFormInput onChange={e => changeInput(e.target.value)} type="text"
-                            feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={category.name}
+                            feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={product.name}
                             required/>
               </div>
               {/* short_description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả ngắn</CFormLabel>
+                <CFormLabel htmlFor="productShortDescription">Mô tả ngắn</CFormLabel>
                 <CFormTextarea onChange={e => changeTextarea(e.target.value)}
-                               feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
-                               value={category.description}/>
+                               feedbackInvalid="Vui lòng nhập mô tả ngắn" id="productShortDescription" rows="3" required
+                               value={product.short_description}/>
               </div>
               {/* full_description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả đầy đủ</CFormLabel>
+                <CFormLabel htmlFor="productFullDescription">Mô tả đầy đủ</CFormLabel>
                 <div className={"w-64"} id={"ck-editor-text"}>
                   {state.editor}
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
-                               feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
-                               value={category.description}/>
+                               feedbackInvalid="Vui lòng nhập mô tả đầy đủ" id="productFullDescription" rows="3" required
+                               value={product.full_description}/>
               </div>
               {/* unit */}
               <div className="mb-3">
-                <CFormLabel htmlFor="categoryName">Đơn vị</CFormLabel>
-                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryName" aria-label="Default select example" required>
+                <CFormLabel htmlFor="productUnit">Đơn vị</CFormLabel>
+                <CFormSelect feedbackInvalid="Vui lòng chọn đơn vị sản phẩm" id="productUnit" required>
                   <option></option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3" disabled>Three</option>
+                  <option value="1">Chiếc</option>
                 </CFormSelect>
+              </div>
+              {/* concurrency */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="productCurrency">Tiền tệ</CFormLabel>
+                <CFormInput onChange={e => changeInput(e.target.value)} type="text"
+                            feedbackInvalid="Vui lòng nhập loại tiền tệ" id="productCurrency" value={product.currency}
+                            required/>
               </div>
               {/* price */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productName">Giá</CFormLabel>
+                <CFormLabel htmlFor="productPrice">Giá</CFormLabel>
                 <CFormInput onChange={e => changeInput(e.target.value)} type="text"
-                            feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={category.name}
+                            feedbackInvalid="Vui lòng nhập giá sản phẩm" id="productPrice" value={product.price}
                             required/>
               </div>
               <div className="col-auto">
@@ -244,9 +259,9 @@ const Product = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="categoryName">Tìm kiếm sản phẩm</CFormLabel>
-          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text"
-                      placeholder="Vui lòng nhập tên sản phẩm" value={categorySearch.name} required/>
+          <CFormLabel htmlFor="productSearchName">Tìm kiếm sản phẩm</CFormLabel>
+          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="productSearchName"
+                      placeholder="Vui lòng nhập tên sản phẩm" value={productSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
@@ -257,14 +272,14 @@ const Product = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {!validated && currentPost.map((item, index) => (
+            {currentProduct.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this category?')) {
+                    if (window.confirm('Delete this product?')) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
@@ -283,7 +298,7 @@ const Product = () => {
             return (
               <button key={index}
                       className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => ChangePage(element)}>
+                      onClick={() => changePage(element)}>
                 {element}
               </button>
             );
