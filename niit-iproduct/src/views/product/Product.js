@@ -49,8 +49,9 @@ const Product = () => {
   const loadData = async () => {
     const data = await axios.get(url + ':' + product_port + '/products');
     const dataJ = await data.data;
-    setProduct(dataJ);
+    setData(dataJ);
   };
+  const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
   const [product, setProduct] = useState([]);
@@ -58,7 +59,7 @@ const Product = () => {
   const [productPerPage] = useState(LIMIT);
   const lastProduct = number * productPerPage;
   const firstProduct = lastProduct - productPerPage;
-  const currentProduct = product.slice(firstProduct, lastProduct);
+  const currentData = data.slice(firstProduct, lastProduct);
   const pageNumber = [];
   for (let i = 1; i <= Math.ceil(product.length / productPerPage); i++) {
     pageNumber.push(i);
@@ -74,7 +75,7 @@ const Product = () => {
       ////
       const dataP = await axios.get(url + ':' + product_port + '/products');
       const dataJP = await dataP.data;
-      setProduct(dataJP);
+      setData(dataJP);
     };
     getData();
     const editor = (
@@ -107,7 +108,7 @@ const Product = () => {
     });
     const data = await axios.get(url + ':' + product_port + '/products/find?name=' + value);
     const dataJ = await data.data;
-    setProduct(dataJ);
+    setData(dataJ);
   };
   const changeTextarea = (value) => {
     setProduct({
@@ -126,7 +127,9 @@ const Product = () => {
         name: form.productName.value,
         short_description: form.productShortDescription.value,
         full_description: form.productFullDescription.value,
-
+        unit: form.productUnit.value,
+        currency: form.productCurrency.value,
+        price: form.productPrice.value
       };
       console.log(action);
       if (action === 'edit') {
@@ -153,10 +156,10 @@ const Product = () => {
           <CKEditor
             editor={ClassicEditor}
             required
-            data={res.data.description ?? ''}
+            data={res.data.full_description ?? ''}
             onReady={editor => {
               // You can store the "editor" and use when it is needed.
-              editor.setData(res.data.description);
+              editor.setData(res.data.full_description);
             }}
             onChange={(event, editor) => {
               const data = editor.getData();
@@ -193,7 +196,7 @@ const Product = () => {
               {/* product_id */}
               <div className="mb-3">
                 <CFormLabel htmlFor="categoryId">Tên danh mục</CFormLabel>
-                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryId" required>
+                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryId" value={product.category_id} required>
                   <option></option>
                   {
                   category.map((item, index) => (
@@ -229,9 +232,9 @@ const Product = () => {
               {/* unit */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productUnit">Đơn vị</CFormLabel>
-                <CFormSelect feedbackInvalid="Vui lòng chọn đơn vị sản phẩm" id="productUnit" required>
+                <CFormSelect feedbackInvalid="Vui lòng chọn đơn vị sản phẩm" id="productUnit" value={product.unit} required>
                   <option></option>
-                  <option value="1">Chiếc</option>
+                  <option value="chiếc">Chiếc</option>
                 </CFormSelect>
               </div>
               {/* concurrency */}
@@ -272,7 +275,7 @@ const Product = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {currentProduct.map((item, index) => (
+            {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
