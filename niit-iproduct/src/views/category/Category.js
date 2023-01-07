@@ -47,14 +47,16 @@ const Category = () => {
   const loadData = async () => {
     const data = await axios.get(url + ':' + port + '/categories');
     const dataJ = await data.data;
-    setCategory(dataJ);
+    setData(dataJ);
   };
+  const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [categoryPerPage] = useState(LIMIT);
   const lastCategory = number * categoryPerPage;
   const firstCategory = lastCategory - categoryPerPage;
-  const currentCategory = category.slice(firstCategory, lastCategory);
+  const currentData = data.slice(firstCategory, lastCategory);
+
   const pageNumber = [];
   for (let i = 1; i <= Math.ceil(category.length / categoryPerPage); i++) {
     pageNumber.push(i);
@@ -66,7 +68,7 @@ const Category = () => {
     const getData = async () => {
       const data = await axios.get(url + ':' + port + '/categories');
       const dataJ = await data.data;
-      setCategory(dataJ);
+      setData(dataJ);
     };
     getData();
     const editor = (
@@ -99,7 +101,7 @@ const Category = () => {
     });
     const data = await axios.get(url + ':' + port + '/categories/find?name=' + value);
     const dataJ = await data.data;
-    setCategory(dataJ);
+    setData(dataJ);
   };
   const changeTextarea = (value) => {
     setCategory({
@@ -215,7 +217,7 @@ const Category = () => {
             </CTableRow>
           </CTableHead>
           <CTableBody>
-            {!validated && currentCategory.map((item, index) => (
+            {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
