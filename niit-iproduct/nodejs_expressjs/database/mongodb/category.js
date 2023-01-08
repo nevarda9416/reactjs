@@ -14,8 +14,8 @@ const collection_name = env.COLLECTION_CATEGORY_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-// Find category name like input data
-app.get('/categories/find', function (req, res) {
+// Find category name like input data (GET)
+app.get('/' + collection_name + '/find', function (req, res) {
   const search_name = req.query.name;
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
@@ -29,7 +29,8 @@ app.get('/categories/find', function (req, res) {
     });
   })
 });
-app.get('/categories', function (req, res) {
+// List categories (GET)
+app.get('/' + collection_name, function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
@@ -44,7 +45,8 @@ app.get('/categories', function (req, res) {
     });
   })
 });
-app.post('/categories/add', function (req, res) {
+// Add product (POST)
+app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
   const listingQuery = {dbname: req.body.dbname};
@@ -65,7 +67,8 @@ app.post('/categories/add', function (req, res) {
     });
   })
 });
-app.get('/categories/edit/:id', function (req, res) {
+// Edit product (GET)
+app.get('/' + collection_name + '/edit/:id', function (req, res) {
   const _id = req.params.id;
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
@@ -79,7 +82,8 @@ app.get('/categories/edit/:id', function (req, res) {
     });
   })
 });
-app.post('/categories/edit/:id', function (req, res) {
+// Update product (POST)
+app.post('/' + collection_name + '/edit/:id', function (req, res) {
   const listingQuery = {_id: new ObjectId(req.params.id)};
   const updates = {
     $set: {
@@ -98,7 +102,8 @@ app.post('/categories/edit/:id', function (req, res) {
     });
   })
 });
-app.get('/categories/delete/:id', function (req, res) {
+// Delete product (GET)
+app.get('/' + collection_name + '/delete/:id', function (req, res) {
   const listingQuery = {_id: new ObjectId(req.params.id)};
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;

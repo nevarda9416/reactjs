@@ -26,7 +26,7 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {create, update, deleteById} from "../../services/API/Category/CategoryClient";
+import {create, edit, deleteById} from "../../services/API/Category/CategoryClient";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;

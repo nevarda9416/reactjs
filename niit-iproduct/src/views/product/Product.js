@@ -27,7 +27,7 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {update, deleteById} from "../../services/API/Product/ProductClient";
+import {create, edit, deleteById} from "../../services/API/Product/ProductClient";
 
 const url = process.env.REACT_APP_URL;
 const category_port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -72,7 +72,6 @@ const Product = () => {
       const dataC = await axios.get(url + ':' + category_port + '/categories');
       const dataJC = await dataC.data;
       setCategory(dataJC);
-      ////
       const dataP = await axios.get(url + ':' + product_port + '/products');
       const dataJP = await dataP.data;
       setData(dataJP);
@@ -112,7 +111,7 @@ const Product = () => {
   };
   const changeTextarea = (value) => {
     setProduct({
-      description: value
+      full_description: value
     })
   };
   const handleSubmit = (event) => {
@@ -133,7 +132,8 @@ const Product = () => {
       };
       console.log(action);
       if (action === 'edit') {
-        update(id, product, config);
+        console.log(product);
+        edit(id, product, config);
         loadData();
       } else {
         axios.post(url + ':' + product_port + '/products/add', product, config)
@@ -208,14 +208,14 @@ const Product = () => {
               {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productName">Tên sản phẩm</CFormLabel>
-                <CFormInput onChange={e => changeInput(e.target.value)} type="text"
+                <CFormInput type="text"
                             feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={product.name}
                             required/>
               </div>
               {/* short_description */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productShortDescription">Mô tả ngắn</CFormLabel>
-                <CFormTextarea onChange={e => changeTextarea(e.target.value)}
+                <CFormTextarea
                                feedbackInvalid="Vui lòng nhập mô tả ngắn" id="productShortDescription" rows="3" required
                                value={product.short_description}/>
               </div>
@@ -235,19 +235,20 @@ const Product = () => {
                 <CFormSelect feedbackInvalid="Vui lòng chọn đơn vị sản phẩm" id="productUnit" value={product.unit} required>
                   <option></option>
                   <option value="chiếc">Chiếc</option>
+                  <option value="cái">Cái</option>
                 </CFormSelect>
               </div>
               {/* concurrency */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productCurrency">Tiền tệ</CFormLabel>
-                <CFormInput onChange={e => changeInput(e.target.value)} type="text"
+                <CFormInput type="text"
                             feedbackInvalid="Vui lòng nhập loại tiền tệ" id="productCurrency" value={product.currency}
                             required/>
               </div>
               {/* price */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productPrice">Giá</CFormLabel>
-                <CFormInput onChange={e => changeInput(e.target.value)} type="text"
+                <CFormInput type="text"
                             feedbackInvalid="Vui lòng nhập giá sản phẩm" id="productPrice" value={product.price}
                             required/>
               </div>

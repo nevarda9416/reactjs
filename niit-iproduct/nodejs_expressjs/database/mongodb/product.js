@@ -14,8 +14,23 @@ const collection_name = env.COLLECTION_PRODUCT_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// List products
-app.get('/products', function (req, res) {
+// Find product name like input data (GET)
+app.get('/products/find', function (req, res) {
+  const search_name = req.query.name;
+  mongoClient.connect(url, function (error, database) {
+    if (error) throw error;
+    const dbo = database.db(dbname);
+    dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
+      if (error) throw error;
+      res.jsonp(response);
+      setTimeout(() => {
+        database.close()
+      }, 3000);
+    });
+  })
+});
+// List products (GET)
+app.get('/' + collection_name, function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
@@ -31,7 +46,7 @@ app.get('/products', function (req, res) {
   })
 });
 // Add product (POST)
-app.post('/products/add', function (req, res) {
+app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
   const listingQuery = {dbname: req.body.name};
@@ -57,7 +72,7 @@ app.post('/products/add', function (req, res) {
   })
 });
 // Edit product (GET)
-app.get('/products/edit/:id', function (req, res) {
+app.get('/' + collection_name + '/edit/:id', function (req, res) {
   const _id = req.params.id;
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
@@ -72,8 +87,9 @@ app.get('/products/edit/:id', function (req, res) {
   })
 });
 // Update product (POST)
-app.post('/products/edit/:id', function (req, res) {
+app.post('/' + collection_name + '/edit/:id', function (req, res) {
   const listingQuery = {_id: new ObjectId(req.params.id)};
+  console.log(req.body);
   const updates = {
     $set: {
       category_id: req.body.category_id,
@@ -92,6 +108,20 @@ app.post('/products/edit/:id', function (req, res) {
       if (error) throw error;
       console.log('Product updated: ' + JSON.stringify(response));
       res.jsonp(response);
+    });
+  })
+});
+// Delete product (GET)
+app.get('/' + collection_name + '/delete/:id', function (req, res) {
+  const listingQuery = {_id: new ObjectId(req.params.id)};
+  mongoClient.connect(url, function (error, database) {
+    if (error) throw error;
+    const dbo = database.db(dbname);
+    dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
+      if (error) throw error;
+      console.log('Product deleted');
+      res.jsonp(response);
+      database.close();
     });
   })
 });
