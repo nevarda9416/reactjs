@@ -17,6 +17,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
 } from '@coreui/react';
 import {
   cilPencil,
@@ -36,6 +37,7 @@ const Tag = () => {
   const [tagSearch, setTagSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
+  const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
   const token = Math.random().toString(36).substr(2); // remove `0.`
@@ -215,6 +217,21 @@ const Tag = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
+          <CButton onClick={() => setVisible(!visible)}>Launch static backdrop modal</CButton>
+          <CModal visible={visible} onClose={() => setVisible(false)}>
+            <CModalHeader>
+              <CModalTitle>Modal title</CModalTitle>
+            </CModalHeader>
+            <CModalBody>
+              I will not close if you click outside me. Don't even try to press escape key.
+            </CModalBody>
+            <CModalFooter>
+              <CButton color="secondary" onClick={() => setVisible(false)}>
+                Close
+              </CButton>
+              <CButton color="primary">Save changes</CButton>
+            </CModalFooter>
+          </CModal>
           <CFormLabel htmlFor="tagSearchName">Tìm kiếm từ khóa</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
                       placeholder="Vui lòng nhập từ khóa" value={tagSearch.name} required/>
