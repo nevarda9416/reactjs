@@ -41,6 +41,42 @@ const _nav = [
     icon: <CIcon icon={cilListHighPriority} customClassName="nav-icon" />,
   },
   {
+    component: CNavItem,
+    name: 'Danh sách từ khóa',
+    to: '/tags',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Danh sách quản lý',
+    to: '/users',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Thống kê hoạt động',
+    to: '/activities',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Hệ thống',
+    to: '/systems',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'SEO',
+    to: '/seo',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Bình luận',
+    to: '/comments',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
     component: CNavTitle,
     name: 'Dữ liệu',
   },
@@ -49,6 +85,24 @@ const _nav = [
     name: 'Google Trend',
     to: '/google/trend',
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Khách hàng',
+    to: '/customers',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Theo dõi người dùng',
+    to: '/tracking',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Nguồn đăng ký tài khoản',
+    to: '/traffic_sources',
+    icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
 ]
 
