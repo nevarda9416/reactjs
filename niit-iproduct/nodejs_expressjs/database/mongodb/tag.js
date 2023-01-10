@@ -52,13 +52,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
   const listingQuery = {dbname: req.body.name};
   const updates = {
     $set: {
-      category_id: req.body.category_id,
       name: req.body.name,
-      short_description: req.body.short_description,
-      full_description: req.body.full_description,
-      unit: req.body.unit,
-      currency: req.body.currency,
-      price: req.body.price
+      slug: req.body.slug,
+      description: req.body.description
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -92,13 +88,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
   console.log(req.body);
   const updates = {
     $set: {
-      category_id: req.body.category_id,
       name: req.body.name,
-      short_description: req.body.short_description,
-      full_description: req.body.full_description,
-      unit: req.body.unit,
-      currency: req.body.currency,
-      price: req.body.price
+      slug: req.body.slug,
+      description: req.body.description
     }
   };
   mongoClient.connect(url, function (error, database) {

@@ -94,9 +94,14 @@ const Tag = () => {
     );
     setState({...state, editor: editor});
   }, [load]);
-  const changeInput = (value) => {
+  const changeInputName = (value) => {
     setTag({
       name: value
+    })
+  };
+  const changeInputSlug = (value) => {
+    setTag({
+      slug: value
     })
   };
   const changeInputSearch = async (value) => {
@@ -109,11 +114,11 @@ const Tag = () => {
   };
   const changeTextarea = (value) => {
     setTag({
-      full_description: value
+      description: value
     })
   };
   const handleSubmit = (event) => {
-    const form = event.currentTarget;
+    const form = event.target;
     console.log(form);
     if (form.checkValidity() === false) {
       setValidated(true);
@@ -141,6 +146,7 @@ const Tag = () => {
     }
   };
   const editItem = (event, id) => {
+    setVisible(!visible);
     setId(id);
     setAction('edit');
     axios.get(url + ':' + tag_port + '/' + tag_collection + '/edit/' + id)
@@ -196,14 +202,14 @@ const Tag = () => {
               </div>
               {/* slug */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagPrice">Slug</CFormLabel>
-                <CFormInput type="text" id="tagPrice" value={tag.slug}
+                <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
+                <CFormInput type="text" id="tagSlug" value={tag.slug}
                             required/>
               </div>
               {/* description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagShortDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagShortDescription" rows="3" required
+                <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
+                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
                   value={tag.description}/>
               </div>
               <div className="col-auto">
@@ -217,21 +223,6 @@ const Tag = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CButton onClick={() => setVisible(!visible)}>Launch static backdrop modal</CButton>
-          <CModal visible={visible} onClose={() => setVisible(false)}>
-            <CModalHeader>
-              <CModalTitle>Modal title</CModalTitle>
-            </CModalHeader>
-            <CModalBody>
-              I will not close if you click outside me. Don't even try to press escape key.
-            </CModalBody>
-            <CModalFooter>
-              <CButton color="secondary" onClick={() => setVisible(false)}>
-                Close
-              </CButton>
-              <CButton color="primary">Save changes</CButton>
-            </CModalFooter>
-          </CModal>
           <CFormLabel htmlFor="tagSearchName">Tìm kiếm từ khóa</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
                       placeholder="Vui lòng nhập từ khóa" value={tagSearch.name} required/>
@@ -250,6 +241,7 @@ const Tag = () => {
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>
+                  {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm('Delete this tag?')) {
@@ -257,6 +249,48 @@ const Tag = () => {
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
+                <CModal visible={visible} onClose={() => setVisible(false)}>
+                  <CModalHeader>
+                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    <CForm noValidate validated={validated}>
+                      {/* name */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid="Vui lòng nhập Tên từ khóa" id="tagName"
+                                    value={tag.name}
+                                    onChange={(e) => changeInputName(e.target.value)}
+                                    required/>
+                      </div>
+                      {/* slug */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="tagPrice">Slug</CFormLabel>
+                        <CFormInput type="text" id="tagPrice"
+                                    value={tag.slug}
+                                    onChange={(e) => changeInputSlug(e.target.value)}
+                                    required/>
+                      </div>
+                      {/* description */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="tagShortDescription">Mô tả</CFormLabel>
+                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagShortDescription" rows="3"
+                                       value={tag.description}
+                                       onChange={(e) => changeTextarea(e.target.value)}
+                                       required/>
+                      </div>
+                    </CForm>
+                  </CModalBody>
+                  <CModalFooter>
+                    <CButton color="secondary" onClick={() => setVisible(false)}>
+                      Close
+                    </CButton>
+                    <CButton color="primary" onClick={handleSubmit}>
+                      Lưu
+                    </CButton>
+                  </CModalFooter>
+                </CModal>
               </CTableRow>
             ))}
           </CTableBody>
