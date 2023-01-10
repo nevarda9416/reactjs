@@ -1,5 +1,8 @@
 import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
+import Button from "@coreui/coreui/js/src/button";
+import Modal from "@coreui/coreui/js/src/modal";
+
 import {
   CCard,
   CCardBody,
@@ -70,9 +73,9 @@ const Tag = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      const dataP = await axios.get(url + ':' + tag_port + '/' + tag_collection);
-      const dataJP = await dataP.data;
-      setData(dataJP);
+      const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+      const dataJ = await data.data;
+      setData(dataJ);
     };
     getData();
     const editor = (
@@ -119,7 +122,7 @@ const Tag = () => {
   };
   const handleSubmit = (event) => {
     const form = event.target;
-    console.log(form);
+    console.log(form.tagName.value);
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
@@ -133,7 +136,6 @@ const Tag = () => {
       if (action === 'edit') {
         console.log(tag);
         edit(id, tag, config);
-        loadData();
       } else {
         axios.post(url + ':' + tag_port + '/' + tag_collection + '/add', tag, config)
           .then(res => {
@@ -144,6 +146,7 @@ const Tag = () => {
           .catch(error => console.log(error));
       }
     }
+    loadData();
   };
   const editItem = (event, id) => {
     setVisible(!visible);
@@ -197,7 +200,7 @@ const Tag = () => {
               <div className="mb-3">
                 <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập Tên từ khóa" id="tagName" value={tag.name}
+                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName" value={tag.name}
                             required/>
               </div>
               {/* slug */}
@@ -210,7 +213,7 @@ const Tag = () => {
               <div className="mb-3">
                 <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
                 <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
-                  value={tag.description}/>
+                value={tag.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -249,33 +252,34 @@ const Tag = () => {
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
-                <CModal visible={visible} onClose={() => setVisible(false)}>
+                <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
                     <CModalTitle>Sửa từ khóa</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <CForm noValidate validated={validated}>
+                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'myForm'}>
                       {/* name */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập Tên từ khóa" id="tagName"
+                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName"
                                     value={tag.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>
                       </div>
                       {/* slug */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagPrice">Slug</CFormLabel>
-                        <CFormInput type="text" id="tagPrice"
+                        <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid="Vui lòng nhập slug" id="tagSlug"
                                     value={tag.slug}
                                     onChange={(e) => changeInputSlug(e.target.value)}
                                     required/>
                       </div>
                       {/* description */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagShortDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagShortDescription" rows="3"
+                        <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
+                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3"
                                        value={tag.description}
                                        onChange={(e) => changeTextarea(e.target.value)}
                                        required/>
@@ -283,10 +287,10 @@ const Tag = () => {
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
-                    <CButton color="secondary" onClick={() => setVisible(false)}>
+                    <CButton color="secondary" onClick={() => {setVisible(false); loadData()}}>
                       Close
                     </CButton>
-                    <CButton color="primary" onClick={handleSubmit}>
+                    <CButton color="primary" type="submit" form={'myForm'}>
                       Lưu
                     </CButton>
                   </CModalFooter>
