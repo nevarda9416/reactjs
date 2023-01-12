@@ -122,7 +122,7 @@ const Tag = () => {
   };
   const handleSubmit = (event) => {
     const form = event.target;
-    console.log(form.tagName.value);
+    console.log(form);
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
@@ -213,7 +213,7 @@ const Tag = () => {
               <div className="mb-3">
                 <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
                 <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
-                value={tag.description}/>
+                  value={tag.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -257,7 +257,7 @@ const Tag = () => {
                     <CModalTitle>Sửa từ khóa</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'myForm'}>
+                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'tagForm'}>
                       {/* name */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
@@ -287,10 +287,10 @@ const Tag = () => {
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
-                    <CButton color="secondary" onClick={() => {setVisible(false); loadData()}}>
+                    <CButton color="secondary" onClick={() => {setVisible(false);}}>
                       Close
                     </CButton>
-                    <CButton color="primary" type="submit" form={'myForm'}>
+                    <CButton color="primary" type="submit" form={'tagForm'}>
                       Lưu
                     </CButton>
                   </CModalFooter>
