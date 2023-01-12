@@ -131,19 +131,13 @@ const Product = () => {
         price: form.productPrice.value
       };
       console.log(action);
+      console.log(product);
       if (action === 'edit') {
-        console.log(product);
         edit(id, product, config);
-        loadData();
       } else {
-        axios.post(url + ':' + product_port + '/products/add', product, config)
-          .then(res => {
-            console.log(res);
-            loadData();
-            return res;
-          })
-          .catch(error => console.log(error));
+        create(product, config);
       }
+      loadData();
     }
   };
   const editItem = (event, id) => {

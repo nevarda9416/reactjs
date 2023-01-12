@@ -123,12 +123,11 @@ const Category = () => {
       console.log(action);
       if (action === 'edit') {
         update(id, category, config);
-        loadData();
       } else {
         create(category, config);
-        loadData();
       }
     }
+    loadData();
   };
   const editItem = (event, id) => {
     setId(id);

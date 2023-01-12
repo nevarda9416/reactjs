@@ -133,17 +133,11 @@ const Tag = () => {
         description: form.tagDescription.value
       };
       console.log(action);
+      console.log(tag);
       if (action === 'edit') {
-        console.log(tag);
         edit(id, tag, config);
       } else {
-        axios.post(url + ':' + tag_port + '/' + tag_collection + '/add', tag, config)
-          .then(res => {
-            console.log(res);
-            loadData();
-            return res;
-          })
-          .catch(error => console.log(error));
+        create(tag, config);
       }
     }
     loadData();
