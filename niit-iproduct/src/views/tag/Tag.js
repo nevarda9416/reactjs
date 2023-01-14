@@ -1,7 +1,5 @@
 import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
-import Button from "@coreui/coreui/js/src/button";
-import Modal from "@coreui/coreui/js/src/modal";
 
 import {
   CCard,
