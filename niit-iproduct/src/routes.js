@@ -37,8 +37,8 @@ const routes = [
   { path: '/systems/:action/:id', name: 'Hệ thống', element: System },
   { path: '/seo', name: 'SEO', element: SEO },
   { path: '/seo/:action/:id', name: 'SEO', element: SEO },
-  { path: '/comment', name: 'Bình luận', element: Comment },
-  { path: '/comment/:action/:id', name: 'Bình luận', element: Comment },
+  { path: '/comments', name: 'Bình luận', element: Comment },
+  { path: '/comments/:action/:id', name: 'Bình luận', element: Comment },
   { path: '/google/trend', name: 'Google Trend', element: GoogleTrend }
 ];
 
