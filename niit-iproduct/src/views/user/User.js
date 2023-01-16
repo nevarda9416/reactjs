@@ -28,14 +28,14 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {create, edit, deleteById} from "../../services/API/Tag/TagClient";
+import {create, edit, deleteById} from "../../services/API/User/UserClient";
 
 const url = process.env.REACT_APP_URL;
-const tag_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TAG_CRUD_DATA;
-const tag_collection = process.env.REACT_APP_COLLECTION_MONGO_TAG_NAME;
+const user_port = process.env.REACT_APP_PORT_DATABASE_MONGO_USER_CRUD_DATA;
+const user_collection = process.env.REACT_APP_COLLECTION_MONGO_USER_NAME;
 const User = () => {
   const [validated, setValidated] = useState(false);
-  const [tagSearch, setTagSearch] = useState({hits: []});
+  const [userSearch, setUserSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
   const [visible, setVisible] = useState(false);
@@ -49,21 +49,21 @@ const User = () => {
     editor: null
   });
   const loadData = async () => {
-    const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+    const data = await axios.get(url + ':' + user_port + '/' + user_collection);
     const dataJ = await data.data;
     setData(dataJ);
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
-  const [tag, setTag] = useState([]);
+  const [user, setUser] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [tagPerPage] = useState(LIMIT);
-  const lastTag = number * tagPerPage;
-  const firstTag = lastTag - tagPerPage;
-  const currentData = data.slice(firstTag, lastTag);
+  const [userPerPage] = useState(LIMIT);
+  const lastUser = number * userPerPage;
+  const firstUser = lastUser - userPerPage;
+  const currentData = data.slice(firstUser, lastUser);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(tag.length / tagPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(user.length / userPerPage); i++) {
     pageNumber.push(i);
   }
   const changePage = (pageNumber) => {
@@ -71,7 +71,7 @@ const User = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+      const data = await axios.get(url + ':' + user_port + '/' + user_collection);
       const dataJ = await data.data;
       setData(dataJ);
     };
@@ -96,25 +96,25 @@ const User = () => {
     setState({...state, editor: editor});
   }, [load]);
   const changeInputName = (value) => {
-    setTag({
+    setUser({
       name: value
     })
   };
   const changeInputSlug = (value) => {
-    setTag({
+    setUser({
       slug: value
     })
   };
   const changeInputSearch = async (value) => {
-    setTagSearch({
+    setUserSearch({
       name: value
     });
-    const data = await axios.get(url + ':' + tag_port + '/' + tag_collection + '/find?name=' + value);
+    const data = await axios.get(url + ':' + user_port + '/' + user_collection + '/find?name=' + value);
     const dataJ = await data.data;
     setData(dataJ);
   };
   const changeTextarea = (value) => {
-    setTag({
+    setUser({
       description: value
     })
   };
@@ -125,17 +125,17 @@ const User = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const tag = {
-        name: form.tagName.value,
-        slug: form.tagSlug.value,
-        description: form.tagDescription.value
+      const user = {
+        name: form.userName.value,
+        slug: form.userSlug.value,
+        description: form.userDescription.value
       };
       console.log(action);
-      console.log(tag);
+      console.log(user);
       if (action === 'edit') {
-        edit(id, tag, config);
+        edit(id, user, config);
       } else {
-        create(tag, config);
+        create(user, config);
       }
     }
     loadData();
@@ -144,9 +144,9 @@ const User = () => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
-    axios.get(url + ':' + tag_port + '/' + tag_collection + '/edit/' + id)
+    axios.get(url + ':' + user_port + '/' + user_collection + '/edit/' + id)
       .then(res => {
-        setTag(res.data);
+        setUser(res.data);
         const editor = (
           <CKEditor
             editor={ClassicEditor}
@@ -190,22 +190,22 @@ const User = () => {
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="userName">Tên từ khóa</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName" value={tag.name}
+                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="userName" value={user.name}
                             required/>
               </div>
               {/* slug */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="tagSlug" value={tag.slug}
+                <CFormLabel htmlFor="userSlug">Slug</CFormLabel>
+                <CFormInput type="text" id="userSlug" value={user.slug}
                             required/>
               </div>
               {/* description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
-                               value={tag.description}/>
+                <CFormLabel htmlFor="userDescription">Mô tả</CFormLabel>
+                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="userDescription" rows="3" required
+                               value={user.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -218,9 +218,9 @@ const User = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="tagSearchName">Tìm kiếm từ khóa</CFormLabel>
-          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={tagSearch.name} required/>
+          <CFormLabel htmlFor="userSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="userSearchName"
+                      placeholder="Vui lòng nhập từ khóa" value={userSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
@@ -239,7 +239,7 @@ const User = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this tag?')) {
+                    if (window.confirm('Delete this user?')) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
@@ -249,30 +249,30 @@ const User = () => {
                     <CModalTitle>Sửa từ khóa</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'tagForm'}>
+                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'userForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="userName">Tên từ khóa</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName"
-                                    value={tag.name}
+                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="userName"
+                                    value={user.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>
                       </div>
                       {/* slug */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
+                        <CFormLabel htmlFor="userSlug">Slug</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="tagSlug"
-                                    value={tag.slug}
+                                    feedbackInvalid="Vui lòng nhập slug" id="userSlug"
+                                    value={user.slug}
                                     onChange={(e) => changeInputSlug(e.target.value)}
                                     required/>
                       </div>
                       {/* description */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3"
-                                       value={tag.description}
+                        <CFormLabel htmlFor="userDescription">Mô tả</CFormLabel>
+                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="userDescription" rows="3"
+                                       value={user.description}
                                        onChange={(e) => changeTextarea(e.target.value)}
                                        required/>
                       </div>
@@ -282,7 +282,7 @@ const User = () => {
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
                       Close
                     </CButton>
-                    <CButton color="primary" type="submit" form={'tagForm'}>
+                    <CButton color="primary" type="submit" form={'userForm'}>
                       Lưu
                     </CButton>
                   </CModalFooter>
