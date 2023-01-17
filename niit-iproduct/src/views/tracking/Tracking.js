@@ -28,14 +28,14 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {create, edit, deleteById} from "../../services/API/Tag/TagClient";
+import {create, edit, deleteById} from "../../services/API/Tracking/TrackingClient";
 
 const url = process.env.REACT_APP_URL;
-const tag_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TAG_CRUD_DATA;
-const tag_collection = process.env.REACT_APP_COLLECTION_MONGO_TAG_NAME;
+const tracking_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TRACKING_CRUD_DATA;
+const tracking_collection = process.env.REACT_APP_COLLECTION_MONGO_TRACKING_NAME;
 const Tracking = () => {
   const [validated, setValidated] = useState(false);
-  const [tagSearch, setTagSearch] = useState({hits: []});
+  const [trackingSearch, setTrackingSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
   const [visible, setVisible] = useState(false);
@@ -49,21 +49,21 @@ const Tracking = () => {
     editor: null
   });
   const loadData = async () => {
-    const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+    const data = await axios.get(url + ':' + tracking_port + '/' + tracking_collection);
     const dataJ = await data.data;
     setData(dataJ);
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
-  const [tag, setTag] = useState([]);
+  const [tracking, setTracking] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [tagPerPage] = useState(LIMIT);
-  const lastTag = number * tagPerPage;
-  const firstTag = lastTag - tagPerPage;
-  const currentData = data.slice(firstTag, lastTag);
+  const [trackingPerPage] = useState(LIMIT);
+  const lastTracking = number * trackingPerPage;
+  const firstTracking = lastTracking - trackingPerPage;
+  const currentData = data.slice(firstTracking, lastTracking);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(tag.length / tagPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(tracking.length / trackingPerPage); i++) {
     pageNumber.push(i);
   }
   const changePage = (pageNumber) => {
@@ -71,7 +71,7 @@ const Tracking = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+      const data = await axios.get(url + ':' + tracking_port + '/' + tracking_collection);
       const dataJ = await data.data;
       setData(dataJ);
     };
@@ -96,25 +96,25 @@ const Tracking = () => {
     setState({...state, editor: editor});
   }, [load]);
   const changeInputName = (value) => {
-    setTag({
+    setTracking({
       name: value
     })
   };
   const changeInputSlug = (value) => {
-    setTag({
+    setTracking({
       slug: value
     })
   };
   const changeInputSearch = async (value) => {
-    setTagSearch({
+    setTrackingSearch({
       name: value
     });
-    const data = await axios.get(url + ':' + tag_port + '/' + tag_collection + '/find?name=' + value);
+    const data = await axios.get(url + ':' + tracking_port + '/' + tracking_collection + '/find?name=' + value);
     const dataJ = await data.data;
     setData(dataJ);
   };
   const changeTextarea = (value) => {
-    setTag({
+    setTracking({
       description: value
     })
   };
@@ -125,17 +125,17 @@ const Tracking = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const tag = {
-        name: form.tagName.value,
-        slug: form.tagSlug.value,
-        description: form.tagDescription.value
+      const tracking = {
+        name: form.trackingName.value,
+        slug: form.trackingSlug.value,
+        description: form.trackingDescription.value
       };
       console.log(action);
-      console.log(tag);
+      console.log(tracking);
       if (action === 'edit') {
-        edit(id, tag, config);
+        edit(id, tracking, config);
       } else {
-        create(tag, config);
+        create(tracking, config);
       }
     }
     loadData();
@@ -144,9 +144,9 @@ const Tracking = () => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
-    axios.get(url + ':' + tag_port + '/' + tag_collection + '/edit/' + id)
+    axios.get(url + ':' + tracking_port + '/' + tracking_collection + '/edit/' + id)
       .then(res => {
-        setTag(res.data);
+        setTracking(res.data);
         const editor = (
           <CKEditor
             editor={ClassicEditor}
@@ -190,22 +190,22 @@ const Tracking = () => {
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="trackingName">Tên từ khóa</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName" value={tag.name}
+                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="trackingName" value={tracking.name}
                             required/>
               </div>
               {/* slug */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="tagSlug" value={tag.slug}
+                <CFormLabel htmlFor="trackingSlug">Slug</CFormLabel>
+                <CFormInput type="text" id="trackingSlug" value={tracking.slug}
                             required/>
               </div>
               {/* description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
-                               value={tag.description}/>
+                <CFormLabel htmlFor="trackingDescription">Mô tả</CFormLabel>
+                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trackingDescription" rows="3" required
+                               value={tracking.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -218,9 +218,9 @@ const Tracking = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="tagSearchName">Tìm kiếm từ khóa</CFormLabel>
-          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={tagSearch.name} required/>
+          <CFormLabel htmlFor="trackingSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trackingSearchName"
+                      placeholder="Vui lòng nhập từ khóa" value={trackingSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
@@ -239,7 +239,7 @@ const Tracking = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this tag?')) {
+                    if (window.confirm('Delete this tracking?')) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
@@ -249,30 +249,30 @@ const Tracking = () => {
                     <CModalTitle>Sửa từ khóa</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'tagForm'}>
+                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trackingForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="trackingName">Tên từ khóa</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName"
-                                    value={tag.name}
+                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="trackingName"
+                                    value={tracking.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>
                       </div>
                       {/* slug */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
+                        <CFormLabel htmlFor="trackingSlug">Slug</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="tagSlug"
-                                    value={tag.slug}
+                                    feedbackInvalid="Vui lòng nhập slug" id="trackingSlug"
+                                    value={tracking.slug}
                                     onChange={(e) => changeInputSlug(e.target.value)}
                                     required/>
                       </div>
                       {/* description */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3"
-                                       value={tag.description}
+                        <CFormLabel htmlFor="trackingDescription">Mô tả</CFormLabel>
+                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trackingDescription" rows="3"
+                                       value={tracking.description}
                                        onChange={(e) => changeTextarea(e.target.value)}
                                        required/>
                       </div>
@@ -282,7 +282,7 @@ const Tracking = () => {
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
                       Close
                     </CButton>
-                    <CButton color="primary" type="submit" form={'tagForm'}>
+                    <CButton color="primary" type="submit" form={'trackingForm'}>
                       Lưu
                     </CButton>
                   </CModalFooter>
