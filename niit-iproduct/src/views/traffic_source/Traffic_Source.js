@@ -28,14 +28,14 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {create, edit, deleteById} from "../../services/API/Tag/TagClient";
+import {create, edit, deleteById} from "../../services/API/TrafficSource/TrafficSourceClient";
 
 const url = process.env.REACT_APP_URL;
-const tag_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TAG_CRUD_DATA;
-const tag_collection = process.env.REACT_APP_COLLECTION_MONGO_TAG_NAME;
+const trafficSource_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TRAFFIC_SOURCE_CRUD_DATA;
+const trafficSource_collection = process.env.REACT_APP_COLLECTION_MONGO_TRAFFIC_SOURCE_NAME;
 const Traffic_Source = () => {
   const [validated, setValidated] = useState(false);
-  const [tagSearch, setTagSearch] = useState({hits: []});
+  const [trafficSourceSearch, setTrafficSourceSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
   const [visible, setVisible] = useState(false);
@@ -49,21 +49,21 @@ const Traffic_Source = () => {
     editor: null
   });
   const loadData = async () => {
-    const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+    const data = await axios.get(url + ':' + trafficSource_port + '/' + trafficSource_collection);
     const dataJ = await data.data;
     setData(dataJ);
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
-  const [tag, setTag] = useState([]);
+  const [trafficSource, setTrafficSource] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [tagPerPage] = useState(LIMIT);
-  const lastTag = number * tagPerPage;
-  const firstTag = lastTag - tagPerPage;
-  const currentData = data.slice(firstTag, lastTag);
+  const [trafficSourcePerPage] = useState(LIMIT);
+  const lastTrafficSource = number * trafficSourcePerPage;
+  const firstTrafficSource = lastTrafficSource - trafficSourcePerPage;
+  const currentData = data.slice(firstTrafficSource, lastTrafficSource);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(tag.length / tagPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(trafficSource.length / trafficSourcePerPage); i++) {
     pageNumber.push(i);
   }
   const changePage = (pageNumber) => {
@@ -71,7 +71,7 @@ const Traffic_Source = () => {
   };
   useEffect(() => {
     const getData = async () => {
-      const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+      const data = await axios.get(url + ':' + trafficSource_port + '/' + trafficSource_collection);
       const dataJ = await data.data;
       setData(dataJ);
     };
@@ -96,25 +96,25 @@ const Traffic_Source = () => {
     setState({...state, editor: editor});
   }, [load]);
   const changeInputName = (value) => {
-    setTag({
+    setTrafficSource({
       name: value
     })
   };
   const changeInputSlug = (value) => {
-    setTag({
+    setTrafficSource({
       slug: value
     })
   };
   const changeInputSearch = async (value) => {
-    setTagSearch({
+    setTrafficSourceSearch({
       name: value
     });
-    const data = await axios.get(url + ':' + tag_port + '/' + tag_collection + '/find?name=' + value);
+    const data = await axios.get(url + ':' + trafficSource_port + '/' + trafficSource_collection + '/find?name=' + value);
     const dataJ = await data.data;
     setData(dataJ);
   };
   const changeTextarea = (value) => {
-    setTag({
+    setTrafficSource({
       description: value
     })
   };
@@ -125,17 +125,17 @@ const Traffic_Source = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const tag = {
-        name: form.tagName.value,
-        slug: form.tagSlug.value,
-        description: form.tagDescription.value
+      const trafficSource = {
+        name: form.trafficSourceName.value,
+        slug: form.trafficSourceSlug.value,
+        description: form.trafficSourceDescription.value
       };
       console.log(action);
-      console.log(tag);
+      console.log(trafficSource);
       if (action === 'edit') {
-        edit(id, tag, config);
+        edit(id, trafficSource, config);
       } else {
-        create(tag, config);
+        create(trafficSource, config);
       }
     }
     loadData();
@@ -144,9 +144,9 @@ const Traffic_Source = () => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
-    axios.get(url + ':' + tag_port + '/' + tag_collection + '/edit/' + id)
+    axios.get(url + ':' + trafficSource_port + '/' + trafficSource_collection + '/edit/' + id)
       .then(res => {
-        setTag(res.data);
+        setTrafficSource(res.data);
         const editor = (
           <CKEditor
             editor={ClassicEditor}
@@ -190,22 +190,22 @@ const Traffic_Source = () => {
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="trafficSourceName">Tên từ khóa</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName" value={tag.name}
+                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="trafficSourceName" value={trafficSource.name}
                             required/>
               </div>
               {/* slug */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="tagSlug" value={tag.slug}
+                <CFormLabel htmlFor="trafficSourceSlug">Slug</CFormLabel>
+                <CFormInput type="text" id="trafficSourceSlug" value={trafficSource.slug}
                             required/>
               </div>
               {/* description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
-                               value={tag.description}/>
+                <CFormLabel htmlFor="trafficSourceDescription">Mô tả</CFormLabel>
+                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trafficSourceDescription" rows="3" required
+                               value={trafficSource.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -218,9 +218,9 @@ const Traffic_Source = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="tagSearchName">Tìm kiếm từ khóa</CFormLabel>
-          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={tagSearch.name} required/>
+          <CFormLabel htmlFor="trafficSourceSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trafficSourceSearchName"
+                      placeholder="Vui lòng nhập từ khóa" value={trafficSourceSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
@@ -239,7 +239,7 @@ const Traffic_Source = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this tag?')) {
+                    if (window.confirm('Delete this trafficSource?')) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
@@ -249,30 +249,30 @@ const Traffic_Source = () => {
                     <CModalTitle>Sửa từ khóa</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
-                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'tagForm'}>
+                    <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trafficSourceForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="trafficSourceName">Tên từ khóa</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName"
-                                    value={tag.name}
+                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="trafficSourceName"
+                                    value={trafficSource.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>
                       </div>
                       {/* slug */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
+                        <CFormLabel htmlFor="trafficSourceSlug">Slug</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="tagSlug"
-                                    value={tag.slug}
+                                    feedbackInvalid="Vui lòng nhập slug" id="trafficSourceSlug"
+                                    value={trafficSource.slug}
                                     onChange={(e) => changeInputSlug(e.target.value)}
                                     required/>
                       </div>
                       {/* description */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3"
-                                       value={tag.description}
+                        <CFormLabel htmlFor="trafficSourceDescription">Mô tả</CFormLabel>
+                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trafficSourceDescription" rows="3"
+                                       value={trafficSource.description}
                                        onChange={(e) => changeTextarea(e.target.value)}
                                        required/>
                       </div>
@@ -282,7 +282,7 @@ const Traffic_Source = () => {
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
                       Close
                     </CButton>
-                    <CButton color="primary" type="submit" form={'tagForm'}>
+                    <CButton color="primary" type="submit" form={'trafficSourceForm'}>
                       Lưu
                     </CButton>
                   </CModalFooter>
