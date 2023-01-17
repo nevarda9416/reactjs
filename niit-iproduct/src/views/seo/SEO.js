@@ -184,15 +184,15 @@ const SEO = () => {
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới từ khóa</strong>
+            <strong>Thêm mới meta seo</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="seoName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="seoName">Tên meta seo</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="seoName" value={seo.name}
+                            feedbackInvalid="Vui lòng nhập tên meta seo" id="seoName" value={seo.name}
                             required/>
               </div>
               {/* slug */}
@@ -218,15 +218,15 @@ const SEO = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="seoSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormLabel htmlFor="seoSearchName">Tìm kiếm meta seo</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="seoSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={seoSearch.name} required/>
+                      placeholder="Vui lòng nhập meta seo" value={seoSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Meta title</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -234,7 +234,7 @@ const SEO = () => {
             {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
-                <CTableDataCell>{item.name}</CTableDataCell>
+                <CTableDataCell>{item.meta_title}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
@@ -246,15 +246,15 @@ const SEO = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                    <CModalTitle>Sửa meta seo</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'seoForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="seoName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="seoName">Tên meta seo</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="seoName"
+                                    feedbackInvalid="Vui lòng nhập tên meta seo" id="seoName"
                                     value={seo.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>

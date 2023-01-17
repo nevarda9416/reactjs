@@ -184,15 +184,15 @@ const Traffic_Source = () => {
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới từ khóa</strong>
+            <strong>Thêm mới nguồn đăng ký tài khoản</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="trafficSourceName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="trafficSourceName">Tên nguồn đăng ký tài khoản</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="trafficSourceName" value={trafficSource.name}
+                            feedbackInvalid="Vui lòng nhập tên nguồn đăng ký tài khoản" id="trafficSourceName" value={trafficSource.name}
                             required/>
               </div>
               {/* slug */}
@@ -218,15 +218,15 @@ const Traffic_Source = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="trafficSourceSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormLabel htmlFor="trafficSourceSearchName">Tìm kiếm nguồn đăng ký tài khoản</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trafficSourceSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={trafficSourceSearch.name} required/>
+                      placeholder="Vui lòng nhập nguồn đăng ký tài khoản" value={trafficSourceSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Source</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -234,7 +234,7 @@ const Traffic_Source = () => {
             {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
-                <CTableDataCell>{item.name}</CTableDataCell>
+                <CTableDataCell>{item.register_source}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
@@ -246,15 +246,15 @@ const Traffic_Source = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                    <CModalTitle>Sửa nguồn đăng ký tài khoản</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trafficSourceForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trafficSourceName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="trafficSourceName">Tên nguồn đăng ký tài khoản</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="trafficSourceName"
+                                    feedbackInvalid="Vui lòng nhập tên nguồn đăng ký tài khoản" id="trafficSourceName"
                                     value={trafficSource.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>

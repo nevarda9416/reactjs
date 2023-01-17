@@ -184,15 +184,15 @@ const Tracking = () => {
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới từ khóa</strong>
+            <strong>Thêm mới tracking</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="trackingName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="trackingName">Tên tracking</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="trackingName" value={tracking.name}
+                            feedbackInvalid="Vui lòng nhập tên tracking" id="trackingName" value={tracking.name}
                             required/>
               </div>
               {/* slug */}
@@ -218,15 +218,15 @@ const Tracking = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="trackingSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormLabel htmlFor="trackingSearchName">Tìm kiếm tracking</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trackingSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={trackingSearch.name} required/>
+                      placeholder="Vui lòng nhập tracking" value={trackingSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Từ khóa tìm kiếm</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -234,7 +234,7 @@ const Tracking = () => {
             {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
-                <CTableDataCell>{item.name}</CTableDataCell>
+                <CTableDataCell>{item.keyword}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
@@ -246,15 +246,15 @@ const Tracking = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                    <CModalTitle>Sửa tracking</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trackingForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trackingName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="trackingName">Tên tracking</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="trackingName"
+                                    feedbackInvalid="Vui lòng nhập tên tracking" id="trackingName"
                                     value={tracking.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>

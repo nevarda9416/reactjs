@@ -184,15 +184,15 @@ const User = () => {
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới từ khóa</strong>
+            <strong>Thêm mới người quản lý</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="userName">Tên người quản lý</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="userName" value={user.name}
+                            feedbackInvalid="Vui lòng nhập tên người quản lý" id="userName" value={user.name}
                             required/>
               </div>
               {/* slug */}
@@ -218,15 +218,15 @@ const User = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="userSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormLabel htmlFor="userSearchName">Tìm kiếm người quản lý</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="userSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={userSearch.name} required/>
+                      placeholder="Vui lòng nhập người quản lý" value={userSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
               <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Email</CTableHeaderCell>
               <CTableHeaderCell scope="col">Action</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -234,7 +234,7 @@ const User = () => {
             {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
-                <CTableDataCell>{item.name}</CTableDataCell>
+                <CTableDataCell>{item.email}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
@@ -246,15 +246,15 @@ const User = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                    <CModalTitle>Sửa người quản lý</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'userForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="userName">Tên người quản lý</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="userName"
+                                    feedbackInvalid="Vui lòng nhập tên người quản lý" id="userName"
                                     value={user.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>

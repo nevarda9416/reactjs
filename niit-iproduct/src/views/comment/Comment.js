@@ -184,15 +184,15 @@ const Comment = () => {
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới từ khóa</strong>
+            <strong>Thêm mới bình luận</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="commentName">Tên từ khóa</CFormLabel>
+                <CFormLabel htmlFor="commentName">Tên bình luận</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="commentName" value={comment.name}
+                            feedbackInvalid="Vui lòng nhập tên bình luận" id="commentName" value={comment.name}
                             required/>
               </div>
               {/* slug */}
@@ -218,9 +218,9 @@ const Comment = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="commentSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormLabel htmlFor="commentSearchName">Tìm kiếm bình luận</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="commentSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={commentSearch.name} required/>
+                      placeholder="Vui lòng nhập bình luận" value={commentSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
@@ -234,7 +234,7 @@ const Comment = () => {
             {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
-                <CTableDataCell>{item.name}</CTableDataCell>
+                <CTableDataCell>{item.content}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
@@ -246,15 +246,15 @@ const Comment = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                    <CModalTitle>Sửa bình luận</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'commentForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="commentName">Tên từ khóa</CFormLabel>
+                        <CFormLabel htmlFor="commentName">Tên bình luận</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="commentName"
+                                    feedbackInvalid="Vui lòng nhập tên bình luận" id="commentName"
                                     value={comment.name}
                                     onChange={(e) => changeInputName(e.target.value)}
                                     required/>

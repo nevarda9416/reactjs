@@ -48,7 +48,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Danh sách quản lý',
+    name: 'Danh sách người quản lý',
     to: '/users',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
@@ -95,7 +95,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Theo dõi người dùng',
-    to: '/tracking',
+    to: '/trackings',
     icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
   },
   {
