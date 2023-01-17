@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "concurrently \"node database/mongodb/user.js\" \"node database/mongodb/category.js\" \"node database/mongodb/product.js\"  \"node database/mongodb/tag.js\"  \"node database/mongodb/activity.js\"  \"node database/mongodb/system.js\"  \"node database/mongodb/seo.js\"  \"node database/mongodb/comment.js\""
+    "start": "concurrently \"node database/mongodb/user.js\" \"node database/mongodb/category.js\" \"node database/mongodb/product.js\"  \"node database/mongodb/tag.js\"  \"node database/mongodb/activity.js\"  \"node database/mongodb/system.js\"  \"node database/mongodb/seo.js\"  \"node database/mongodb/comment.js\"  \"node database/mongodb/customer.js\""
   },
   "repository": {
     "type": "git",
