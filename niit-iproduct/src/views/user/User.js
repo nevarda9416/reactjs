@@ -188,17 +188,32 @@ const User = () => {
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
+              {/* fullname */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userName">Tên người quản lý</CFormLabel>
+                <CFormLabel htmlFor="userFullName">Họ và tên</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên người quản lý" id="userName" value={user.name}
+                            feedbackInvalid="Vui lòng nhập họ và tên" id="userFullName" value={user.fullname}
                             required/>
               </div>
-              {/* slug */}
+              {/* email */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="userSlug" value={user.slug}
+                <CFormLabel htmlFor="userEmail">Email</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid="Vui lòng nhập email" id="userEmail" value={user.email}
+                            required/>
+              </div>
+              {/* username */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="userName">Username</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid="Vui lòng nhập tên tài khoản" id="userName" value={user.username}
+                            required/>
+              </div>
+              {/* password */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="userPassword">Password</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid="Vui lòng nhập mật khẩu" id="userPassword" value={user.password}
                             required/>
               </div>
               {/* description */}
