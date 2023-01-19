@@ -241,6 +241,7 @@ app.get('/data/create', function (req, res) {
         $set: {
           fullname: value.fullname,
           email: value.email,
+          username: value.username,
           password: value.password,
           remember_token: value.remember_token,
           refresh_token: value.refresh_token,

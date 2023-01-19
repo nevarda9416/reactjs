@@ -1,4 +1,4 @@
-import {React, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
 
 import {
@@ -126,9 +126,11 @@ const User = () => {
     } else {
       setValidated(false);
       const user = {
-        name: form.userName.value,
-        slug: form.userSlug.value,
-        description: form.userDescription.value
+        fullname: form.userFullName.value,
+        email: form.userEmail.value,
+        username: form.userName.value,
+        password: form.userPassword.value,
+        department: form.userDepartment.value,
       };
       console.log(action);
       console.log(user);
@@ -216,11 +218,12 @@ const User = () => {
                             feedbackInvalid="Vui lòng nhập mật khẩu" id="userPassword" value={user.password}
                             required/>
               </div>
-              {/* description */}
+              {/* department */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="userDescription" rows="3" required
-                               value={user.description}/>
+                <CFormLabel htmlFor="userDepartment">Phòng ban</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid="Vui lòng nhập phòng ban" id="userDepartment" value={user.department}
+                            required/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -235,7 +238,7 @@ const User = () => {
         <div className="mb-3">
           <CFormLabel htmlFor="userSearchName">Tìm kiếm người quản lý</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="userSearchName"
-                      placeholder="Vui lòng nhập người quản lý" value={userSearch.name} required/>
+                      placeholder="Vui lòng nhập tên người quản lý" value={userSearch.fullname} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>

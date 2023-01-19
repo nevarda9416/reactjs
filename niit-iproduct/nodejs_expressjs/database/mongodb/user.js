@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectID;
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
 const env = process.env;
@@ -41,9 +42,6 @@ app.get('/' + collection_name + '/find', function (req, res) {
     dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
     });
   })
 });
@@ -54,12 +52,7 @@ app.get('/' + collection_name, function (req, res) {
     const dbo = database.db(dbname);
     dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
-      if (response) {
-        setTimeout(() => {
-          database.close()
-        }, 3000);
-        res.jsonp(response);
-      }
+      res.jsonp(response);
     });
   })
 });
@@ -94,9 +87,6 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
     dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
     });
   })
 });
@@ -131,7 +121,6 @@ app.get('/' + collection_name + '/delete/:id', function (req, res) {
       if (error) throw error;
       console.log('User deleted');
       res.jsonp(response);
-      database.close();
     });
   })
 });
