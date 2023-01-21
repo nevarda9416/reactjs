@@ -268,31 +268,40 @@ const User = () => {
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'userForm'}>
-                      {/* name */}
+                      {/* fullname */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userName">Tên người quản lý</CFormLabel>
+                        <CFormLabel htmlFor="userFullName">Họ và tên</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên người quản lý" id="userName"
-                                    value={user.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
+                                    feedbackInvalid="Vui lòng nhập họ và tên" id="userFullName" value={user.fullname}
                                     required/>
                       </div>
-                      {/* slug */}
+                      {/* email */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userSlug">Slug</CFormLabel>
+                        <CFormLabel htmlFor="userEmail">Email</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="userSlug"
-                                    value={user.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
+                                    feedbackInvalid="Vui lòng nhập email" id="userEmail" value={user.email}
                                     required/>
                       </div>
-                      {/* description */}
+                      {/* username */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="userDescription" rows="3"
-                                       value={user.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="userName">Username</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid="Vui lòng nhập tên tài khoản" id="userName" value={user.username}
+                                    required/>
+                      </div>
+                      {/* password */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="userPassword">Password</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid="Vui lòng nhập mật khẩu" id="userPassword" value={user.password}
+                                    required/>
+                      </div>
+                      {/* department */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="userDepartment">Phòng ban</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid="Vui lòng nhập phòng ban" id="userDepartment" value={user.department}
+                                    required/>
                       </div>
                     </CForm>
                   </CModalBody>
