@@ -5,14 +5,16 @@ import { CContainer, CSpinner, CAlert } from '@coreui/react'
 // routes config
 import routes from '../routes'
 import {useSelector} from "react-redux";
+import {useTranslation} from "react-i18next";
 const AppContent = () => {
+  const [t, i18n] = useTranslation('common');
   const welcome = useSelector((state) => state.welcome);
   return (
     <CContainer lg>
       <CAlert color="success" dismissible onClose={()=>{
         //alert("👋 Well, hi there! Thanks for dismissing me.")
       }}>
-        <strong>{welcome}</strong>
+        <strong>{t('welcome')}</strong>
       </CAlert>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>

@@ -1,0 +1,23 @@
+{
+  "welcome": "Welcome to dashboard!",
+  "home": "Homepage",
+  "btn_save": "Save",
+  "btn_close": "Close",
+  "paginate_previous": "Previous",
+  "paginate_next": "Next",
+  "seo": {
+    "breadcrumb": "SEO",
+    "add_meta": "Add meta seo",
+    "edit_meta": "Edit meta seo",
+    "meta_title": "Meta title",
+    "meta_keyword": "Meta keyword",
+    "meta_description": "Meta description",
+    "validate_input_meta_title": "Please input meta title",
+    "validate_input_meta_keyword": "Please input meta keyword",
+    "validate_input_meta_description": "Please input meta description",
+    "search_meta": "Search meta seo",
+    "column_meta_id": "ID",
+    "column_meta_action": "Action",
+    "confirm_delete": "Delete this seo?"
+  }
+}

@@ -151,7 +151,7 @@ app.get('/data/create', function (req, res) {
       device_type: 'PC',
       source: 'WEB',
       redirect_to_url: null,
-      http_accept_language: 'fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5',
+      http_accept_language: 'fr-CH, fr;q=0.9, en;q=0.8, vi;q=0.7, *;q=0.5',
       http_accept_encoding: 'gzip',
       http_accept: 'text/html, application/xhtml+xml, application/xml;q=0.9, image/webp, */*;q=0.8',
       http_host: 'developer.mozilla.org',
@@ -296,6 +296,7 @@ app.get('/data/create', function (req, res) {
   // 9) List sample systems
   const listSystems = [
     {
+      type: 'default',
       is_actived: 1, // 1: yes, 0: no
       actived_by: 'tudt',
       actived_at: '2022-12-17 01:02:55',

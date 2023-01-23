@@ -1,0 +1,23 @@
+{
+  "welcome": "Chào mừng đến với trang quản trị!",
+  "home": "Trang chủ",
+  "btn_save": "Lưu",
+  "btn_close": "Đóng",
+  "paginate_previous": "Trước",
+  "paginate_next": "Sau",
+  "seo": {
+    "breadcrumb": "SEO",
+    "add_meta": "Thêm mới meta seo",
+    "edit_meta": "Sửa meta seo",
+    "meta_title": "Tiêu đề meta",
+    "meta_keyword": "Từ khóa meta",
+    "meta_description": "Mô tả meta",
+    "validate_input_meta_title": "Vui lòng nhập tiêu đề meta",
+    "validate_input_meta_keyword": "Vui lòng nhập từ khóa meta",
+    "validate_input_meta_description": "Vui lòng nhập mô tả meta",
+    "search_meta": "Tìm kiếm meta seo",
+    "column_meta_id": "ID",
+    "column_meta_action": "Hành động",
+    "confirm_delete": "Xóa seo này?"
+  }
+}

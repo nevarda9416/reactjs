@@ -1,6 +1,6 @@
 import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
-
+import {useTranslation} from "react-i18next";
 import {
   CCard,
   CCardBody,
@@ -179,37 +179,35 @@ const SEO = () => {
     deleteById(id);
     setLoad(1);
   };
+
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới meta seo</strong>
+            <strong>{t('seo.add_meta')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
+              {/* meta_title */}
               <div className="mb-3">
-                <CFormLabel htmlFor="seoName">Tên meta seo</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên meta seo" id="seoName" value={seo.name}
-                            required/>
+                <CFormLabel htmlFor="seoMetaTitle">{t('seo.meta_title')}</CFormLabel>
+                <CFormInput type="text" feedbackInvalid={t('seo.validate_input_meta_title')} id="seoMetaTitle" value={seo.meta_title} required/>
               </div>
-              {/* slug */}
+              {/* meta_keyword */}
               <div className="mb-3">
-                <CFormLabel htmlFor="seoSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="seoSlug" value={seo.slug}
-                            required/>
+                <CFormLabel htmlFor="seoMetaKeyword">{t('seo.meta_keyword')}</CFormLabel>
+                <CFormInput type="text" feedbackInvalid={t('seo.validate_input_meta_keyword')} id="seoMetaKeyword" value={seo.meta_keyword} required/>
               </div>
-              {/* description */}
+              {/* meta_description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="seoDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="seoDescription" rows="3" required
-                               value={seo.description}/>
+                <CFormLabel htmlFor="seoDescription">{t('seo.meta_description')}</CFormLabel>
+                <CFormTextarea feedbackInvalid={t('seo.validate_input_meta_description')} id="seoDescription" rows="3" value={seo.meta_description} required/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -218,16 +216,15 @@ const SEO = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="seoSearchName">Tìm kiếm meta seo</CFormLabel>
-          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="seoSearchName"
-                      placeholder="Vui lòng nhập meta seo" value={seoSearch.name} required/>
+          <CFormLabel htmlFor="seoSearchName">{t('seo.search_meta')}</CFormLabel>
+          <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="seoSearchName" placeholder={t('seo.validate_input_meta_title')} value={seoSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Meta title</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('seo.column_meta_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('seo.meta_title')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('seo.column_meta_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -239,51 +236,40 @@ const SEO = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this seo?')) {
+                    if (window.confirm(t("seo.confirm_delete"))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa meta seo</CModalTitle>
+                    <CModalTitle>{t('seo.edit_meta')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'seoForm'}>
-                      {/* name */}
+                      {/* meta_title */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="seoName">Tên meta seo</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên meta seo" id="seoName"
-                                    value={seo.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="seoMetaTitle">{t('seo.meta_title')}</CFormLabel>
+                        <CFormInput type="text" feedbackInvalid={t('seo.validate_input_meta_title')} id="seoMetaTitle" value={seo.meta_title} required/>
                       </div>
-                      {/* slug */}
+                      {/* meta_keyword */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="seoSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="seoSlug"
-                                    value={seo.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="seoMetaKeyword">{t('seo.meta_keyword')}</CFormLabel>
+                        <CFormInput type="text" feedbackInvalid={t('seo.validate_input_meta_keyword')} id="seoMetaKeyword" value={seo.meta_keyword} required/>
                       </div>
-                      {/* description */}
+                      {/* meta_description */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="seoDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="seoDescription" rows="3"
-                                       value={seo.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="seoDescription">{t('seo.meta_description')}</CFormLabel>
+                        <CFormTextarea feedbackInvalid={t('seo.validate_input_meta_description')} id="seoDescription" rows="3" value={seo.meta_description} required/>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'seoForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -292,24 +278,18 @@ const SEO = () => {
           </CTableBody>
         </CTable>
         <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number - 1)}>
-            Trước
+          <button className="px-3 py-1 m-1 text-center btn-primary" onClick={() => setNumber(number - 1)}>
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
-              <button key={index}
-                      className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => changePage(element)}>
+              <button key={index} className="px-3 py-1 m-1 text-center btn-outline-dark" onClick={() => changePage(element)}>
                 {element}
               </button>
             );
           })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number + 1)}>
-            Sau
+          <button className="px-3 py-1 m-1 text-center btn-primary" onClick={() => setNumber(number + 1)}>
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>

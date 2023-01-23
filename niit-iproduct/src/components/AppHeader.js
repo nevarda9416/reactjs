@@ -12,16 +12,17 @@ import {
   CNavItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
+import {cifGb, cifVn, cilMenu} from '@coreui/icons'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
 import { logo } from 'src/assets/brand/logo'
+import {useTranslation} from "react-i18next";
 
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.sidebarShow)
-
+  const [t, i18n] = useTranslation('common');
   return (
     <CHeader position="sticky" className="mb-4">
       <CContainer fluid>
@@ -38,6 +39,18 @@ const AppHeader = () => {
           <CNavItem>
             <CNavLink to="/dashboard" component={NavLink}>
               Dashboard
+            </CNavLink>
+          </CNavItem>
+        </CHeaderNav>
+        <CHeaderNav>
+          <CNavItem>
+            <CNavLink onClick={() => i18n.changeLanguage('vi')}>
+              <CIcon icon={cifVn} size="lg" />
+            </CNavLink>
+          </CNavItem>
+          <CNavItem>
+            <CNavLink onClick={() => i18n.changeLanguage('en')}>
+              <CIcon icon={cifGb} size="lg" />
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

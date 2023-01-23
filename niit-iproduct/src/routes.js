@@ -35,7 +35,7 @@ const routes = [
   { path: '/activities/:action/:id', name: 'Thống kê hoạt động', element: Activity },
   { path: '/systems', name: 'Hệ thống', element: System },
   { path: '/systems/:action/:id', name: 'Hệ thống', element: System },
-  { path: '/seo', name: 'SEO', element: SEO },
+  { path: '/seo', name: 'seo.breadcrumb', element: SEO },
   { path: '/seo/:action/:id', name: 'SEO', element: SEO },
   { path: '/comments', name: 'Bình luận', element: Comment },
   { path: '/comments/:action/:id', name: 'Bình luận', element: Comment },
