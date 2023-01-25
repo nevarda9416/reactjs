@@ -1,5 +1,7 @@
 import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
+import {useTranslation} from "react-i18next";
+import StarRatingComponent from 'react-star-rating-component';
 
 import {
   CCard,
@@ -18,7 +20,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
+  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CFormSelect
 } from '@coreui/react';
 import {
   cilPencil,
@@ -55,8 +57,8 @@ const Comment = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [comment, setComment] = useState([]);
+  const [rating, setRating] = useState(1);
   const [number, setNumber] = useState(1); // No of pages
   const [commentPerPage] = useState(LIMIT);
   const lastComment = number * commentPerPage;
@@ -179,37 +181,46 @@ const Comment = () => {
     deleteById(id);
     setLoad(1);
   };
+  const onStarClick = (nextValue, prevValue, name) => {
+    setRating(nextValue);
+  };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới bình luận</strong>
+            <strong>{t('comment.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
+              {/* content */}
               <div className="mb-3">
-                <CFormLabel htmlFor="commentName">Tên bình luận</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên bình luận" id="commentName" value={comment.name}
-                            required/>
+                <CFormLabel htmlFor="commentContent">{t('comment.label_content')}</CFormLabel>
+                <CFormTextarea feedbackInvalid={t('comment.validate_input_content')} id="commentContent" rows="3" required value={comment.content}/>
               </div>
-              {/* slug */}
+              {/* status */}
               <div className="mb-3">
-                <CFormLabel htmlFor="commentSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="commentSlug" value={comment.slug}
-                            required/>
+                <CFormLabel htmlFor="commentStatus">{t('comment.label_status')}</CFormLabel>
+                <CFormSelect feedbackInvalid={t('comment.validate_input_status')} id="commentStatus" value={comment.status} required>
+                  <option value='0'>Ẩn</option>
+                  <option value='1'>Hiện</option>
+                </CFormSelect>
               </div>
-              {/* description */}
+              {/* rate */}
               <div className="mb-3">
-                <CFormLabel htmlFor="commentDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="commentDescription" rows="3" required
-                               value={comment.description}/>
+                <CFormLabel htmlFor="commentRate">{t('comment.label_rate')}</CFormLabel><br/>
+                <StarRatingComponent
+                  name='commentRate'
+                  starCount={5}
+                  value={comment.rate}
+                  starColor='#f00'
+                  onStarClick={e => onStarClick(e)}
+                />
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -218,16 +229,16 @@ const Comment = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="commentSearchName">Tìm kiếm bình luận</CFormLabel>
+          <CFormLabel htmlFor="commentSearchName">{t('comment.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="commentSearchName"
-                      placeholder="Vui lòng nhập bình luận" value={commentSearch.name} required/>
+                      placeholder={t('comment.validate_input_content')} value={commentSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('comment.label_content')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -239,51 +250,49 @@ const Comment = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this comment?')) {
+                    if (window.confirm(t('comment.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa bình luận</CModalTitle>
+                    <CModalTitle>{t('comment.edit')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'commentForm'}>
-                      {/* name */}
+                      {/* content */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="commentName">Tên bình luận</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên bình luận" id="commentName"
-                                    value={comment.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="commentContent">{t('comment.label_content')}</CFormLabel>
+                        <CFormTextarea feedbackInvalid="Vui lòng nhập nội dung bình luận" id="commentContent" rows="3" required value={comment.content}/>
                       </div>
-                      {/* slug */}
+                      {/* status */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="commentSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="commentSlug"
-                                    value={comment.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="commentStatus">{t('comment.label_status')}</CFormLabel>
+                        <CFormSelect feedbackInvalid="Vui lòng chọn trạng thái" id="commentStatus" value={comment.status} required>
+                          <option value='0'>Ẩn</option>
+                          <option value='1'>Hiện</option>
+                        </CFormSelect>
                       </div>
-                      {/* description */}
+                      {/* rate */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="commentDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="commentDescription" rows="3"
-                                       value={comment.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="commentRate">{t('comment.label_rate')}</CFormLabel><br/>
+                        <StarRatingComponent
+                          name='commentRate'
+                          starCount={5}
+                          value={comment.rate}
+                          starColor='#f00'
+                          onStarClick={e => onStarClick(e)}
+                        />
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'commentForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -292,11 +301,11 @@ const Comment = () => {
           </CTableBody>
         </CTable>
         <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
+          <CButton
+            className="px-3 py-1 m-1 text-center btn-secondary"
             onClick={() => setNumber(number - 1)}>
-            Trước
-          </button>
+            {t('paginate_previous')}
+          </CButton>
           {pageNumber.map((element, index) => {
             return (
               <button key={index}
@@ -306,11 +315,11 @@ const Comment = () => {
               </button>
             );
           })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
+          <CButton
+            className="px-3 py-1 m-1 text-center btn-secondary"
             onClick={() => setNumber(number + 1)}>
-            Sau
-          </button>
+            {t('paginate_next')}
+          </CButton>
         </div>
       </CCol>
     </CRow>

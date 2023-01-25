@@ -1,8 +1,11 @@
 {
   "welcome": "Welcome to dashboard!",
   "home": "Homepage",
+  "dashboard": "Dashboard",
   "btn_save": "Save",
   "btn_close": "Close",
+  "column_id": "ID",
+  "column_action": "Action",
   "paginate_previous": "Previous",
   "paginate_next": "Next",
   "seo": {
@@ -19,5 +22,17 @@
     "column_meta_id": "ID",
     "column_meta_action": "Action",
     "confirm_delete": "Delete this seo?"
+  },
+  "comment": {
+    "breadcrumb": "Comment",
+    "add": "Add comment",
+    "edit": "Edit comment",
+    "label_content": "Content",
+    "label_status": "Status",
+    "label_rate": "Vote",
+    "validate_input_content": "Please input content",
+    "validate_input_status": "Please input status",
+    "search": "Search comment",
+    "confirm_delete": "Delete this comment?"
   }
 }

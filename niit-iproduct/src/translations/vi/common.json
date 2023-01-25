@@ -1,8 +1,11 @@
 {
   "welcome": "Chào mừng đến với trang quản trị!",
   "home": "Trang chủ",
+  "dashboard": "Bảng điều khiển",
   "btn_save": "Lưu",
   "btn_close": "Đóng",
+  "column_id": "ID",
+  "column_action": "Hành động",
   "paginate_previous": "Trước",
   "paginate_next": "Sau",
   "seo": {
@@ -19,5 +22,17 @@
     "column_meta_id": "ID",
     "column_meta_action": "Hành động",
     "confirm_delete": "Xóa seo này?"
+  },
+  "comment": {
+    "breadcrumb": "Bình luận",
+    "add": "Thêm mới bình luận",
+    "edit": "Sửa bình luận",
+    "label_content": "Nội dung bình luận",
+    "label_status": "Trạng thái",
+    "label_rate": "Vote bình luận",
+    "validate_input_content": "Vui lòng nhập nội dung bình luận",
+    "validate_input_status": "Vui lòng nhập trạng thái",
+    "search": "Tìm kiếm bình luận",
+    "confirm_delete": "Xóa bình luận này?"
   }
 }
