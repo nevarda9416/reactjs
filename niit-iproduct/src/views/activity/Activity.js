@@ -18,7 +18,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
+  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CFormSelect
 } from '@coreui/react';
 import {
   cilPencil,
@@ -29,6 +29,7 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Activity/ActivityClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const activity_port = process.env.REACT_APP_PORT_DATABASE_MONGO_ACTIVITY_CRUD_DATA;
@@ -179,37 +180,70 @@ const Activity = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới hoạt động</strong>
+            <strong>{t('activity.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
+              {/* Subject */}
               <div className="mb-3">
-                <CFormLabel htmlFor="activityName">Tên hoạt động</CFormLabel>
+                <CFormLabel htmlFor="activitySubject">{t('activity.label_subject')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên hoạt động" id="activityName" value={activity.name}
+                            feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" value={activity.subject}
                             required/>
               </div>
-              {/* slug */}
+              {/* Content */}
               <div className="mb-3">
-                <CFormLabel htmlFor="activitySlug">Slug</CFormLabel>
-                <CFormInput type="text" id="activitySlug" value={activity.slug}
+                <CFormLabel htmlFor="activityContent">{t('activity.label_content')}</CFormLabel>
+                <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" rows="3" required
+                               value={activity.content}/>
+              </div>
+              {/* URL */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="activityUrl">{t('activity.label_url')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" value={activity.url}
                             required/>
               </div>
-              {/* description */}
+              {/* Method */}
               <div className="mb-3">
-                <CFormLabel htmlFor="activityDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="activityDescription" rows="3" required
-                               value={activity.description}/>
+                <CFormLabel htmlFor="activityMethod">{t('activity.label_method')}</CFormLabel>
+                <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" value={activity.method} required>
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                  <option value="DELETE">DELETE</option>
+                </CFormSelect>
+              </div>
+              {/* Function */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="activityFunction">{t('activity.label_function')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" value={activity.function}
+                            required/>
+              </div>
+              {/* IP */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="activityIP">{t('activity.label_ip')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" value={activity.ip}
+                            required/>
+              </div>
+              {/* Agent */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="activityAgent">{t('activity.label_agent')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" value={activity.agent}
+                            required/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -218,16 +252,16 @@ const Activity = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="activitySearchName">Tìm kiếm hoạt động</CFormLabel>
+          <CFormLabel htmlFor="activitySearchName">{t('activity.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="activitySearchName"
-                      placeholder="Vui lòng nhập hoạt động" value={activitySearch.name} required/>
+                      placeholder={t('activity.validate_input_subject')} value={activitySearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('activity.column_action_name')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -239,51 +273,76 @@ const Activity = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this activity?')) {
+                    if (window.confirm(t('activity.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa hoạt động</CModalTitle>
+                    <CModalTitle>{t('activity.edit')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'activityForm'}>
-                      {/* name */}
+                      {/* Subject */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="activityName">Tên hoạt động</CFormLabel>
+                        <CFormLabel htmlFor="activitySubject">{t('activity.label_subject')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên hoạt động" id="activityName"
-                                    value={activity.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
+                                    feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" value={activity.subject}
                                     required/>
                       </div>
-                      {/* slug */}
+                      {/* Content */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="activitySlug">Slug</CFormLabel>
+                        <CFormLabel htmlFor="activityContent">{t('activity.label_content')}</CFormLabel>
+                        <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" rows="3" required
+                                       value={activity.content}/>
+                      </div>
+                      {/* URL */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="activityUrl">{t('activity.label_url')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="activitySlug"
-                                    value={activity.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
+                                    feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" value={activity.url}
                                     required/>
                       </div>
-                      {/* description */}
+                      {/* Method */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="activityDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="activityDescription" rows="3"
-                                       value={activity.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="activityMethod">{t('activity.label_method')}</CFormLabel>
+                        <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" value={activity.method} required>
+                          <option value="GET">GET</option>
+                          <option value="POST">POST</option>
+                          <option value="PUT">PUT</option>
+                          <option value="DELETE">DELETE</option>
+                        </CFormSelect>
+                      </div>
+                      {/* Function */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="activityFunction">{t('activity.label_function')}</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" value={activity.function}
+                                    required/>
+                      </div>
+                      {/* IP */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="activityIP">{t('activity.label_ip')}</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" value={activity.ip}
+                                    required/>
+                      </div>
+                      {/* Agent */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="activityAgent">{t('activity.label_agent')}</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" value={activity.agent}
+                                    required/>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'activityForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -295,7 +354,7 @@ const Activity = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -309,7 +368,7 @@ const Activity = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>

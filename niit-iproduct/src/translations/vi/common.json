@@ -9,6 +9,30 @@
   "column_action": "Hành động",
   "paginate_previous": "Trước",
   "paginate_next": "Sau",
+  "activity": {
+    "breadcrumb": "Thống kê hoạt động",
+    "add": "Thêm mới hoạt động",
+    "edit": "Sửa hoạt động",
+    "label_subject": "Tiêu đề",
+    "label_content": "Nội dung",
+    "label_url": "Đường dẫn",
+    "label_method": "Phương thức",
+    "label_function": "Chức năng",
+    "label_ip": "Địa chỉ IP",
+    "label_agent": "Trình duyệt",
+    "label_user_id": "ID người dùng",
+    "label_system_id": "ID hệ thống",
+    "validate_input_subject": "Vui lòng nhập tiêu đề",
+    "validate_input_content": "Vui lòng nhập nội dung hoạt động",
+    "validate_input_url": "Vui lòng nhập đường dẫn hoạt động",
+    "validate_input_method": "Vui lòng nhập phương thức hoạt động",
+    "validate_input_function": "Vui lòng nhập chức năng hoạt động",
+    "validate_input_ip": "Vui lòng nhập địa chỉ ip hoạt động",
+    "validate_input_agent": "Vui lòng nhập trình duyệt hoạt động",
+    "search": "Tìm kiếm hoạt động",
+    "column_action_name": "Tên hoạt động",
+    "confirm_delete": "Xóa hoạt động này?"
+  },
   "seo": {
     "breadcrumb": "SEO",
     "add_meta": "Thêm mới meta seo",
@@ -37,11 +61,13 @@
     "confirm_delete": "Xóa bình luận này?"
   },
   "google_trend": {
+    "breadcrumb": "Xu hướng Google",
     "title": "Xu hướng Google",
     "validate_input_serch_keyword": "Nhập từ khóa xu hướng tìm kiếm:",
     "placeholder_input_serch_keyword": "Từ khóa..."
   },
   "product": {
+    "breadcrumb": "Dữ liệu sản phẩm",
     "title": "Lấy dữ liệu sản phẩm",
     "category_name": "Tên danh mục",
     "name": "Tên sản phẩm",

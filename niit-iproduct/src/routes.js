@@ -32,16 +32,16 @@ const routes = [
   { path: '/traffic_sources/:action/:id', name: 'Nguồn đăng ký tài khoản', element: Traffic_Source },
   { path: '/users', name: 'Danh sách quản lý', element: User },
   { path: '/users/:action/:id', name: 'Danh sách quản lý', element: User },
-  { path: '/activities', name: 'Thống kê hoạt động', element: Activity },
-  { path: '/activities/:action/:id', name: 'Thống kê hoạt động', element: Activity },
+  { path: '/activities', name: 'activity.breadcrumb', element: Activity },
+  { path: '/activities/:action/:id', name: 'activity.breadcrumb', element: Activity },
   { path: '/systems', name: 'Hệ thống', element: System },
   { path: '/systems/:action/:id', name: 'Hệ thống', element: System },
   { path: '/seo', name: 'seo.breadcrumb', element: SEO },
   { path: '/seo/:action/:id', name: 'SEO', element: SEO },
   { path: '/comments', name: 'comment.breadcrumb', element: Comment },
   { path: '/comments/:action/:id', name: 'comment.breadcrumb', element: Comment },
-  { path: '/google/trend', name: 'Google Trend', element: GoogleTrend },
-  { path: '/data/product', name: 'Data Product', element: DataProduct }
+  { path: '/google/trend', name: 'google_trend.breadcrumb', element: GoogleTrend },
+  { path: '/data/product', name: 'product.breadcrumb', element: DataProduct }
 ];
 
 export default routes

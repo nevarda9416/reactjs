@@ -9,6 +9,30 @@
   "column_action": "Action",
   "paginate_previous": "Previous",
   "paginate_next": "Next",
+  "activity": {
+    "breadcrumb": "Activity",
+    "add": "Add activity",
+    "edit": "Edit activity",
+    "label_subject": "Subject",
+    "label_content": "Content",
+    "label_url": "URL",
+    "label_method": "Method",
+    "label_function": "Function",
+    "label_ip": "IP",
+    "label_agent": "Agent",
+    "label_user_id": "User ID",
+    "label_system_id": "System ID",
+    "validate_input_subject": "Please input subject",
+    "validate_input_content": "Please input content",
+    "validate_input_url": "Please input url",
+    "validate_input_method": "Please input method",
+    "validate_input_function": "Please input function",
+    "validate_input_ip": "Please input ip",
+    "validate_input_agent": "Please input agent",
+    "search": "Search subject",
+    "column_action_name": "Action Name",
+    "confirm_delete": "Delete this subject?"
+  },
   "seo": {
     "breadcrumb": "SEO",
     "add_meta": "Add meta seo",
@@ -37,11 +61,13 @@
     "confirm_delete": "Delete this comment?"
   },
   "google_trend": {
+    "breadcrumb": "Google Trend",
     "title": "Google Trend",
     "validate_input_serch_keyword": "Please input search keyword:",
     "placeholder_input_serch_keyword": "Keyword..."
   },
   "product": {
+    "breadcrumb": "Product data",
     "title": "Get product data",
     "category_name": "Category name",
     "name": "Product name",
