@@ -4,6 +4,7 @@
   "dashboard": "Bảng điều khiển",
   "btn_save": "Lưu",
   "btn_close": "Đóng",
+  "btn_get_data": "Lấy dữ liệu",
   "column_id": "ID",
   "column_action": "Hành động",
   "paginate_previous": "Trước",
@@ -34,5 +35,18 @@
     "validate_input_status": "Vui lòng nhập trạng thái",
     "search": "Tìm kiếm bình luận",
     "confirm_delete": "Xóa bình luận này?"
+  },
+  "google_trend": {
+    "title": "Xu hướng Google",
+    "validate_input_serch_keyword": "Nhập từ khóa xu hướng tìm kiếm:",
+    "placeholder_input_serch_keyword": "Từ khóa..."
+  },
+  "product": {
+    "title": "Lấy dữ liệu sản phẩm",
+    "category_name": "Tên danh mục",
+    "name": "Tên sản phẩm",
+    "search": "Tìm kiếm sản phẩm",
+    "validate_input_name": "Vui lòng nhập tên sản phẩm",
+    "column_name": "Tên sản phẩm"
   }
 }

@@ -14,6 +14,7 @@ import {
   cilUserFollow,
   cibOpenSourceInitiative,
   cilGraph,
+  cilList,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 
@@ -85,6 +86,12 @@ const _nav = [
     name: 'Google Trend',
     to: '/google/trend',
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Sản phẩm',
+    to: '/data/product',
+    icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,

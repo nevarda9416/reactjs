@@ -13,6 +13,7 @@ const System = React.lazy(() => import('./views/system/System'));
 const SEO = React.lazy(() => import('./views/seo/SEO'));
 const Comment = React.lazy(() => import('./views/comment/Comment'));
 const GoogleTrend = React.lazy(() => import('./views/dashboard/GoogleTrend'));
+const DataProduct = React.lazy(() => import('./views/data/Product'));
 
 const routes = [
   { path: '/', exact: true, name: 'Home' },
@@ -39,7 +40,8 @@ const routes = [
   { path: '/seo/:action/:id', name: 'SEO', element: SEO },
   { path: '/comments', name: 'comment.breadcrumb', element: Comment },
   { path: '/comments/:action/:id', name: 'comment.breadcrumb', element: Comment },
-  { path: '/google/trend', name: 'Google Trend', element: GoogleTrend }
+  { path: '/google/trend', name: 'Google Trend', element: GoogleTrend },
+  { path: '/data/product', name: 'Data Product', element: DataProduct }
 ];
 
 export default routes

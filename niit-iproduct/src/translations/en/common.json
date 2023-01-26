@@ -4,6 +4,7 @@
   "dashboard": "Dashboard",
   "btn_save": "Save",
   "btn_close": "Close",
+  "btn_get_data": "Get data",
   "column_id": "ID",
   "column_action": "Action",
   "paginate_previous": "Previous",
@@ -34,5 +35,20 @@
     "validate_input_status": "Please input status",
     "search": "Search comment",
     "confirm_delete": "Delete this comment?"
+  },
+  "google_trend": {
+    "title": "Google Trend",
+    "validate_input_serch_keyword": "Please input search keyword:",
+    "placeholder_input_serch_keyword": "Keyword..."
+  },
+  "product": {
+    "title": "Get product data",
+    "category_name": "Category name",
+    "name": "Product name",
+    "search": "Search product",
+    "validate_input_category_name": "Please input category name",
+    "validate_input_name": "Please input product name",
+    "column_name": "Product name",
+    "confirm_delete": "Delete this product?"
   }
 }
