@@ -97,5 +97,33 @@
     "search": "Tìm kiếm tên tài khoản",
     "column_username": "Tài khoản",
     "confirm_delete": "Xóa người dùng này?"
+  },
+  "tracking": {
+    "breadcrumb": "Theo dõi",
+    "view": "Xem thông tin theo dõi",
+    "label_customer_id": "ID người dùng",
+    "label_datetime": "Ngày tháng",
+    "label_keyword": "Từ khóa",
+    "label_action": "Hành động",
+    "label_user_agent": "Trình duyệt người dùng",
+    "label_http_referrer": "Tham chiếu http",
+    "label_ip": "Địa chỉ IP",
+    "label_network_id": "ID mạng",
+    "label_os": "Hệ điều hành",
+    "label_browser": "Thông tin trình duyệt",
+    "label_browser_version": "Phiên bản trình duyệt",
+    "label_device_type": "Loại thiết bị",
+    "label_source": "Nguồn",
+    "label_redirect_to_url": "Điều hướng đến URL",
+    "label_http_accept_language": "Http Accept Language",
+    "label_http_accept_encoding": "Http Accept Encoding",
+    "label_http_accept": "Http Accept",
+    "label_http_host": "Http Host",
+    "label_server_address": "Địa chỉ server",
+    "label_country": "Đất nước",
+    "label_city": "Thành phố",
+    "search": "Tìm kiếm theo dõi",
+    "validate_input_keyword": "Vui lòng nhập từ khóa theo dõi",
+    "column_keyword": "Từ khóa theo dõi"
   }
 }

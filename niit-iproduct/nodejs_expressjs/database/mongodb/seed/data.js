@@ -180,7 +180,14 @@ app.get('/data/create', function (req, res) {
           browser_version: value.browser_version,
           device_type: value.device_type,
           source: value.source,
-          redirect_to_url: value.redirect_to_url
+          redirect_to_url: value.redirect_to_url,
+          http_accept_language: value.http_accept_language,
+          http_accept_encoding: value.http_accept_encoding,
+          http_accept: value.http_accept,
+          http_host: value.http_host,
+          server_address: value.server_address,
+          country: value.country,
+          city: value.city
         }
       };
       dbo.collection('tracking').updateOne(listingQuery, tracking, {upsert: true}, function (error, response) {

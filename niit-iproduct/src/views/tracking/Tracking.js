@@ -1,6 +1,6 @@
 import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
-
+import {useTranslation} from "react-i18next";
 import {
   CCard,
   CCardBody,
@@ -21,8 +21,7 @@ import {
   CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
 } from '@coreui/react';
 import {
-  cilPencil,
-  cilTrash
+  cilZoom
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
@@ -55,7 +54,6 @@ const Tracking = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [tracking, setTracking] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [trackingPerPage] = useState(LIMIT);
@@ -140,7 +138,7 @@ const Tracking = () => {
     }
     loadData();
   };
-  const editItem = (event, id) => {
+  const viewItem = (event, id) => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
@@ -179,55 +177,21 @@ const Tracking = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
-      <CCol xs={6}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Thêm mới tracking</strong>
-          </CCardHeader>
-          <CCardBody>
-            <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="trackingName">Tên tracking</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên tracking" id="trackingName" value={tracking.name}
-                            required/>
-              </div>
-              {/* slug */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="trackingSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="trackingSlug" value={tracking.slug}
-                            required/>
-              </div>
-              {/* description */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="trackingDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trackingDescription" rows="3" required
-                               value={tracking.description}/>
-              </div>
-              <div className="col-auto">
-                <CButton type="submit" className="mb-3">
-                  Lưu
-                </CButton>
-              </div>
-            </CForm>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={6}>
+      <CCol xs={12}>
         <div className="mb-3">
-          <CFormLabel htmlFor="trackingSearchName">Tìm kiếm tracking</CFormLabel>
+          <CFormLabel htmlFor="trackingSearchName">{t('tracking.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trackingSearchName"
-                      placeholder="Vui lòng nhập tracking" value={trackingSearch.name} required/>
+                      placeholder={t('tracking.validate_input_keyword')} value={trackingSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Từ khóa tìm kiếm</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('tracking.column_keyword')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -237,53 +201,124 @@ const Tracking = () => {
                 <CTableDataCell>{item.keyword}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
-                  <Link onClick={(e) => {
-                    if (window.confirm('Delete this tracking?')) {
-                      deleteItem(event, item._id);
-                    }
-                  }}><CIcon icon={cilTrash}/></Link>
+                  <Link onClick={e => viewItem(e, item._id)}><CIcon icon={cilZoom}/></Link>&nbsp;&nbsp;
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa tracking</CModalTitle>
+                    <CModalTitle>{t('tracking.view')} ID: {tracking._id}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trackingForm'}>
-                      {/* name */}
+                      {/* Customer ID */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trackingName">Tên tracking</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên tracking" id="trackingName"
-                                    value={tracking.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
-                                    required/>
+                        <strong>{t('tracking.label_customer_id')}:</strong>&nbsp;&nbsp;
+                        {tracking.customer_id}
                       </div>
-                      {/* slug */}
+                      {/* Datetime */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trackingSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="trackingSlug"
-                                    value={tracking.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
-                                    required/>
+                        <strong>{t('tracking.label_datetime')}:</strong>&nbsp;&nbsp;
+                        {tracking.datetime}
                       </div>
-                      {/* description */}
+                      {/* Keyword */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trackingDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trackingDescription" rows="3"
-                                       value={tracking.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <strong>{t('tracking.label_keyword')}:</strong>&nbsp;&nbsp;
+                        {tracking.keyword}
+                      </div>
+                      {/* Action */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_action')}:</strong>&nbsp;&nbsp;
+                        {tracking.action}
+                      </div>
+                      {/* User Agent */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_user_agent')}:</strong>&nbsp;&nbsp;
+                        {tracking.user_agent}
+                      </div>
+                      {/* Http Referrer */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_http_referrer')}:</strong>&nbsp;&nbsp;
+                        {tracking.http_referrer}
+                      </div>
+                      {/* IP */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_ip')}:</strong>&nbsp;&nbsp;
+                        {tracking.ip}
+                      </div>
+                      {/* Network ID */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_network_id')}:</strong>&nbsp;&nbsp;
+                        {tracking.network_id}
+                      </div>
+                      {/* OS */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_os')}:</strong>&nbsp;&nbsp;
+                        {tracking.os}
+                      </div>
+                      {/* Browser */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_browser')}:</strong>&nbsp;&nbsp;
+                        {tracking.browser}
+                      </div>
+                      {/* Browser Version */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_browser_version')}:</strong>&nbsp;&nbsp;
+                        {tracking.browser_version}
+                      </div>
+                      {/* Device Type */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_device_type')}:</strong>&nbsp;&nbsp;
+                        {tracking.device_type}
+                      </div>
+                      {/* Source */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_source')}:</strong>&nbsp;&nbsp;
+                        {tracking.source}
+                      </div>
+                      {/* Redirect to Url */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_redirect_to_url')}:</strong>&nbsp;&nbsp;
+                        {tracking.redirect_to_url}
+                      </div>
+                      {/* Http Accept Language */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_http_accept_language')}:</strong>&nbsp;&nbsp;
+                        {tracking.http_accept_language}
+                      </div>
+                      {/* Http Accept Encoding */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_http_accept_encoding')}:</strong>&nbsp;&nbsp;
+                        {tracking.http_accept_encoding}
+                      </div>
+                      {/* Http Accept */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_http_accept')}:</strong>&nbsp;&nbsp;
+                        {tracking.http_accept}
+                      </div>
+                      {/* Http Host */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_http_host')}:</strong>&nbsp;&nbsp;
+                        {tracking.http_host}
+                      </div>
+                      {/* Server Address */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_server_address')}:</strong>&nbsp;&nbsp;
+                        {tracking.server_address}
+                      </div>
+                      {/* Country */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_country')}:</strong>&nbsp;&nbsp;
+                        {tracking.country}
+                      </div>
+                      {/* City */}
+                      <div className="mb-3">
+                        <strong>{t('tracking.label_city')}:</strong>&nbsp;&nbsp;
+                        {tracking.city}
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
-                    </CButton>
-                    <CButton color="primary" type="submit" form={'trackingForm'}>
-                      Lưu
+                      {t('btn_close')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -295,7 +330,7 @@ const Tracking = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -309,7 +344,7 @@ const Tracking = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>
