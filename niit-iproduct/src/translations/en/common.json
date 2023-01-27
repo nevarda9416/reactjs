@@ -99,5 +99,29 @@
     "validate_input_name": "Please input product name",
     "column_name": "Product name",
     "confirm_delete": "Delete this product?"
+  },
+  "customer": {
+    "breadcrumb": "Customer",
+    "add": "Add customer",
+    "edit": "Edit customer",
+    "label_username": "Username",
+    "label_fullname": "Full Name",
+    "label_email": "Email",
+    "label_telephone": "Telephone",
+    "label_password": "Password",
+    "label_gender": "Gender",
+    "label_date_of_birth": "Date of Birth",
+    "label_status": "Status",
+    "label_traffic_id": "Traffic Source",
+    "label_system_id": "System ID",
+    "validate_input_username": "Please input username",
+    "validate_input_fullname": "Please input full name",
+    "validate_input_email": "Please input email",
+    "validate_input_telephone": "Please input telephone",
+    "validate_input_password": "Please input password",
+    "validate_input_gender": "Please select gender",
+    "search": "Search username",
+    "column_username": "Username",
+    "confirm_delete": "Delete this customer?"
   }
 }

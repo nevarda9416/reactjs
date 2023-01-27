@@ -8,6 +8,7 @@ import {
   CCol,
   CRow,
   CForm,
+  CFormSelect,
   CFormInput,
   CFormLabel,
   CFormTextarea,
@@ -29,8 +30,11 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Customer/CustomerClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
+const traffic_source_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TRAFFIC_SOURCE_CRUD_DATA;
+const traffic_source_collection = process.env.REACT_APP_COLLECTION_MONGO_TRAFFIC_SOURCE_NAME;
 const customer_port = process.env.REACT_APP_PORT_DATABASE_MONGO_CUSTOMER_CRUD_DATA;
 const customer_collection = process.env.REACT_APP_COLLECTION_MONGO_CUSTOMER_NAME;
 const Customer = () => {
@@ -55,7 +59,7 @@ const Customer = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
+  const [traffic_sources, setTrafficSources] = useState([]);
   const [customer, setCustomer] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [customerPerPage] = useState(LIMIT);
@@ -71,6 +75,9 @@ const Customer = () => {
   };
   useEffect(() => {
     const getData = async () => {
+      const dataT = await axios.get(url + ':' + traffic_source_port + '/' + traffic_source_collection);
+      const dataJT = await dataT.data;
+      setTrafficSources(dataJT);
       const data = await axios.get(url + ':' + customer_port + '/' + customer_collection);
       const dataJ = await data.data;
       setData(dataJ);
@@ -179,37 +186,89 @@ const Customer = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới khách hàng</strong>
+            <strong>{t('customer.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
+              {/* Username */}
               <div className="mb-3">
-                <CFormLabel htmlFor="customerName">Tên khách hàng</CFormLabel>
+                <CFormLabel htmlFor="customerUsername">{t('customer.label_username')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên khách hàng" id="customerName" value={customer.name}
+                            feedbackInvalid={t('customer.validate_input_username')} id="customerUsername" value={customer.username}
                             required/>
               </div>
-              {/* slug */}
+              {/* Email */}
               <div className="mb-3">
-                <CFormLabel htmlFor="customerSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="customerSlug" value={customer.slug}
+                <CFormLabel htmlFor="customerEmail">{t('customer.label_email')}</CFormLabel>
+                <CFormInput type="email"
+                            feedbackInvalid={t('customer.validate_input_email')} id="customerEmail" value={customer.email}
                             required/>
               </div>
-              {/* description */}
+              {/* Telephone */}
               <div className="mb-3">
-                <CFormLabel htmlFor="customerDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="customerDescription" rows="3" required
-                               value={customer.description}/>
+                <CFormLabel htmlFor="customerTelephone">{t('customer.label_telephone')}</CFormLabel>
+                <CFormInput type="number"
+                            feedbackInvalid={t('customer.validate_input_telephone')} id="customerTelephone" value={customer.telephone}
+                            required/>
+              </div>
+              {/* Full Name */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="customerFullname">{t('customer.label_fullname')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('customer.validate_input_fullname')} id="customerFullname" value={customer.fullname}
+                            required/>
+              </div>
+              {/* Password */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="customerPassword">{t('customer.label_password')}</CFormLabel>
+                <CFormInput type="password"
+                            feedbackInvalid={t('customer.validate_input_password')} id="customerPassword" value={customer.password}
+                            required/>
+              </div>
+              {/* Gender */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="customerGender">{t('customer.label_gender')}</CFormLabel>
+                <CFormSelect feedbackInvalid={t('customer.validate_input_gender')} id="customerGender" value={customer.gender} required>
+                  <option value="1">Nam</option>
+                  <option value="0">Nữ</option>
+                  <option value="-1">Không xác định</option>
+                </CFormSelect>
+              </div>
+              {/* Date of birth */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="customerDateOfBirth">{t('customer.label_date_of_birth')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('customer.validate_input_date_of_birth')} id="customerDateOfBirth" value={customer.date_of_birth}
+                            required/>
+              </div>
+              {/* Status */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="customerStatus">{t('customer.label_status')}</CFormLabel>
+                <CFormInput type="text"
+                            feedbackInvalid={t('customer.validate_input_status')} id="customerStatus" value={customer.status}
+                            required/>
+              </div>
+              {/* Traffic Id */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="customerTrafficId">{t('customer.label_traffic_id')}</CFormLabel>
+                <CFormSelect feedbackInvalid={t('customer.validate_input_traffic_id')} id="customerTrafficId" value={customer.traffic_id} required>
+                  <option></option>
+                  {
+                  traffic_sources.map((item, index) => (
+                    <option key={index} value={item._id}>{item.register_source}</option>
+                  ))
+                  }
+                </CFormSelect>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -218,16 +277,16 @@ const Customer = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="customerSearchName">Tìm kiếm khách hàng</CFormLabel>
+          <CFormLabel htmlFor="customerSearchName">{t('customer.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="customerSearchName"
-                      placeholder="Vui lòng nhập khách hàng" value={customerSearch.name} required/>
+                      placeholder={t('customer.validate_input_username')} value={customerSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Full Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('customer.column_username')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -246,44 +305,88 @@ const Customer = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa khách hàng</CModalTitle>
+                    <CModalTitle>{t('customer.edit')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'customerForm'}>
-                      {/* name */}
+                      {/* Username */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="customerName">Tên khách hàng</CFormLabel>
+                        <CFormLabel htmlFor="customerUsername">{t('customer.label_username')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên khách hàng" id="customerName"
-                                    value={customer.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
+                                    feedbackInvalid={t('customer.validate_input_username')} id="customerUsername" value={customer.username}
                                     required/>
                       </div>
-                      {/* slug */}
+                      {/* Email */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="customerSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="customerSlug"
-                                    value={customer.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
+                        <CFormLabel htmlFor="customerEmail">{t('customer.label_email')}</CFormLabel>
+                        <CFormInput type="email"
+                                    feedbackInvalid={t('customer.validate_input_email')} id="customerEmail" value={customer.email}
                                     required/>
                       </div>
-                      {/* description */}
+                      {/* Telephone */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="customerDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="customerDescription" rows="3"
-                                       value={customer.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="customerTelephone">{t('customer.label_telephone')}</CFormLabel>
+                        <CFormInput type="number"
+                                    feedbackInvalid={t('customer.validate_input_telephone')} id="customerTelephone" value={customer.telephone}
+                                    required/>
+                      </div>
+                      {/* Full Name */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="customerFullname">{t('customer.label_fullname')}</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid={t('customer.validate_input_fullname')} id="customerFullname" value={customer.fullname}
+                                    required/>
+                      </div>
+                      {/* Password */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="customerPassword">{t('customer.label_password')}</CFormLabel>
+                        <CFormInput type="password"
+                                    feedbackInvalid={t('customer.validate_input_password')} id="customerPassword" value={customer.password}
+                                    required/>
+                      </div>
+                      {/* Gender */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="customerGender">{t('customer.label_gender')}</CFormLabel>
+                        <CFormSelect feedbackInvalid={t('customer.validate_input_gender')} id="customerGender" value={customer.gender} required>
+                          <option value="1">Nam</option>
+                          <option value="0">Nữ</option>
+                          <option value="-1">Không xác định</option>
+                        </CFormSelect>
+                      </div>
+                      {/* Date of birth */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="customerDateOfBirth">{t('customer.label_date_of_birth')}</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid={t('customer.validate_input_date_of_birth')} id="customerDateOfBirth" value={customer.date_of_birth}
+                                    required/>
+                      </div>
+                      {/* Status */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="customerStatus">{t('customer.label_status')}</CFormLabel>
+                        <CFormInput type="text"
+                                    feedbackInvalid={t('customer.validate_input_status')} id="customerStatus" value={customer.status}
+                                    required/>
+                      </div>
+                      {/* Traffic Id */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="customerTrafficId">{t('customer.label_traffic_id')}</CFormLabel>
+                        <CFormSelect feedbackInvalid={t('customer.validate_input_traffic_id')} id="customerTrafficId" value={customer.traffic_id} required>
+                          <option></option>
+                          {
+                          traffic_sources.map((item, index) => (
+                            <option key={index} value={item._id}>{item.register_source}</option>
+                          ))
+                          }
+                        </CFormSelect>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'customerForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -295,7 +398,7 @@ const Customer = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -309,7 +412,7 @@ const Customer = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>
