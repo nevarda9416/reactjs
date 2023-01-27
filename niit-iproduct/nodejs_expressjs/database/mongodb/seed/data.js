@@ -3,6 +3,8 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
+const cheerio = require('cheerio'); // khai báo module cheerio
+const request = require('request-promise'); // khai báo module request-promise
 const path = require('path');
 require('dotenv').config({path: path.resolve(__dirname, '../../../.env')});
 const env = process.env;
@@ -12,6 +14,21 @@ const dbname = env.DATABASE_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+// Crawl product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
+app.get('/products/crawl', function (req, res) {
+  request('https://mediamart.vn/tag?key=macbook+air+m1', (error, response, html) => {
+    if (!error && response.statusCode == 200) {
+      const $ = cheerio.load(html); // Load HTML
+      $('.product-name').each((index, el) => {
+        const job = $(el).text();
+        console.log(job);
+      })
+    } else {
+      console.log(error);
+    }
+    res.jsonp({code:response.statusCode});
+  });
+});
 app.get('/data/create', function (req, res) {
   // 1) List sample categories
   const listCategories = [

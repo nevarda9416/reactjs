@@ -16,6 +16,7 @@
   "homepage": "https://bitbucket.org/nevarda9416/expressjs_dev#readme",
   "dependencies": {
     "body-parser": "^1.20.1",
+    "cheerio": "^1.0.0-rc.12",
     "concurrently": "^7.6.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -25,6 +26,7 @@
     "hbs": "^4.1.1",
     "mongo": "^0.1.0",
     "mysql": "^2.18.1",
-    "node-couchdb": "^1.3.0"
+    "node-couchdb": "^1.3.0",
+    "request-promise": "^4.2.6"
   }
 }
