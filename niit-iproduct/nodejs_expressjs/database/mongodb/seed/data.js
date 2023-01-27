@@ -319,6 +319,7 @@ app.get('/data/create', function (req, res) {
       var listingQuery = {created_by: value.created_by};
       var system = {
         $set: {
+          type: value.type, // NEW attribute
           is_actived: value.is_actived,
           actived_by: value.actived_by,
           actived_at: value.actived_at,

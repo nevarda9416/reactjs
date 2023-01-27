@@ -18,7 +18,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
-  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
+  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter, CFormCheck
 } from '@coreui/react';
 import {
   cilPencil,
@@ -29,6 +29,7 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/System/SystemClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const system_port = process.env.REACT_APP_PORT_DATABASE_MONGO_SYSTEM_CRUD_DATA;
@@ -179,37 +180,91 @@ const System = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới cấu hình</strong>
+            <strong>{t('system.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
+              {/* Type */}
               <div className="mb-3">
-                <CFormLabel htmlFor="systemName">Tên cấu hình</CFormLabel>
+                <CFormLabel htmlFor="systemType">{t('system.label_type')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên cấu hình" id="systemName" value={system.name}
+                            feedbackInvalid={t('system.validate_input_type')} id="systemType" value={system.type}
                             required/>
               </div>
-              {/* slug */}
+              {/* Is Actived */}
               <div className="mb-3">
-                <CFormLabel htmlFor="systemSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="systemSlug" value={system.slug}
-                            required/>
+                <CFormLabel htmlFor="systemIsActived">{t('system.label_is_actived')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_is_actived')} id="systemIsActived" value={system.is_actived}/>
               </div>
-              {/* description */}
+              {/* Actived By */}
               <div className="mb-3">
-                <CFormLabel htmlFor="systemDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="systemDescription" rows="3" required
-                               value={system.description}/>
+                <CFormLabel htmlFor="systemActivedBy">{t('system.label_actived_by')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_actived_by')} id="systemActivedBy" value={system.actived_by}/>
+              </div>
+              {/* Actived At */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemActivedAt">{t('system.label_actived_at')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_actived_at')} id="systemActivedAt" value={system.actived_at}/>
+              </div>
+              {/* Created By */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemCreatedBy">{t('system.label_created_by')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_created_by')} id="systemCreatedBy" value={system.created_by}/>
+              </div>
+              {/* Created At */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemCreatedAt">{t('system.label_created_at')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_created_at')} id="systemCreatedAt" value={system.created_at}/>
+              </div>
+              {/* Updated By */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemUpdatedBy">{t('system.label_updated_by')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_updated_by')} id="systemUpdatedBy" value={system.updated_by}/>
+              </div>
+              {/* Updated At */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemUpdatedAt">{t('system.label_updated_at')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_updated_at')} id="systemUpdatedAt" value={system.updated_at}/>
+              </div>
+              {/* Is Deleted */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemIsDeleted">{t('system.label_is_deleted')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_is_deleted')} id="systemIsDeleted" value={system.is_deleted}/>
+              </div>
+              {/* Deleted By */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemDeletedBy">{t('system.label_deleted_by')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_deleted_by')} id="systemDeletedBy" value={system.deleted_by}/>
+              </div>
+              {/* Deleted At */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemDeletedAt">{t('system.label_deleted_at')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_deleted_at')} id="systemDeletedAt" value={system.deleted_at}/>
+              </div>
+              {/* Is Published */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemIsPublished">{t('system.label_is_published')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_is_published')} id="systemIsPublished" value={system.is_published}/>
+              </div>
+              {/* Published By */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemPublishedBy">{t('system.label_published_by')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_published_by')} id="systemPublishedBy" value={system.published_by}/>
+              </div>
+              {/* Published At */}
+              <div className="mb-3">
+                <CFormLabel htmlFor="systemPublishedAt">{t('system.label_published_at')}</CFormLabel>&nbsp;&nbsp;
+                <CFormCheck feedbackInvalid={t('system.validate_input_published_at')} id="systemPublishedAt" value={system.published_at}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -218,72 +273,118 @@ const System = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="systemSearchName">Tìm kiếm cấu hình</CFormLabel>
+          <CFormLabel htmlFor="systemSearchName">{t('system.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="systemSearchName"
-                      placeholder="Vui lòng nhập cấu hình" value={systemSearch.name} required/>
+                      placeholder={t('system.validate_input_type')} value={systemSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Created By</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('system.column_type')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {currentData.map((item, index) => (
               <CTableRow key={index}>
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
-                <CTableDataCell>{item.created_by}</CTableDataCell>
+                <CTableDataCell>{item.type}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this system?')) {
+                    if (window.confirm(t('system.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa cấu hình</CModalTitle>
+                    <CModalTitle>{t('system.edit')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'systemForm'}>
-                      {/* name */}
+                      {/* Type */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="systemName">Tên cấu hình</CFormLabel>
+                        <CFormLabel htmlFor="systemType">{t('system.label_type')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên cấu hình" id="systemName"
-                                    value={system.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
+                                    feedbackInvalid={t('system.validate_input_type')} id="systemType" value={system.type}
                                     required/>
                       </div>
-                      {/* slug */}
+                      {/* Is Actived */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="systemSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="systemSlug"
-                                    value={system.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="systemIsActived">{t('system.label_is_actived')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_is_actived')} id="systemIsActived" value={system.is_actived}/>
                       </div>
-                      {/* description */}
+                      {/* Actived By */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="systemDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="systemDescription" rows="3"
-                                       value={system.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="systemActivedBy">{t('system.label_actived_by')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_actived_by')} id="systemActivedBy" value={system.actived_by}/>
+                      </div>
+                      {/* Actived At */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemActivedAt">{t('system.label_actived_at')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_actived_at')} id="systemActivedAt" value={system.actived_at}/>
+                      </div>
+                      {/* Created By */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemCreatedBy">{t('system.label_created_by')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_created_by')} id="systemCreatedBy" value={system.created_by}/>
+                      </div>
+                      {/* Created At */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemCreatedAt">{t('system.label_created_at')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_created_at')} id="systemCreatedAt" value={system.created_at}/>
+                      </div>
+                      {/* Updated By */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemUpdatedBy">{t('system.label_updated_by')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_updated_by')} id="systemUpdatedBy" value={system.updated_by}/>
+                      </div>
+                      {/* Updated At */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemUpdatedAt">{t('system.label_updated_at')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_updated_at')} id="systemUpdatedAt" value={system.updated_at}/>
+                      </div>
+                      {/* Is Deleted */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemIsDeleted">{t('system.label_is_deleted')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_is_deleted')} id="systemIsDeleted" value={system.is_deleted}/>
+                      </div>
+                      {/* Deleted By */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemDeletedBy">{t('system.label_deleted_by')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_deleted_by')} id="systemDeletedBy" value={system.deleted_by}/>
+                      </div>
+                      {/* Deleted At */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemDeletedAt">{t('system.label_deleted_at')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_deleted_at')} id="systemDeletedAt" value={system.deleted_at}/>
+                      </div>
+                      {/* Is Published */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemIsPublished">{t('system.label_is_published')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_is_published')} id="systemIsPublished" value={system.is_published}/>
+                      </div>
+                      {/* Published By */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemPublishedBy">{t('system.label_published_by')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_published_by')} id="systemPublishedBy" value={system.published_by}/>
+                      </div>
+                      {/* Published At */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="systemPublishedAt">{t('system.label_published_at')}</CFormLabel>&nbsp;&nbsp;
+                        <CFormCheck feedbackInvalid={t('system.validate_input_published_at')} id="systemPublishedAt" value={system.published_at}/>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'systemForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -295,7 +396,7 @@ const System = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -309,7 +410,7 @@ const System = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>

@@ -179,7 +179,6 @@ const SEO = () => {
     deleteById(id);
     setLoad(1);
   };
-
   const [t, i18n] = useTranslation('common');
   return (
     <CRow>
