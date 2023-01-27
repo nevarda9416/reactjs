@@ -151,5 +151,15 @@
     "search": "Search tracking",
     "validate_input_keyword": "Please input keyword",
     "column_keyword": "Keyword tracking"
+  },
+  "traffic_source": {
+    "breadcrumb": "Traffic Source",
+    "view": "View traffic source",
+    "label_register_source": "Register Source",
+    "label_source_id": "Source ID",
+    "label_customer_id": "Customer ID",
+    "search": "Search source",
+    "validate_input_source": "Please input source",
+    "column_source": "Source"
   }
 }

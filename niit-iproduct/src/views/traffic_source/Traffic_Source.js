@@ -1,6 +1,6 @@
 import {React, useEffect, useState} from 'react'
 import {Link} from 'react-router-dom';
-
+import {useTranslation} from "react-i18next";
 import {
   CCard,
   CCardBody,
@@ -21,7 +21,7 @@ import {
   CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
 } from '@coreui/react';
 import {
-  cilPencil,
+  cilZoom,
   cilTrash
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
@@ -55,7 +55,6 @@ const Traffic_Source = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [trafficSource, setTrafficSource] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [trafficSourcePerPage] = useState(LIMIT);
@@ -140,7 +139,7 @@ const Traffic_Source = () => {
     }
     loadData();
   };
-  const editItem = (event, id) => {
+  const viewItem = (event, id) => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
@@ -179,55 +178,21 @@ const Traffic_Source = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
-      <CCol xs={6}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>Thêm mới nguồn đăng ký tài khoản</strong>
-          </CCardHeader>
-          <CCardBody>
-            <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* name */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="trafficSourceName">Tên nguồn đăng ký tài khoản</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên nguồn đăng ký tài khoản" id="trafficSourceName" value={trafficSource.name}
-                            required/>
-              </div>
-              {/* slug */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="trafficSourceSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="trafficSourceSlug" value={trafficSource.slug}
-                            required/>
-              </div>
-              {/* description */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="trafficSourceDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trafficSourceDescription" rows="3" required
-                               value={trafficSource.description}/>
-              </div>
-              <div className="col-auto">
-                <CButton type="submit" className="mb-3">
-                  Lưu
-                </CButton>
-              </div>
-            </CForm>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={6}>
+      <CCol xs={12}>
         <div className="mb-3">
-          <CFormLabel htmlFor="trafficSourceSearchName">Tìm kiếm nguồn đăng ký tài khoản</CFormLabel>
+          <CFormLabel htmlFor="trafficSourceSearchName">{t('traffic_source.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trafficSourceSearchName"
-                      placeholder="Vui lòng nhập nguồn đăng ký tài khoản" value={trafficSourceSearch.name} required/>
+                      placeholder={t('traffic_source.validate_input_source')} value={trafficSourceSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Source</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('traffic_source.column_source')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -236,54 +201,35 @@ const Traffic_Source = () => {
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.register_source}</CTableDataCell>
                 <CTableDataCell>
-                  {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
-                  <Link onClick={(e) => {
-                    if (window.confirm('Delete this trafficSource?')) {
-                      deleteItem(event, item._id);
-                    }
-                  }}><CIcon icon={cilTrash}/></Link>
+                  {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilZoom}/></Link>&nbsp;&nbsp;*/}
+                  <Link onClick={e => viewItem(e, item._id)}><CIcon icon={cilZoom}/></Link>&nbsp;&nbsp;
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa nguồn đăng ký tài khoản</CModalTitle>
+                    <CModalTitle>{t('traffic_source.view')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trafficSourceForm'}>
-                      {/* name */}
+                      {/* Register Source */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trafficSourceName">Tên nguồn đăng ký tài khoản</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên nguồn đăng ký tài khoản" id="trafficSourceName"
-                                    value={trafficSource.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
-                                    required/>
+                        <strong>{t('traffic_source.label_register_source')}:</strong>&nbsp;&nbsp;
+                        {trafficSource.register_source}
                       </div>
-                      {/* slug */}
+                      {/* Source ID */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trafficSourceSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="trafficSourceSlug"
-                                    value={trafficSource.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
-                                    required/>
+                        <strong>{t('traffic_source.label_source_id')}:</strong>&nbsp;&nbsp;
+                        {trafficSource.source_id}
                       </div>
-                      {/* description */}
+                      {/* Customer ID */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="trafficSourceDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="trafficSourceDescription" rows="3"
-                                       value={trafficSource.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <strong>{t('traffic_source.label_customer_id')}:</strong>&nbsp;&nbsp;
+                        {trafficSource.customer_id}
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
-                    </CButton>
-                    <CButton color="primary" type="submit" form={'trafficSourceForm'}>
-                      Lưu
+                      {t('btn_close')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -295,7 +241,7 @@ const Traffic_Source = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -309,7 +255,7 @@ const Traffic_Source = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>

@@ -125,5 +125,15 @@
     "search": "Tìm kiếm theo dõi",
     "validate_input_keyword": "Vui lòng nhập từ khóa theo dõi",
     "column_keyword": "Từ khóa theo dõi"
+  },
+  "traffic_source": {
+    "breadcrumb": "Nguồn đăng ký tài khoản",
+    "view": "Xem nguồn đăng ký tài khoản",
+    "label_register_source": "Nguồn đăng ký tài khoản",
+    "label_source_id": "ID nguồn đăng ký",
+    "label_customer_id": "ID người dùng",
+    "search": "Tìm kiếm nguồn đăng ký tài khoản",
+    "validate_input_source": "Vui lòng nhập nguồn đăng ký tài khoản",
+    "column_source": "Nguồn đăng ký"
   }
 }
