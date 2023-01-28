@@ -14,19 +14,93 @@ const dbname = env.DATABASE_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-// Crawl product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
+// Crawl list sample product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
 app.get('/products/crawl', function (req, res) {
-  request('https://mediamart.vn/tag?key=macbook+air+m1', (error, response, html) => {
-    if (!error && response.statusCode == 200) {
+  // Mediamart
+  request('https://mediamart.vn/tag?key=dell+ultrashap', (error, response, html) => {
+    if (!error && response.statusCode === 200) {
       const $ = cheerio.load(html); // Load HTML
-      $('.product-name').each((index, el) => {
-        const job = $(el).text();
-        console.log(job);
+      $('.product-item').each((index, el) => {
+        const listingQuery = {name: $(el).find('.product-name').text().replace(/\n/g, '')};
+        const price_saving = $(el).find('.product-price-saving').text().replace(/[^0-9]/g, '');
+        const price_regular = $(el).find('.product-price-regular').text().replace(/[^0-9]/g, '');
+        const price = price_regular - (price_regular / 100 * price_saving);
+        console.log($(el).find('.product-name').text().replace(/\n/g, ''));
+        const listProducts = {
+          $set: {
+            name: $(el).find('.product-name').text().replace(/\n/g, ''),
+            short_description: null,
+            full_description: null,
+            thumbnail_url: $(el).find('img').attr('src'),
+            unit: 'chiếc',
+            status: 'Còn hàng',
+            tag: null,
+            is_combo: 0,
+            category_id: null,
+            manufacture_id: null,
+            display_order: 0,
+            attribute_id: null,
+            seo_id: null,
+            system_id: null,
+            currency: 'VND',
+            price: price
+          }
+        };
+        mongoClient.connect(url, function (error, database) {
+          if (error) throw error;
+          const dbo = database.db(dbname);
+          dbo.collection('products').updateOne(listingQuery, listProducts, {upsert: true}, function (error, response) {
+            if (error) throw error;
+            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+          });
+        });
       })
     } else {
       console.log(error);
     }
-    res.jsonp({code:response.statusCode});
+  });
+  request('https://mediamart.vn/tag?key=macbook+air+m1', (error, response, html) => {
+    if (!error && response.statusCode === 200) {
+      const $ = cheerio.load(html); // Load HTML
+      $('.product-item').each((index, el) => {
+        const listingQuery = {name: $(el).find('.product-name').text().replace(/\n/g, '')};
+        const price_saving = $(el).find('.product-price-saving').text().replace(/[^0-9]/g, '');
+        const price_regular = $(el).find('.product-price-regular').text().replace(/[^0-9]/g, '');
+        const price = price_regular - (price_regular / 100 * price_saving);
+        console.log($(el).find('.product-name').text().replace(/\n/g, ''));
+        const listProducts = {
+          $set: {
+            name: $(el).find('.product-name').text().replace(/\n/g, ''),
+            short_description: null,
+            full_description: null,
+            thumbnail_url: $(el).find('img').attr('src'),
+            unit: 'chiếc',
+            status: 'Còn hàng',
+            tag: null,
+            is_combo: 0,
+            category_id: null,
+            manufacture_id: null,
+            display_order: 0,
+            attribute_id: null,
+            seo_id: null,
+            system_id: null,
+            currency: 'VND',
+            price: price
+          }
+        };
+        mongoClient.connect(url, function (error, database) {
+          if (error) throw error;
+          const dbo = database.db(dbname);
+          dbo.collection('products').updateOne(listingQuery, listProducts, {upsert: true}, function (error, response) {
+            if (error) throw error;
+            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+          });
+        });
+      })
+    } else {
+      console.log(error);
+    }
+    res.jsonp({code: response.statusCode});
   });
 });
 app.get('/data/create', function (req, res) {
@@ -73,7 +147,7 @@ app.get('/data/create', function (req, res) {
       seo_id: null,
       system_id: null,
       currency: 'VND',
-      price: '33490000'
+      price: 33490000
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -86,9 +160,30 @@ app.get('/data/create', function (req, res) {
   });
   // 3) List sample tags
   const listTags = [
-    {name: 'Macbook Air 2020 M1', slug: 'macbook-air-2020-m1', description: 'Macbook Air 2020 M1', seo_id: null, system_id: null, is_google_trend: 'no'},
-    {name: 'Macbook Air M1', slug: 'macbook-air-m1', description: 'Macbook Air M1', seo_id: null, system_id: null, is_google_trend: 'no'},
-    {name: 'Macbook Air M1 2020', slug: 'macbook-air-m1-2020', description: 'Macbook Air M1 2020', seo_id: null, system_id: null, is_google_trend: 'no'}
+    {
+      name: 'Macbook Air 2020 M1',
+      slug: 'macbook-air-2020-m1',
+      description: 'Macbook Air 2020 M1',
+      seo_id: null,
+      system_id: null,
+      is_google_trend: 'no'
+    },
+    {
+      name: 'Macbook Air M1',
+      slug: 'macbook-air-m1',
+      description: 'Macbook Air M1',
+      seo_id: null,
+      system_id: null,
+      is_google_trend: 'no'
+    },
+    {
+      name: 'Macbook Air M1 2020',
+      slug: 'macbook-air-m1-2020',
+      description: 'Macbook Air M1 2020',
+      seo_id: null,
+      system_id: null,
+      is_google_trend: 'no'
+    }
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
