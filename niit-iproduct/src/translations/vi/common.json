@@ -1,4 +1,21 @@
 {
+  "login": {
+    "title": "Đăng nhập",
+    "label": "Đăng nhập bằng tài khoản của bạn",
+    "placeholder_input_username": "Tên tài khoản",
+    "placeholder_input_password": "Mật khẩu"
+  },
+  "register": {
+    "title": "Đăng ký",
+    "label": "Bạn chưa có tài khoản.",
+    "not_have_account": "Đăng ký ngay!",
+    "placeholder_input_username": "Tên tài khoản",
+    "placeholder_input_email": "Email",
+    "placeholder_input_password": "Mật khẩu",
+    "placeholder_input_repeat_password": "Nhập lại mật khẩu"
+  },
+  "btn_login": "Đăng nhập",
+  "btn_register": "Tạo tài khoản",
   "welcome": "Chào mừng đến với trang quản trị!",
   "home": "Trang chủ",
   "dashboard": "Bảng điều khiển",
@@ -9,6 +26,13 @@
   "column_action": "Hành động",
   "paginate_previous": "Trước",
   "paginate_next": "Sau",
+  "nav": {
+    "dashboard": "Bảng điều khiển",
+    "management": "Quản lý"
+  },
+  "user": {
+    "breadcrumb": "Danh sách người quản lý"
+  },
   "activity": {
     "breadcrumb": "Thống kê hoạt động",
     "add": "Thêm mới hoạt động",

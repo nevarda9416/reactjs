@@ -16,6 +16,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import axios from 'axios'
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_USER_CRUD_DATA;
@@ -54,6 +55,7 @@ const Login = () => {
             .catch(error => console.log(error));
     }
   }
+  const [t, i18n] = useTranslation('common');
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -63,13 +65,13 @@ const Login = () => {
               <CCard className="p-4">
                 <CCardBody>
                   <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-                    <h1>Login</h1>
-                    <p className="text-medium-emphasis">Sign In to your account</p>
+                    <h1>{t('login.title')}</h1>
+                    <p className="text-medium-emphasis">{t('login.label')}</p>
                     <CInputGroup className="mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="off" id="username" required/>
+                      <CFormInput placeholder={t('placeholder_input_username')} autoComplete="off" id="username" required/>
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -77,19 +79,14 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         type="password"
-                        placeholder="Password"
+                        placeholder={t('placeholder_input_password')}
                         autoComplete="off"
                         id="password" required/>
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
                         <CButton color="primary" className="px-4" type="submit">
-                          Login
-                        </CButton>
-                      </CCol>
-                      <CCol xs={6} className="text-right">
-                        <CButton color="link" className="px-0">
-                          Forgot password?
+                          {t('btn_login')}
                         </CButton>
                       </CCol>
                     </CRow>
@@ -99,14 +96,13 @@ const Login = () => {
               <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
+                    <h2>{t('register.title')}</h2>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                      tempor incididunt ut labore et dolore magna aliqua.
+                      {t('register.label')}
                     </p>
                     <Link to="/register">
                       <CButton color="primary" className="mt-3" active tabIndex={-1}>
-                        Register Now!
+                        {t('register.not_have_account')}
                       </CButton>
                     </Link>
                   </div>

@@ -1,4 +1,21 @@
 {
+  "login": {
+    "title": "Login",
+    "label": "Sign In to your account",
+    "placeholder_input_username": "Username",
+    "placeholder_input_password": "Password"
+  },
+  "register": {
+    "title": "Register",
+    "label": "Create your account",
+    "not_have_account": "Register Now!",
+    "placeholder_input_username": "Username",
+    "placeholder_input_email": "Email",
+    "placeholder_input_password": "Password",
+    "placeholder_input_repeat_password": "Repeat password"
+  },
+  "btn_login": "Login",
+  "btn_register": "Create Account",
   "welcome": "Welcome to dashboard!",
   "home": "Homepage",
   "dashboard": "Dashboard",
@@ -9,6 +26,13 @@
   "column_action": "Action",
   "paginate_previous": "Previous",
   "paginate_next": "Next",
+  "nav": {
+    "dashboard": "Dashboard",
+    "management": "Management"
+  },
+  "user": {
+    "breadcrumb": "User management"
+  },
   "activity": {
     "breadcrumb": "Activity",
     "add": "Add activity",
