@@ -28,7 +28,21 @@
   "paginate_next": "Sau",
   "nav": {
     "dashboard": "Bảng điều khiển",
-    "management": "Quản lý"
+    "management": "Quản lý",
+    "category": "Danh mục sản phẩm",
+    "product": "Danh sách sản phẩm",
+    "tag": "Danh sách từ khóa",
+    "user": "Danh sách người quản lý",
+    "activity": "Thống kê hoạt động",
+    "system": "Hệ thống",
+    "seo": "SEO",
+    "comment": "Bình luận",
+    "data": "Dữ liệu",
+    "google_trend": "Google Trend",
+    "crawl_product": "Sản phẩm",
+    "customer": "Khách hàng",
+    "tracking": "Theo dõi người dùng",
+    "traffic_source": "Nguồn đăng ký tài khoản"
   },
   "user": {
     "breadcrumb": "Danh sách người quản lý"

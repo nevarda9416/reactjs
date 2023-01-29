@@ -17,97 +17,113 @@ import {
   cilList,
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
+import {Translation} from "react-i18next";
+import i18next from "i18next";
+import common_vi from "./translations/vi/common.json";
+import common_en from "./translations/en/common.json";
 
+i18next.init({
+  interpolation: {escapeValue: false},  // React already does escaping
+  lng: 'en',                              // language to use
+  resources: {
+    vi: {
+      common: common_vi
+    },
+    en: {
+      common: common_en               // 'common' is our custom namespace
+    },
+  },
+});
 const _nav = [
   {
     component: CNavItem,
-    name: 'Dashboard',
+    name: 'nav.dashboard',
     to: '/dashboard',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Quản lý',
+    name: 'nav.management',
   },
   {
     component: CNavItem,
-    name: 'Danh mục sản phẩm',
+    name: 'nav.category',
     to: '/categories',
     icon: <CIcon icon={cilBookmark} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Danh sách sản phẩm',
+    name: 'nav.product',
     to: '/products',
     icon: <CIcon icon={cilListHighPriority} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Danh sách từ khóa',
+    name: 'nav.tag',
     to: '/tags',
     icon: <CIcon icon={cilNotes} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Danh sách người quản lý',
+    name: 'nav.user',
     to: '/users',
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Thống kê hoạt động',
+    name: 'nav.activity',
     to: '/activities',
     icon: <CIcon icon={cilActionUndo} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Hệ thống',
+    name: 'nav.system',
     to: '/systems',
     icon: <CIcon icon={cilAssistiveListeningSystem} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'SEO',
+    name: 'nav.seo',
     to: '/seo',
     icon: <CIcon icon={cibGoogle} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Bình luận',
+    name: 'nav.comment',
     to: '/comments',
     icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
-    name: 'Dữ liệu',
+    name: 'nav.data',
   },
   {
     component: CNavItem,
-    name: 'Google Trend',
+    name: 'nav.google_trend',
     to: '/google/trend',
     icon: <CIcon icon={cilGraph} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Sản phẩm',
+    name: 'nav.crawl_product',
     to: '/data/product',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Khách hàng',
+    name: 'nav.customer',
     to: '/customers',
     icon: <CIcon icon={cilUserFemale} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Theo dõi người dùng',
+    name: 'nav.tracking',
     to: '/trackings',
     icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Nguồn đăng ký tài khoản',
+    name: 'nav.traffic_source',
     to: '/traffic_sources',
     icon: <CIcon icon={cibOpenSourceInitiative} customClassName="nav-icon" />,
   },

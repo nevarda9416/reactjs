@@ -3,6 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 import { CBadge } from '@coreui/react'
+import {useTranslation} from "react-i18next";
 
 export const AppSidebarNav = ({ items }) => {
   const location = useLocation()
@@ -20,6 +21,7 @@ export const AppSidebarNav = ({ items }) => {
     )
   }
 
+  const [t, i18n] = useTranslation('common');
   const navItem = (item, index) => {
     const { component, name, badge, icon, ...rest } = item
     const Component = component
@@ -32,7 +34,7 @@ export const AppSidebarNav = ({ items }) => {
         key={index}
         {...rest}
       >
-        {navLink(name, icon, badge)}
+        {navLink(t(name), icon, badge)}
       </Component>
     )
   }

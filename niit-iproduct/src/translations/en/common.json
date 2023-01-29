@@ -28,7 +28,21 @@
   "paginate_next": "Next",
   "nav": {
     "dashboard": "Dashboard",
-    "management": "Management"
+    "management": "Management",
+    "category": "Categories",
+    "product": "Products",
+    "tag": "Tags",
+    "user": "Users",
+    "activity": "Activity statistics",
+    "system": "System",
+    "seo": "SEO",
+    "comment": "Comments",
+    "data": "Data",
+    "google_trend": "Google Trend",
+    "crawl_product": "Products",
+    "customer": "Customers",
+    "tracking": "Tracking",
+    "traffic_source": "Traffic Sources"
   },
   "user": {
     "breadcrumb": "User management"
