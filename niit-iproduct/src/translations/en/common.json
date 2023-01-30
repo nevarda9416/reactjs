@@ -44,6 +44,10 @@
     "tracking": "Tracking",
     "traffic_source": "Traffic Sources"
   },
+  "category": {
+    "breadcrumb": "Category management",
+    "label_name": "Category name"
+  },
   "user": {
     "breadcrumb": "User management",
     "add": "Add user",
@@ -157,14 +161,25 @@
     "placeholder_input_serch_keyword": "Keyword..."
   },
   "product": {
-    "breadcrumb": "Product data",
+    "breadcrumb": "Product management",
+    "add_or_edit": "Add or Edit product",
+    "label_short_description": "Short description",
+    "label_full_description": "Full description",
+    "label_unit": "Unit",
+    "label_currency": "Currency",
+    "label_price": "Price",
+    "validate_input_short_description": "Please input short description",
+    "validate_input_full_description": "Please input full description",
+    "validate_input_unit": "Please input unit",
+    "validate_input_currency": "Please input currency",
+    "validate_input_price": "Please input price",
     "title": "Get product data",
-    "category_name": "Category name",
-    "name": "Product name",
+    "label_category_name": "Category name",
+    "label_name": "Product name",
     "search": "Search product",
     "validate_input_category_name": "Please input category name",
     "validate_input_name": "Please input product name",
-    "column_name": "Product name",
+    "column_name": "Product Name",
     "confirm_delete": "Delete this product?"
   },
   "customer": {

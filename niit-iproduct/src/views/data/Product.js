@@ -191,7 +191,7 @@ const DataProduct = () => {
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* category_id */}
               <div className="mb-3">
-                <CFormLabel htmlFor="categoryId">{t('product.category_name')}</CFormLabel>
+                <CFormLabel htmlFor="categoryId">{t('product.label_category_name')}</CFormLabel>
                 <CFormSelect feedbackInvalid={t('product.validate_input_category_name')} id="categoryId" value={product.category_id} required>
                   <option></option>
                   {
@@ -203,7 +203,7 @@ const DataProduct = () => {
               </div>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productName">{t('product.name')}</CFormLabel>
+                <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
                 <CFormInput type="text"
                             feedbackInvalid={t('product.validate_input_name')} id="productName" value={product.name}
                             required/>

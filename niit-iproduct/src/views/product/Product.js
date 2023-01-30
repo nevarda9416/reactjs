@@ -28,6 +28,7 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Product/ProductClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const category_port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -178,19 +179,20 @@ const Product = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới sản phẩm</strong>
+            <strong>{t('product.add_or_edit')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* product_id */}
+              {/* category_id */}
               <div className="mb-3">
-                <CFormLabel htmlFor="categoryId">Tên danh mục</CFormLabel>
-                <CFormSelect feedbackInvalid="Vui lòng chọn danh mục" id="categoryId" value={product.category_id} required>
+                <CFormLabel htmlFor="categoryId">{t('category.label_name')}</CFormLabel>
+                <CFormSelect feedbackInvalid={t('category.validate_input_name')} id="categoryId" value={product.category_id} required>
                   <option></option>
                   {
                   category.map((item, index) => (
@@ -201,32 +203,32 @@ const Product = () => {
               </div>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productName">Tên sản phẩm</CFormLabel>
+                <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên sản phẩm" id="productName" value={product.name}
+                            feedbackInvalid={t('product.validate_input_name')} id="productName" value={product.name}
                             required/>
               </div>
               {/* short_description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productShortDescription">Mô tả ngắn</CFormLabel>
+                <CFormLabel htmlFor="productShortDescription">{t('product.label_short_description')}</CFormLabel>
                 <CFormTextarea
-                               feedbackInvalid="Vui lòng nhập mô tả ngắn" id="productShortDescription" rows="3" required
+                               feedbackInvalid={t('product.validate_input_short_description')} id="productShortDescription" rows="3" required
                                value={product.short_description}/>
               </div>
               {/* full_description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productFullDescription">Mô tả đầy đủ</CFormLabel>
+                <CFormLabel htmlFor="productFullDescription">{t('product.label_full_description')}</CFormLabel>
                 <div className={"w-64"} id={"ck-editor-text"}>
                   {state.editor}
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
-                               feedbackInvalid="Vui lòng nhập mô tả đầy đủ" id="productFullDescription" rows="3" required
+                               feedbackInvalid={t('product.validate_input_full_description')} id="productFullDescription" rows="3" required
                                value={product.full_description}/>
               </div>
               {/* unit */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productUnit">Đơn vị</CFormLabel>
-                <CFormSelect feedbackInvalid="Vui lòng chọn đơn vị sản phẩm" id="productUnit" value={product.unit} required>
+                <CFormLabel htmlFor="productUnit">{t('product.label_unit')}</CFormLabel>
+                <CFormSelect feedbackInvalid={t('product.validate_input_unit')} id="productUnit" value={product.unit} required>
                   <option></option>
                   <option value="chiếc">Chiếc</option>
                   <option value="cái">Cái</option>
@@ -234,21 +236,21 @@ const Product = () => {
               </div>
               {/* concurrency */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productCurrency">Tiền tệ</CFormLabel>
+                <CFormLabel htmlFor="productCurrency">{t('product.label_currency')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập loại tiền tệ" id="productCurrency" value={product.currency}
+                            feedbackInvalid={t('product.validate_input_currency')} id="productCurrency" value={product.currency}
                             required/>
               </div>
               {/* price */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productPrice">Giá</CFormLabel>
+                <CFormLabel htmlFor="productPrice">{t('product.label_price')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập giá sản phẩm" id="productPrice" value={product.price}
+                            feedbackInvalid={t('product.validate_input_price')} id="productPrice" value={product.price}
                             required/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -257,16 +259,16 @@ const Product = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="productSearchName">Tìm kiếm sản phẩm</CFormLabel>
+          <CFormLabel htmlFor="productSearchName">{t('product.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="productSearchName"
-                      placeholder="Vui lòng nhập tên sản phẩm" value={productSearch.name} required/>
+                      placeholder={t('product.validate_input_name')} value={productSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('product.column_name')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -277,7 +279,7 @@ const Product = () => {
                 <CTableDataCell>
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this product?')) {
+                    if (window.confirm(t('product.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
@@ -290,7 +292,7 @@ const Product = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -304,7 +306,7 @@ const Product = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>

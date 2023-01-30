@@ -44,6 +44,10 @@
     "tracking": "Theo dõi người dùng",
     "traffic_source": "Nguồn đăng ký tài khoản"
   },
+  "category": {
+    "breadcrumb": "Danh mục sản phẩm",
+    "label_name": "Tên danh mục"
+  },
   "user": {
     "breadcrumb": "Danh sách người quản lý",
     "add": "Thêm mới người quản lý",
@@ -132,9 +136,21 @@
     "placeholder_input_serch_keyword": "Từ khóa..."
   },
   "product": {
+    "breadcrumb": "Quản lý sản phẩm",
+    "add_or_edit": "Thêm mới hoặc sửa sản phẩm",
+    "label_short_description": "Mô tả ngắn",
+    "label_full_description": "Mô tả đầy đủ",
+    "label_unit": "Đơn vị",
+    "label_currency": "Tiền tệ",
+    "label_price": "Giá",
+    "validate_input_short_description": "Vui lòng nhập mô tả ngắn",
+    "validate_input_full_description": "Vui lòng nhập mô tả đầy đủ",
+    "validate_input_unit": "Vui lòng chọn đơn vị sản phẩm",
+    "validate_input_currency": "Vui lòng nhập loại tiền tệ",
+    "validate_input_price": "Vui lòng nhập giá sản phẩm",
     "title": "Lấy dữ liệu sản phẩm",
-    "category_name": "Tên danh mục",
-    "name": "Tên sản phẩm",
+    "label_category_name": "Tên danh mục",
+    "label_name": "Tên sản phẩm",
     "search": "Tìm kiếm sản phẩm",
     "validate_input_category_name": "Vui lòng nhập tên danh mục",
     "validate_input_name": "Vui lòng nhập tên sản phẩm",
