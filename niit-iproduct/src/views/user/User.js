@@ -29,6 +29,7 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/User/UserClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const user_port = process.env.REACT_APP_PORT_DATABASE_MONGO_USER_CRUD_DATA;
@@ -181,53 +182,54 @@ const User = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới người quản lý</strong>
+            <strong>{t('user.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* fullname */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userFullName">Họ và tên</CFormLabel>
+                <CFormLabel htmlFor="userFullName">{t('user.label_fullname')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập họ và tên" id="userFullName" value={user.fullname}
+                            feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" value={user.fullname}
                             required/>
               </div>
               {/* email */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userEmail">Email</CFormLabel>
+                <CFormLabel htmlFor="userEmail">{t('user.label_email')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập email" id="userEmail" value={user.email}
+                            feedbackInvalid={t('user.validate_input_email')} id="userEmail" value={user.email}
                             required/>
               </div>
               {/* username */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userName">Username</CFormLabel>
+                <CFormLabel htmlFor="userName">{t('user.label_username')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên tài khoản" id="userName" value={user.username}
+                            feedbackInvalid={t('user.validate_input_username')} id="userName" value={user.username}
                             required/>
               </div>
               {/* password */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userPassword">Password</CFormLabel>
+                <CFormLabel htmlFor="userPassword">{t('user.label_password')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập mật khẩu" id="userPassword" value={user.password}
+                            feedbackInvalid={t('user.validate_input_password')} id="userPassword" value={user.password}
                             required/>
               </div>
               {/* department */}
               <div className="mb-3">
-                <CFormLabel htmlFor="userDepartment">Phòng ban</CFormLabel>
+                <CFormLabel htmlFor="userDepartment">{t('user.label_department')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập phòng ban" id="userDepartment" value={user.department}
+                            feedbackInvalid={t('user.validate_input_department')} id="userDepartment" value={user.department}
                             required/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -236,16 +238,16 @@ const User = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="userSearchName">Tìm kiếm người quản lý</CFormLabel>
+          <CFormLabel htmlFor="userSearchName">{t('user.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="userSearchName"
-                      placeholder="Vui lòng nhập tên người quản lý" value={userSearch.fullname} required/>
+                      placeholder={t('user.validate_input_username')} value={userSearch.fullname} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Email</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('user.column_email')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -264,53 +266,53 @@ const User = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa người quản lý</CModalTitle>
+                    <CModalTitle>{t('user.edit')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'userForm'}>
                       {/* fullname */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userFullName">Họ và tên</CFormLabel>
+                        <CFormLabel htmlFor="userFullName">{t('user.label_fullname')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập họ và tên" id="userFullName" value={user.fullname}
+                                    feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" value={user.fullname}
                                     required/>
                       </div>
                       {/* email */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userEmail">Email</CFormLabel>
+                        <CFormLabel htmlFor="userEmail">{t('user.label_email')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập email" id="userEmail" value={user.email}
+                                    feedbackInvalid={t('user.validate_input_email')} id="userEmail" value={user.email}
                                     required/>
                       </div>
                       {/* username */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userName">Username</CFormLabel>
+                        <CFormLabel htmlFor="userName">{t('user.label_username')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên tài khoản" id="userName" value={user.username}
+                                    feedbackInvalid={t('user.validate_input_username')} id="userName" value={user.username}
                                     required/>
                       </div>
                       {/* password */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userPassword">Password</CFormLabel>
+                        <CFormLabel htmlFor="userPassword">{t('user.label_password')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập mật khẩu" id="userPassword" value={user.password}
+                                    feedbackInvalid={t('user.validate_input_password')} id="userPassword" value={user.password}
                                     required/>
                       </div>
                       {/* department */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="userDepartment">Phòng ban</CFormLabel>
+                        <CFormLabel htmlFor="userDepartment">{t('user.label_department')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập phòng ban" id="userDepartment" value={user.department}
+                                    feedbackInvalid={t('user.validate_input_department')} id="userDepartment" value={user.department}
                                     required/>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'userForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -322,7 +324,7 @@ const User = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -336,7 +338,7 @@ const User = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>

@@ -45,7 +45,22 @@
     "traffic_source": "Traffic Sources"
   },
   "user": {
-    "breadcrumb": "User management"
+    "breadcrumb": "User management",
+    "add": "Add user",
+    "edit": "Edit user",
+    "label_fullname": "Full name",
+    "label_email": "Email",
+    "label_username": "Username",
+    "label_password": "Password",
+    "label_department": "Department",
+    "validate_input_fullname": "Please input fullname",
+    "validate_input_email": "Please input email",
+    "validate_input_username": "Please input username",
+    "validate_input_password": "Please input password",
+    "validate_input_department": "Please input department",
+    "search": "Search user",
+    "column_email": "Email",
+    "confirm_delete": "Delete this user?"
   },
   "activity": {
     "breadcrumb": "Activity",

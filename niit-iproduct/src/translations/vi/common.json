@@ -45,7 +45,22 @@
     "traffic_source": "Nguồn đăng ký tài khoản"
   },
   "user": {
-    "breadcrumb": "Danh sách người quản lý"
+    "breadcrumb": "Danh sách người quản lý",
+    "add": "Thêm mới người quản lý",
+    "edit": "Sửa người quản lý",
+    "label_fullname": "Họ và tên",
+    "label_email": "Email",
+    "label_username": "Tên tài khoản",
+    "label_password": "Mật khẩu",
+    "label_department": "Phòng ban",
+    "validate_input_fullname": "Vui lòng nhập họ và tên",
+    "validate_input_email": "Vui lòng nhập email",
+    "validate_input_username": "Vui lòng nhập tên tài khoản",
+    "validate_input_password": "Vui lòng nhập mật khẩu",
+    "validate_input_department": "Vui lòng nhập phòng ban",
+    "search": "Tìm kiếm người quản lý",
+    "column_email": "Email",
+    "confirm_delete": "Xóa người quản lý này?"
   },
   "activity": {
     "breadcrumb": "Thống kê hoạt động",
