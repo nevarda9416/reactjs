@@ -6,22 +6,70 @@ const mongoClient = require('mongodb').MongoClient;
 const cheerio = require('cheerio'); // khai báo module cheerio
 const request = require('request-promise'); // khai báo module request-promise
 const path = require('path');
-require('dotenv').config({path: path.resolve(__dirname, '../../../.env')});
+require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const env = process.env;
 const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
 const port = env.DATABASE_PORT_SEEDING_DATA;
 const dbname = env.DATABASE_NAME;
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 // Crawl list sample product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
-app.get('/products/crawl', function (req, res) {
+app.get('/products/crawl/detail', function (req, res) {
+  // Mediamart
+  mongoClient.connect(url, function (error, database) {
+    if (error) throw error;
+    const dbo = database.db(dbname);
+    dbo.collection('products').find().toArray(function (error, response) {
+      if (error) throw error;
+      response.forEach(element => {
+        if (typeof element.link !== 'undefined') {
+          console.log(element.link);
+          request(element.link, (error, response_two, html) => {
+            if (!error && response_two.statusCode === 200) {
+              const $ = cheerio.load(html); // Load HTML
+              $('.wrap-product').each((index, el) => {
+                const listingQuery = { link: element.link };
+                const listProducts = {
+                  $set: {
+                    short_description: $(el).find('.pdetail-desc').html(),
+                    full_description: $(el).find('.pd-content-seemore').html(),
+                    tag: null,
+                    is_combo: 0,
+                    category_id: null,
+                    manufacture_id: null,
+                    display_order: 0,
+                    attribute_id: null,
+                    seo_id: null,
+                    system_id: null
+                  }
+                };
+                mongoClient.connect(url, function (error, database) {
+                  if (error) throw error;
+                  const dbo = database.db(dbname);
+                  dbo.collection('products').updateOne(listingQuery, listProducts, function (error, response) {
+                    if (error) throw error;
+                    console.log('Documents inserted or updated: ' + JSON.stringify(response));
+                  });
+                });
+              })
+            } else {
+              console.log(error);
+            }
+          });
+        }
+      });
+      res.jsonp({ success: true });
+    });
+  });
+});
+app.get('/products/crawl/list', function (req, res) {
   // Mediamart
   request('https://mediamart.vn/tag?key=dell+ultrashap', (error, response, html) => {
     if (!error && response.statusCode === 200) {
       const $ = cheerio.load(html); // Load HTML
       $('.product-item').each((index, el) => {
-        const listingQuery = {name: $(el).find('.product-name').text().replace(/\n/g, '')};
+        const listingQuery = { link: $(el).attr('href') };
         const price_saving = $(el).find('.product-price-saving').text().replace(/[^0-9]/g, '');
         const price_regular = $(el).find('.product-price-regular').text().replace(/[^0-9]/g, '');
         const price = price_regular - (price_regular / 100 * price_saving);
@@ -32,6 +80,7 @@ app.get('/products/crawl', function (req, res) {
             short_description: null,
             full_description: null,
             thumbnail_url: $(el).find('img').attr('src'),
+            link: 'https://mediamart.vn' + $(el).attr('href'),
             unit: 'chiếc',
             status: 'Còn hàng',
             tag: null,
@@ -49,7 +98,7 @@ app.get('/products/crawl', function (req, res) {
         mongoClient.connect(url, function (error, database) {
           if (error) throw error;
           const dbo = database.db(dbname);
-          dbo.collection('products').updateOne(listingQuery, listProducts, {upsert: true}, function (error, response) {
+          dbo.collection('products').updateOne(listingQuery, listProducts, { upsert: true }, function (error, response) {
             if (error) throw error;
             console.log('Documents inserted or updated: ' + JSON.stringify(response));
           });
@@ -63,7 +112,7 @@ app.get('/products/crawl', function (req, res) {
     if (!error && response.statusCode === 200) {
       const $ = cheerio.load(html); // Load HTML
       $('.product-item').each((index, el) => {
-        const listingQuery = {name: $(el).find('.product-name').text().replace(/\n/g, '')};
+        const listingQuery = { link: $(el).attr('href') };
         const price_saving = $(el).find('.product-price-saving').text().replace(/[^0-9]/g, '');
         const price_regular = $(el).find('.product-price-regular').text().replace(/[^0-9]/g, '');
         const price = price_regular - (price_regular / 100 * price_saving);
@@ -74,6 +123,7 @@ app.get('/products/crawl', function (req, res) {
             short_description: null,
             full_description: null,
             thumbnail_url: $(el).find('img').attr('src'),
+            link: 'https://mediamart.vn' + $(el).attr('href'),
             unit: 'chiếc',
             status: 'Còn hàng',
             tag: null,
@@ -91,7 +141,7 @@ app.get('/products/crawl', function (req, res) {
         mongoClient.connect(url, function (error, database) {
           if (error) throw error;
           const dbo = database.db(dbname);
-          dbo.collection('products').updateOne(listingQuery, listProducts, {upsert: true}, function (error, response) {
+          dbo.collection('products').updateOne(listingQuery, listProducts, { upsert: true }, function (error, response) {
             if (error) throw error;
             console.log('Documents inserted or updated: ' + JSON.stringify(response));
           });
@@ -100,21 +150,21 @@ app.get('/products/crawl', function (req, res) {
     } else {
       console.log(error);
     }
-    res.jsonp({code: response.statusCode});
+    res.jsonp({ code: response.statusCode });
   });
 });
 app.get('/data/create', function (req, res) {
   // 1) List sample categories
   const listCategories = [
-    {name: 'Smartphones', dbname: 'smartphones', description: 'Smartphones'},
-    {name: 'Máy tính bảng', dbname: 'maytinhbang', description: 'Máy tính bảng'},
-    {name: 'Điện thoại', dbname: 'dienthoai', description: 'Điện thoại'},
+    { name: 'Smartphones', dbname: 'smartphones', description: 'Smartphones' },
+    { name: 'Máy tính bảng', dbname: 'maytinhbang', description: 'Máy tính bảng' },
+    { name: 'Điện thoại', dbname: 'dienthoai', description: 'Điện thoại' },
   ];
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listCategories.forEach(value => {
-      var listingQuery = {name: value.name};
+      var listingQuery = { name: value.name };
       var category = {
         $set: {
           name: value.name,
@@ -122,14 +172,14 @@ app.get('/data/create', function (req, res) {
           description: value.description
         }
       };
-      dbo.collection('categories').updateOne(listingQuery, category, {upsert: true}, function (error, response) {
+      dbo.collection('categories').updateOne(listingQuery, category, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
     });
   });
   // 2) List sample products
-  const listingQuery = {name: 'mac air m1'};
+  const listingQuery = { name: 'mac air m1' };
   const listProducts = {
     $set: {
       name: 'mac air m1',
@@ -153,7 +203,7 @@ app.get('/data/create', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection('products').updateOne(listingQuery, listProducts, {upsert: true}, function (error, response) {
+    dbo.collection('products').updateOne(listingQuery, listProducts, { upsert: true }, function (error, response) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
     });
@@ -189,7 +239,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listTags.forEach(value => {
-      var listingQuery = {name: value.name};
+      var listingQuery = { name: value.name };
       var tag = {
         $set: {
           name: value.name,
@@ -200,7 +250,7 @@ app.get('/data/create', function (req, res) {
           is_google_trend: value.is_google_trend
         }
       };
-      dbo.collection('tags').updateOne(listingQuery, tag, {upsert: true}, function (error, response) {
+      dbo.collection('tags').updateOne(listingQuery, tag, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -225,7 +275,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listCustomers.forEach(value => {
-      var listingQuery = {username: value.username};
+      var listingQuery = { username: value.username };
       var customer = {
         $set: {
           username: value.username,
@@ -240,7 +290,7 @@ app.get('/data/create', function (req, res) {
           traffic_id: value.traffic_id,
         }
       };
-      dbo.collection('customers').updateOne(listingQuery, customer, {upsert: true}, function (error, response) {
+      dbo.collection('customers').updateOne(listingQuery, customer, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -276,7 +326,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listTrackings.forEach(value => {
-      var listingQuery = {customer_id: value.customer_id};
+      var listingQuery = { customer_id: value.customer_id };
       var tracking = {
         $set: {
           customer_id: value.customer_id,
@@ -302,7 +352,7 @@ app.get('/data/create', function (req, res) {
           city: value.city
         }
       };
-      dbo.collection('tracking').updateOne(listingQuery, tracking, {upsert: true}, function (error, response) {
+      dbo.collection('tracking').updateOne(listingQuery, tracking, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -320,7 +370,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listTrafficSources.forEach(value => {
-      var listingQuery = {register_source: value.register_source};
+      var listingQuery = { register_source: value.register_source };
       var traffic_source = {
         $set: {
           register_source: value.register_source,
@@ -328,7 +378,7 @@ app.get('/data/create', function (req, res) {
           customer_id: value.customer_id
         }
       };
-      dbo.collection('traffic_sources').updateOne(listingQuery, traffic_source, {upsert: true}, function (error, response) {
+      dbo.collection('traffic_sources').updateOne(listingQuery, traffic_source, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -355,7 +405,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listUsers.forEach(value => {
-      var listingQuery = {email: value.email};
+      var listingQuery = { email: value.email };
       var user = {
         $set: {
           fullname: value.fullname,
@@ -368,7 +418,7 @@ app.get('/data/create', function (req, res) {
           system_id: value.system_id
         }
       };
-      dbo.collection('users').updateOne(listingQuery, user, {upsert: true}, function (error, response) {
+      dbo.collection('users').updateOne(listingQuery, user, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -392,7 +442,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listActivites.forEach(value => {
-      var listingQuery = {subject: value.subject};
+      var listingQuery = { subject: value.subject };
       var activity = {
         $set: {
           subject: value.subject,
@@ -406,7 +456,7 @@ app.get('/data/create', function (req, res) {
           system_id: value.system_id
         }
       };
-      dbo.collection('activities').updateOne(listingQuery, activity, {upsert: true}, function (error, response) {
+      dbo.collection('activities').updateOne(listingQuery, activity, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -435,7 +485,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listSystems.forEach(value => {
-      var listingQuery = {created_by: value.created_by};
+      var listingQuery = { created_by: value.created_by };
       var system = {
         $set: {
           type: value.type, // NEW attribute
@@ -454,7 +504,7 @@ app.get('/data/create', function (req, res) {
           published_at: value.published_at
         }
       };
-      dbo.collection('systems').updateOne(listingQuery, system, {upsert: true}, function (error, response) {
+      dbo.collection('systems').updateOne(listingQuery, system, { upsert: true }, function (error, response) {
         if (error) throw error;
         console.log('Documents inserted or updated: ' + JSON.stringify(response));
       });
@@ -473,7 +523,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listSeo.forEach(value => {
-      var listingQuery = {meta_title: value.meta_title};
+      var listingQuery = { meta_title: value.meta_title };
       var seo = {
         $set: {
           meta_title: value.meta_title,
@@ -502,7 +552,7 @@ app.get('/data/create', function (req, res) {
     if (error) throw error;
     const dbo = database.db(dbname);
     listComments.forEach(value => {
-      var listingQuery = {customer_id: value.customer_id};
+      var listingQuery = { customer_id: value.customer_id };
       var comment = {
         $set: {
           customer_id: value.customer_id,
@@ -518,7 +568,7 @@ app.get('/data/create', function (req, res) {
       });
     });
   });
-  res.jsonp({success: true});
+  res.jsonp({ success: true });
 });
 app.listen(port, env.SERVER_NAME, function () {
   console.log('Example app listening on port ' + port + '!')
