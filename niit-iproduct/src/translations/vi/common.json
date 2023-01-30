@@ -62,6 +62,20 @@
     "column_email": "Email",
     "confirm_delete": "Xóa người quản lý này?"
   },
+  "tag": {
+    "breadcrumb": "Danh sách từ khóa",
+    "add": "Thêm mới từ khóa",
+    "edit": "Sửa người quản lý",
+    "label_name": "Tên từ khóa",
+    "label_slug": "Slug",
+    "label_description": "Mô tả",
+    "validate_input_name": "Vui lòng nhập tên từ khóa",
+    "validate_input_slug": "Vui lòng nhập slug",
+    "validate_input_description": "Vui lòng nhập mô tả",
+    "search": "Tìm kiếm từ khóa",
+    "column_name": "Tên từ khóa",
+    "confirm_delete": "Xóa từ khóa này?"
+  },
   "activity": {
     "breadcrumb": "Thống kê hoạt động",
     "add": "Thêm mới hoạt động",

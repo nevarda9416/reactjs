@@ -259,7 +259,7 @@ const User = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this user?')) {
+                    if (window.confirm(t('user.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>

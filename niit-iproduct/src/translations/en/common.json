@@ -62,6 +62,20 @@
     "column_email": "Email",
     "confirm_delete": "Delete this user?"
   },
+  "tag": {
+    "breadcrumb": "Tag management",
+    "add": "Add tag",
+    "edit": "Edit tag",
+    "label_name": "Name",
+    "label_slug": "Slug",
+    "label_description": "Description",
+    "validate_input_name": "Please input name",
+    "validate_input_slug": "Please input slug",
+    "validate_input_description": "Please input description",
+    "search": "Search name",
+    "column_name": "Name",
+    "confirm_delete": "Delete this tag?"
+  },
   "activity": {
     "breadcrumb": "Activity",
     "add": "Add activity",

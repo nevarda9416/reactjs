@@ -29,6 +29,7 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Tag/TagClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const tag_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TAG_CRUD_DATA;
@@ -179,37 +180,34 @@ const Tag = () => {
     deleteById(id);
     setLoad(1);
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới từ khóa</strong>
+            <strong>{t('tag.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName" value={tag.name}
-                            required/>
+                <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" value={tag.name} required/>
               </div>
               {/* slug */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
-                <CFormInput type="text" id="tagSlug" value={tag.slug}
-                            required/>
+                <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" value={tag.slug} required/>
               </div>
               {/* description */}
               <div className="mb-3">
-                <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3" required
-                  value={tag.description}/>
+                <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
+                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" rows="3" required value={tag.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -218,16 +216,16 @@ const Tag = () => {
       </CCol>
       <CCol xs={6}>
         <div className="mb-3">
-          <CFormLabel htmlFor="tagSearchName">Tìm kiếm từ khóa</CFormLabel>
+          <CFormLabel htmlFor="tagSearchName">{t('tag.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
-                      placeholder="Vui lòng nhập từ khóa" value={tagSearch.name} required/>
+                      placeholder={t('tag.validate_input_name')} value={tagSearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('tag.column_name')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -239,51 +237,40 @@ const Tag = () => {
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this tag?')) {
+                    if (window.confirm(t('tag.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>Sửa từ khóa</CModalTitle>
+                    <CModalTitle>{t('tag.edit')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'tagForm'}>
                       {/* name */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagName">Tên từ khóa</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập tên từ khóa" id="tagName"
-                                    value={tag.name}
-                                    onChange={(e) => changeInputName(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
+                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" value={tag.name} required/>
                       </div>
                       {/* slug */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagSlug">Slug</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid="Vui lòng nhập slug" id="tagSlug"
-                                    value={tag.slug}
-                                    onChange={(e) => changeInputSlug(e.target.value)}
-                                    required/>
+                        <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
+                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" value={tag.slug} required/>
                       </div>
                       {/* description */}
                       <div className="mb-3">
-                        <CFormLabel htmlFor="tagDescription">Mô tả</CFormLabel>
-                        <CFormTextarea feedbackInvalid="Vui lòng nhập mô tả" id="tagDescription" rows="3"
-                                       value={tag.description}
-                                       onChange={(e) => changeTextarea(e.target.value)}
-                                       required/>
+                        <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
+                        <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" rows="3" required value={tag.description}/>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
                     <CButton color="secondary" onClick={() => {setVisible(false);}}>
-                      Close
+                      {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'tagForm'}>
-                      Lưu
+                      {t('btn_save')}
                     </CButton>
                   </CModalFooter>
                 </CModal>
@@ -295,7 +282,7 @@ const Tag = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -309,7 +296,7 @@ const Tag = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>
