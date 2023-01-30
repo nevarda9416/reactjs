@@ -56,7 +56,6 @@ const User = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [user, setUser] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [userPerPage] = useState(LIMIT);

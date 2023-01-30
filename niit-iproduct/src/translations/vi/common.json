@@ -46,7 +46,15 @@
   },
   "category": {
     "breadcrumb": "Danh mục sản phẩm",
-    "label_name": "Tên danh mục"
+    "add_or_edit": "Thêm hoặc Sửa sản phẩm",
+    "label_name": "Tên danh mục",
+    "label_description": "Mô tả",
+    "validate_input_name": "Vui lòng nhập tên danh mục",
+    "validate_input_description" : "Vui lòng nhập mô tả",
+    "search": "Tìm kiếm danh mục",
+    "column_name": "Tên danh mục",
+    "column_description": "Mô tả",
+    "confirm_delete": "Xóa danh mục này?"
   },
   "user": {
     "breadcrumb": "Danh sách người quản lý",

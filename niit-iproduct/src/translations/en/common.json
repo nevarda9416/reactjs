@@ -46,7 +46,15 @@
   },
   "category": {
     "breadcrumb": "Category management",
-    "label_name": "Category name"
+    "add_or_edit": "Add or Edit category",
+    "label_name": "Category name",
+    "label_description": "Description",
+    "validate_input_name": "Please input category name",
+    "validate_input_description" : "Please input description",
+    "search": "Search category",
+    "column_name": "Name",
+    "column_description": "Description",
+    "confirm_delete": "Delete this category?"
   },
   "user": {
     "breadcrumb": "User management",

@@ -27,6 +27,7 @@ import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Category/CategoryClient";
+import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
@@ -167,33 +168,34 @@ const Category = () => {
     deleteById(id);
     loadData();
   };
+  const [t, i18n] = useTranslation('common');
   return (
     <CRow>
       <CCol xs={4}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>Thêm mới danh mục</strong>
+            <strong>{t('category.add_or_edit')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               <div className="mb-3">
-                <CFormLabel htmlFor="categoryName">Tên danh mục</CFormLabel>
+                <CFormLabel htmlFor="categoryName">{t('category.label_name')}</CFormLabel>
                 <CFormInput onChange={e => changeInput(e.target.value)} type="text"
-                            feedbackInvalid="Vui lòng nhập tên danh mục" id="categoryName" value={category.name}
+                            feedbackInvalid={t('category.validate_input_name')} id="categoryName" value={category.name}
                             required/>
               </div>
               <div className="mb-3">
-                <CFormLabel htmlFor="exampleFormControlTextarea1">Mô tả</CFormLabel>
+                <CFormLabel htmlFor="exampleFormControlTextarea1">{t('category.label_description')}</CFormLabel>
                 <div className={"w-64"} id={"ck-editor-text"}>
                   {state.editor}
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
-                               feedbackInvalid="Vui lòng nhập mô tả" id="categoryDescription" rows="3" required
+                               feedbackInvalid={t('category.validate_input_description')} id="categoryDescription" rows="3" required
                                value={category.description}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
-                  Lưu
+                  {t('btn_save')}
                 </CButton>
               </div>
             </CForm>
@@ -202,17 +204,17 @@ const Category = () => {
       </CCol>
       <CCol xs={8}>
         <div className="mb-3">
-          <CFormLabel htmlFor="categoryName">Tìm kiếm danh mục</CFormLabel>
+          <CFormLabel htmlFor="categoryName">{t('category.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text"
-                      placeholder="Vui lòng nhập tên danh mục" value={categorySearch.name} required/>
+                      placeholder={t('category.validate_input_name')} value={categorySearch.name} required/>
         </div>
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Description</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Action</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_id')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('category.column_name')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('category.column_description')}</CTableHeaderCell>
+              <CTableHeaderCell scope="col">{t('column_action')}</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
@@ -228,7 +230,7 @@ const Category = () => {
                 <CTableDataCell>
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
-                    if (window.confirm('Delete this category?')) {
+                    if (window.confirm(t('category.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
@@ -241,7 +243,7 @@ const Category = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number - 1)}>
-            Trước
+            {t('paginate_previous')}
           </button>
           {pageNumber.map((element, index) => {
             return (
@@ -255,7 +257,7 @@ const Category = () => {
           <button
             className="px-3 py-1 m-1 text-center btn-primary"
             onClick={() => setNumber(number + 1)}>
-            Sau
+            {t('paginate_next')}
           </button>
         </div>
       </CCol>
