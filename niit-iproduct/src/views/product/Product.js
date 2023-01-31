@@ -45,7 +45,8 @@ const Product = () => {
     headers: {Authorization: `Bearer ${token}`}
   };
   const [state, setState] = useState({
-    editor: null
+    editor: null,
+    editShortDescription: null
   });
   const loadData = async () => {
     const data = await axios.get(url + ':' + product_port + '/products');
@@ -95,7 +96,24 @@ const Product = () => {
         }}
       />
     );
-    setState({...state, editor: editor});
+    const editShortDescription = (
+      <CKEditor
+        editor={ClassicEditor}
+        required
+        onChange={(event, editor) => {
+          const data = editor.getData();
+          console.log({event, editor, data});
+          changeShortDescription(data);
+        }}
+        onBlur={(event, editor) => {
+          console.log('Blur.', editor);
+        }}
+        onFocus={(event, editor) => {
+          console.log('Focus.', editor);
+        }}
+      />
+    );
+    setState({...state, editor: editor, editShortDescription: editShortDescription});
   }, [load]);
   const changeInput = (value) => {
     setProduct({
@@ -113,6 +131,11 @@ const Product = () => {
   const changeTextarea = (value) => {
     setProduct({
       full_description: value
+    })
+  };
+  const changeShortDescription = (value) => {
+    setProduct({
+      short_description: value
     })
   };
   const handleSubmit = (event) => {
@@ -169,7 +192,29 @@ const Product = () => {
             }}
           />
         );
-        setState({...state, editor: editor});
+        const editShortDescription = (
+          <CKEditor
+            editor={ClassicEditor}
+            required
+            data={res.data.short_description ?? ''}
+            onReady={editor => {
+              // You can store the "editor" and use when it is needed.
+              editor.setData(res.data.short_description);
+            }}
+            onChange={(event, editor) => {
+              const data = editor.getData();
+              console.log({event, editor, data});
+              changeShortDescription(data);
+            }}
+            onBlur={(event, editor) => {
+              console.log('Blur.', editor);
+            }}
+            onFocus={(event, editor) => {
+              console.log('Focus.', editor);
+            }}
+          />
+        );
+        setState({...state, editor: editor, editShortDescription: editShortDescription});
       })
       .catch(error => console.log(error));
   };
@@ -211,7 +256,10 @@ const Product = () => {
               {/* short_description */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productShortDescription">{t('product.label_short_description')}</CFormLabel>
-                <CFormTextarea
+                <div className={"w-64"} id={"ck-editor-text"}>
+                  {state.editShortDescription}
+                </div>
+                <CFormTextarea className="d-none" onChange={e => changeShortDescription(e.target.value)}
                                feedbackInvalid={t('product.validate_input_short_description')} id="productShortDescription" rows="3" required
                                value={product.short_description}/>
               </div>
