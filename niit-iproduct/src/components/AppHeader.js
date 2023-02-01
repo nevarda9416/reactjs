@@ -38,7 +38,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
             <CNavLink to="/dashboard" component={NavLink}>
-              {t('dashboard')}
+              {t('nav.dashboard')}
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

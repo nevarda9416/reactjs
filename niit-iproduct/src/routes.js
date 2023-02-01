@@ -17,12 +17,12 @@ const DataProduct = React.lazy(() => import('./views/data/Product'));
 const SearchProduct = React.lazy(() => import('./views/search/Product'));
 
 const routes = [
-  { path: '/', exact: true, name: 'Home' },
-  { path: '/dashboard', name: 'Dashboard', element: Dashboard },
-  { path: '/categories', name: 'Danh mục sản phẩm', element: Category },
-  { path: '/categories/:action/:id', name: 'Danh mục sản phẩm', element: Category },
-  { path: '/products', name: 'Danh sách sản phẩm', element: Product },
-  { path: '/products/:action/:id', name: 'Danh sách sản phẩm', element: Product },
+  { path: '/', exact: true, name: 'home.breadcrumb' },
+  { path: '/dashboard', name: 'dashboard.breadcrumb', element: Dashboard },
+  { path: '/categories', name: 'category.breadcrumb', element: Category },
+  { path: '/categories/:action/:id', name: 'category.breadcrumb', element: Category },
+  { path: '/products', name: 'product.breadcrumb', element: Product },
+  { path: '/products/:action/:id', name: 'product.breadcrumb', element: Product },
   { path: '/tags', name: 'tag.breadcrumb', element: Tag },
   { path: '/tags/:action/:id', name: 'tag.breadcrumb', element: Tag },
   { path: '/customers', name: 'customer.breadcrumb', element: Customer },

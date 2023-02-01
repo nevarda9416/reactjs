@@ -14,13 +14,29 @@ const collection_name = env.COLLECTION_ACTIVITY_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+// Count products (GET)
+app.get('/' + collection_name + '/count', function (req, res) {
+  mongoClient.connect(url, function (error, database) {
+    if (error) throw error;
+    const dbo = database.db(dbname);
+    dbo.collection('products').count({}, function (error, response_p) {
+      dbo.collection('categories').count({}, function (error, response_c) {
+        dbo.collection('tags').count({}, function (error, response_t) {
+          if (error) throw error;
+          res.jsonp({ product: response_p, category: response_c, tag: response_t });
+          dbo.close();
+        });
+      });
+    });
+  })
+});
 // Find activity name like input data (GET)
 app.get('/' + collection_name + '/find', function (req, res) {
   const search_name = req.query.name;
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({ name: new RegExp(search_name, 'i') }).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       setTimeout(() => {
@@ -34,7 +50,7 @@ app.get('/' + collection_name, function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({}).sort({ _id: -1 }).toArray(function (error, response) {
       if (error) throw error;
       if (response) {
         setTimeout(() => {
@@ -49,7 +65,7 @@ app.get('/' + collection_name, function (req, res) {
 app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
-  const listingQuery = {dbname: req.body.name};
+  const listingQuery = { dbname: req.body.name };
   const updates = {
     $set: {
       name: req.body.name,
@@ -60,7 +76,7 @@ app.post('/' + collection_name + '/add', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
@@ -73,7 +89,7 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
+    dbo.collection(collection_name).findOne({ _id: new ObjectId(_id) }, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       setTimeout(() => {
@@ -84,7 +100,7 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Update activity (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
-  const listingQuery = {_id: new ObjectId(req.params.id)};
+  const listingQuery = { _id: new ObjectId(req.params.id) };
   console.log(req.body);
   const updates = {
     $set: {
@@ -96,7 +112,7 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
       if (error) throw error;
       console.log('Activity updated: ' + JSON.stringify(response));
       res.jsonp(response);
@@ -105,7 +121,7 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Delete activity (GET)
 app.get('/' + collection_name + '/delete/:id', function (req, res) {
-  const listingQuery = {_id: new ObjectId(req.params.id)};
+  const listingQuery = { _id: new ObjectId(req.params.id) };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);

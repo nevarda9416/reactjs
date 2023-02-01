@@ -18,7 +18,6 @@
   "btn_register": "Create Account",
   "welcome": "Welcome to dashboard!",
   "home": "Homepage",
-  "dashboard": "Dashboard",
   "btn_save": "Save",
   "btn_close": "Close",
   "btn_get_data": "Get data",
@@ -43,6 +42,13 @@
     "customer": "Customers",
     "tracking": "Tracking",
     "traffic_source": "Traffic Sources"
+  },
+  "dashboard": {
+    "breadcrumb": "Dashboard",
+    "label_statistic": "Statistics",
+    "label_statistic_product": "Products",
+    "label_statistic_category": "Category",
+    "label_statistic_tag": "Tag"
   },
   "category": {
     "breadcrumb": "Category management",

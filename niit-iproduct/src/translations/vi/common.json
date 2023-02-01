@@ -18,7 +18,6 @@
   "btn_register": "Tạo tài khoản",
   "welcome": "Chào mừng đến với trang quản trị!",
   "home": "Trang chủ",
-  "dashboard": "Bảng điều khiển",
   "btn_save": "Lưu",
   "btn_close": "Đóng",
   "btn_get_data": "Lấy dữ liệu",
@@ -43,6 +42,13 @@
     "customer": "Khách hàng",
     "tracking": "Theo dõi người dùng",
     "traffic_source": "Nguồn đăng ký tài khoản"
+  },
+  "dashboard": {
+    "breadcrumb": "Bảng điều khiển",
+    "label_statistic": "Thống kê sơ bộ",
+    "label_statistic_product": "Sản phẩm",
+    "label_statistic_category": "Danh mục",
+    "label_statistic_tag": "Từ khóa"
   },
   "category": {
     "breadcrumb": "Danh mục sản phẩm",
