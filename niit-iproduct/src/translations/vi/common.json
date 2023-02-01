@@ -160,9 +160,12 @@
     "label_category_name": "Tên danh mục",
     "label_name": "Tên sản phẩm",
     "search": "Tìm kiếm sản phẩm",
+    "example_keyword": "Ví dụ từ khóa tìm kiếm",
     "validate_input_category_name": "Vui lòng nhập tên danh mục",
     "validate_input_name": "Vui lòng nhập tên sản phẩm",
     "column_name": "Tên sản phẩm",
+    "column_price": "Giá",
+    "column_link": "Nơi mua",
     "confirm_delete": "Xóa sản phẩm này?"
   },
   "customer": {

@@ -185,9 +185,12 @@
     "label_category_name": "Category name",
     "label_name": "Product name",
     "search": "Search product",
+    "example_keyword": "Example search keyword",
     "validate_input_category_name": "Please input category name",
     "validate_input_name": "Please input product name",
     "column_name": "Product Name",
+    "column_price": "Price",
+    "column_link": "Link buy",
     "confirm_delete": "Delete this product?"
   },
   "customer": {
