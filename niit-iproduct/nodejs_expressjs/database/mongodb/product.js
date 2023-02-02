@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
 const path = require('path');
 const { ObjectId } = require('mongodb');
+const fs = require('fs');
 require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
 const env = process.env;
 const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
@@ -49,7 +50,7 @@ app.get('/' + collection_name, function (req, res) {
 app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
-  const listingQuery = {dbname: req.body.name};
+  const listingQuery = {name: req.body.name};
   const updates = {
     $set: {
       category_id: req.body.category_id,
@@ -123,6 +124,58 @@ app.get('/' + collection_name + '/delete/:id', function (req, res) {
       res.jsonp(response);
       database.close();
     });
+  })
+});
+// Export from database and write to json file
+app.get('/products/export', function (req, res) {
+  mongoClient.connect(url, function (error, database) {
+    if (error) throw error;
+    const dbo = database.db(dbname);
+    dbo.collection('products').find({}).sort({ _id: -1 }).toArray(function (error, response) {
+      if (error) throw error;
+      fs.writeFile('./nodejs_expressjs/database/mongodb/products.json', JSON.stringify(response), function (error) {
+        if (error) {
+          res.jsonp({ success: false });
+        } else {
+          console.log(JSON.stringify(response));
+          res.jsonp({ success: true });
+        }
+      });
+    });
+  })
+});
+// Import from json file to database
+app.get('/products/import', function (req, res) {
+  fs.readFile('./nodejs_expressjs/database/mongodb/products.json', function(error, response) {
+    if (error) {
+      res.jsonp({ success: false });
+    } else {
+      const parseJSON = JSON.parse(response);
+      parseJSON.forEach(element => {
+        console.log(element.name);
+        const listingQuery = {name: element.name};
+        const updates = {
+          $set: {
+            category_id: element.category_id,
+            name: element.name,
+            short_description: element.short_description,
+            full_description: element.full_description,
+            unit: element.unit,
+            currency: element.currency,
+            price: element.price
+          }
+        };
+        mongoClient.connect(url, function (error, database) {
+          if (error) throw error;
+          const dbo = database.db(dbname);
+          dbo.collection('products').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+            if (error) throw error;
+            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+          });
+        })
+      });
+      res.jsonp({ success: true });
+    }
   })
 });
 app.listen(port, env.SERVER_NAME, function () {

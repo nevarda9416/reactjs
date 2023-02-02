@@ -170,6 +170,7 @@ const DataProduct = () => {
           />
         );
         setState({...state, editor: editor});
+        setLoad(1);
       })
       .catch(error => console.log(error));
   };
@@ -240,7 +241,7 @@ const DataProduct = () => {
                   <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('product.confirm_delete'))) {
-                      deleteItem(event, item._id);
+                      deleteItem(e, item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>

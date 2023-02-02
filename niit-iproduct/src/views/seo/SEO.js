@@ -55,7 +55,6 @@ const SEO = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [seo, setSeo] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [seoPerPage] = useState(LIMIT);

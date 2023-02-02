@@ -14,7 +14,7 @@ const collection_name = env.COLLECTION_ACTIVITY_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-// Count products (GET)
+// Count data (GET)
 app.get('/' + collection_name + '/count', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;

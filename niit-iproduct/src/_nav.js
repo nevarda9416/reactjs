@@ -15,6 +15,7 @@ import {
   cibOpenSourceInitiative,
   cilGraph,
   cilList,
+  cilSettings
 } from '@coreui/icons'
 import { CNavItem, CNavTitle } from '@coreui/react'
 import {Translation} from "react-i18next";
@@ -127,6 +128,12 @@ const _nav = [
     to: '/traffic_sources',
     icon: <CIcon icon={cibOpenSourceInitiative} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'nav.tool',
+    to: '/data/tools',
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+  }
 ];
 
 export default _nav

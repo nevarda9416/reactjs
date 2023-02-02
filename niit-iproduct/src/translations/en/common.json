@@ -21,6 +21,10 @@
   "btn_save": "Save",
   "btn_close": "Close",
   "btn_get_data": "Get data",
+  "btn_export_data": "Export Data",
+  "btn_import_data": "Import Data",
+  "alert_export_success": "Export data successfully!",
+  "alert_import_success": "Import data successfully!",
   "column_id": "ID",
   "column_action": "Action",
   "paginate_previous": "Previous",
@@ -41,7 +45,8 @@
     "crawl_product": "Products",
     "customer": "Customers",
     "tracking": "Tracking",
-    "traffic_source": "Traffic Sources"
+    "traffic_source": "Traffic Sources",
+    "tool": "Tools"
   },
   "dashboard": {
     "breadcrumb": "Dashboard",
@@ -260,5 +265,8 @@
     "search": "Search source",
     "validate_input_source": "Please input source",
     "column_source": "Source"
+  },
+  "tool": {
+    "breadcrumb": "Tool"
   }
 }

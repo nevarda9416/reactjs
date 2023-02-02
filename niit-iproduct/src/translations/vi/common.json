@@ -21,6 +21,10 @@
   "btn_save": "Lưu",
   "btn_close": "Đóng",
   "btn_get_data": "Lấy dữ liệu",
+  "btn_export_data": "Xuất dữ liệu",
+  "btn_import_data": "Nhập dữ liệu",
+  "alert_export_success": "Xuất dữ liệu thành công!",
+  "alert_import_success": "Nhập dữ liệu thành công!",
   "column_id": "ID",
   "column_action": "Hành động",
   "paginate_previous": "Trước",
@@ -41,7 +45,8 @@
     "crawl_product": "Sản phẩm",
     "customer": "Khách hàng",
     "tracking": "Theo dõi người dùng",
-    "traffic_source": "Nguồn đăng ký tài khoản"
+    "traffic_source": "Nguồn đăng ký tài khoản",
+    "tool": "Công cụ"
   },
   "dashboard": {
     "breadcrumb": "Bảng điều khiển",
@@ -235,5 +240,8 @@
     "search": "Tìm kiếm nguồn đăng ký tài khoản",
     "validate_input_source": "Vui lòng nhập nguồn đăng ký tài khoản",
     "column_source": "Nguồn đăng ký"
+  },
+  "tool": {
+    "breadcrumb": "Công cụ"
   }
 }
