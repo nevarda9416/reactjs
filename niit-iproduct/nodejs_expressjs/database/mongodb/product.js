@@ -25,7 +25,7 @@ app.get('/' + collection_name + '/find', function (req, res) {
       if (error) throw error;
       res.jsonp(response);
       setTimeout(() => {
-        database.close()
+        dbo.close()
       }, 3000);
     });
   })
@@ -39,7 +39,7 @@ app.get('/' + collection_name, function (req, res) {
       if (error) throw error;
       if (response) {
         setTimeout(() => {
-          database.close()
+          dbo.close()
         }, 3000);
         res.jsonp(response);
       }
