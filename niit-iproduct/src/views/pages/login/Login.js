@@ -12,9 +12,10 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
+  CNavLink
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser, cifGb, cifVn } from '@coreui/icons'
 import axios from 'axios'
 import {useTranslation} from "react-i18next";
 
@@ -60,10 +61,16 @@ const Login = () => {
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md={8}>
+          <CCol md={4}>
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
+                        <CNavLink onClick={() => i18n.changeLanguage('vi')} style={{ display: "inline-block", margin: "0 1rem 1rem 0" }}>
+                            <CIcon icon={cifVn} size="lg" />
+                        </CNavLink>
+                        <CNavLink onClick={() => i18n.changeLanguage('en')} className="d-inline">
+                            <CIcon icon={cifGb} size="lg" />
+                        </CNavLink>
                   <CForm noValidate validated={validated} onSubmit={handleSubmit}>
                     <h1>{t('login.title')}</h1>
                     <p className="text-medium-emphasis">{t('login.label')}</p>
@@ -93,7 +100,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              <CCard className="text-white bg-primary py-5 d-none" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <h2>{t('register.title')}</h2>

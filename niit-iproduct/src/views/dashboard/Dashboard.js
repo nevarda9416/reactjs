@@ -38,15 +38,15 @@ const Dashboard = () => {
                 <CCol xs={12} md={12} xl={12}>
                   <CRow>
                     <CCol sm={4}>
-                      <div className="border-start border-start-4 border-start-info py-1 px-3">
-                        <h5 className="text-medium-emphasis">{t('dashboard.label_statistic_product')}</h5>
-                        <div className="fs-5 fw-semibold">{cproduct}</div>
-                      </div>
-                    </CCol>
-                    <CCol sm={4}>
                       <div className="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
                         <h5 className="text-medium-emphasis">{t('dashboard.label_statistic_category')}</h5>
                         <div className="fs-5 fw-semibold">{ccategory}</div>
+                      </div>
+                    </CCol>
+                    <CCol sm={4}>
+                      <div className="border-start border-start-4 border-start-info py-1 px-3">
+                        <h5 className="text-medium-emphasis">{t('dashboard.label_statistic_product')}</h5>
+                        <div className="fs-5 fw-semibold">{cproduct}</div>
                       </div>
                     </CCol>
                     <CCol sm={4}>

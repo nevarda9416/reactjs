@@ -82,18 +82,18 @@ const _nav = [
     to: '/systems',
     icon: <CIcon icon={cilAssistiveListeningSystem} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'nav.seo',
-    to: '/seo',
-    icon: <CIcon icon={cibGoogle} customClassName="nav-icon" />,
-  },
-  {
-    component: CNavItem,
-    name: 'nav.comment',
-    to: '/comments',
-    icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'nav.seo',
+  //   to: '/seo',
+  //   icon: <CIcon icon={cibGoogle} customClassName="nav-icon" />,
+  // },
+  // {
+  //   component: CNavItem,
+  //   name: 'nav.comment',
+  //   to: '/comments',
+  //   icon: <CIcon icon={cilCommentSquare} customClassName="nav-icon" />,
+  // },
   {
     component: CNavTitle,
     name: 'nav.data',
@@ -110,24 +110,24 @@ const _nav = [
     to: '/data/product',
     icon: <CIcon icon={cilList} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'nav.customer',
-    to: '/customers',
-    icon: <CIcon icon={cilUserFemale} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'nav.customer',
+  //   to: '/customers',
+  //   icon: <CIcon icon={cilUserFemale} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: 'nav.tracking',
     to: '/trackings',
     icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: 'nav.traffic_source',
-    to: '/traffic_sources',
-    icon: <CIcon icon={cibOpenSourceInitiative} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'nav.traffic_source',
+  //   to: '/traffic_sources',
+  //   icon: <CIcon icon={cibOpenSourceInitiative} customClassName="nav-icon" />,
+  // },
   {
     component: CNavItem,
     name: 'nav.tool',
