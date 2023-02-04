@@ -27,8 +27,10 @@
   "alert_import_success": "Import data successfully!",
   "column_id": "ID",
   "column_action": "Action",
+  "paginate_first": "First",
   "paginate_previous": "Previous",
   "paginate_next": "Next",
+  "paginate_last": "Last",
   "nav": {
     "dashboard": "Dashboard",
     "management": "Management",
@@ -180,7 +182,7 @@
     "placeholder_input_serch_keyword": "Keyword..."
   },
   "product": {
-    "breadcrumb": "Product management",
+    "breadcrumb": "Product Management",
     "add_or_edit": "Add or Edit product",
     "label_short_description": "Short description",
     "label_full_description": "Full description",

@@ -27,8 +27,10 @@
   "alert_import_success": "Nhập dữ liệu thành công!",
   "column_id": "ID",
   "column_action": "Hành động",
+  "paginate_first": "Đầu",
   "paginate_previous": "Trước",
   "paginate_next": "Sau",
+  "paginate_last": "Cuối",
   "nav": {
     "dashboard": "Bảng điều khiển",
     "management": "Quản lý",

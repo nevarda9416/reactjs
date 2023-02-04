@@ -24,7 +24,6 @@ app.get('/' + collection_name + '/count', function (req, res) {
         dbo.collection('tags').count({}, function (error, response_t) {
           if (error) throw error;
           res.jsonp({ product: response_p, category: response_c, tag: response_t });
-          dbo.close();
         });
       });
     });
