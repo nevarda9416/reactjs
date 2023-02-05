@@ -71,8 +71,7 @@
   },
   "user": {
     "breadcrumb": "User management",
-    "add": "Add user",
-    "edit": "Edit user",
+    "add_or_edit": "Add or Edit user",
     "label_fullname": "Full name",
     "label_email": "Email",
     "label_username": "Username",
@@ -89,8 +88,7 @@
   },
   "tag": {
     "breadcrumb": "Tag management",
-    "add": "Add tag",
-    "edit": "Edit tag",
+    "add_or_edit": "Add or Edit tag",
     "label_name": "Name",
     "label_slug": "Slug",
     "label_description": "Description",
