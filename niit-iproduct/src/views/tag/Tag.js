@@ -56,10 +56,10 @@ const Tag = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [tag, setTag] = useState([]);
+  const [tags, setTags] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [tagPerPage] = useState(LIMIT);
+  const tagPerPage = LIMIT;
   const lastTag = number * tagPerPage;
   const firstTag = lastTag - tagPerPage;
   const currentData = data.slice(firstTag, lastTag);
@@ -74,6 +74,7 @@ const Tag = () => {
     const getData = async () => {
       const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
       const dataJ = await data.data;
+      setTags(dataJ);
       setData(dataJ);
     };
     getData();
@@ -96,16 +97,6 @@ const Tag = () => {
     );
     setState({...state, editor: editor});
   }, [load]);
-  const changeInputName = (value) => {
-    setTag({
-      name: value
-    })
-  };
-  const changeInputSlug = (value) => {
-    setTag({
-      slug: value
-    })
-  };
   const changeInputSearch = async (value) => {
     setTagSearch({
       name: value
@@ -181,6 +172,56 @@ const Tag = () => {
     setLoad(1);
   };
   const [t, i18n] = useTranslation('common');
+  const pagination =
+        <div className="my-3 text-center">
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    setNumber(1)
+                }}>
+                {t('paginate_first')}
+            </button>
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    if (number > 1)
+                        setNumber(number - 1)
+                    else
+                        setNumber(1)
+                }}>
+                {t('paginate_previous')}
+            </button>
+            {pageNumber.map((element, index) => {
+                const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
+                return (
+                    <span>{(element < number - 3 || element > number + 3 || element == number) &&
+                        <button key={index}
+                            className={className}
+                            onClick={() => changePage(element)}>
+                            {element}
+                        </button>
+                    }</span>
+                );
+            })}
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    if (number < Math.ceil(tags.length / tagPerPage))
+                        setNumber(number + 1)
+                    else
+                        setNumber(Math.ceil(tags.length / tagPerPage))
+                }}>
+                {t('paginate_next')}
+            </button>
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    setNumber(Math.ceil(tags.length / tagPerPage))
+                }}>
+                {t('paginate_last')}
+            </button>
+        </div>
+        ;
   return (
     <CRow>
       <CCol xs={6}>
@@ -220,6 +261,7 @@ const Tag = () => {
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
                       placeholder={t('tag.validate_input_name')} value={tagSearch.name} required/>
         </div>
+        {pagination}
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
@@ -277,28 +319,8 @@ const Tag = () => {
               </CTableRow>
             ))}
           </CTableBody>
-        </CTable>
-        <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number - 1)}>
-            {t('paginate_previous')}
-          </button>
-          {pageNumber.map((element, index) => {
-            return (
-              <button key={index}
-                      className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => changePage(element)}>
-                {element}
-              </button>
-            );
-          })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number + 1)}>
-            {t('paginate_next')}
-          </button>
-        </div>
+        </CTable>        
+        {pagination}
       </CCol>
     </CRow>
   )
