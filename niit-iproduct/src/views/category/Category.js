@@ -52,6 +52,7 @@ const Category = () => {
   };
   const [data, setData] = useState([]);
   const [category, setCategory] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
   const [categoryPerPage] = useState(LIMIT);
   const lastCategory = number * categoryPerPage;
@@ -69,6 +70,7 @@ const Category = () => {
     const getData = async () => {
       const data = await axios.get(url + ':' + port + '/categories');
       const dataJ = await data.data;
+      setCategories(dataJ);
       setData(dataJ);
     };
     getData();
@@ -169,6 +171,56 @@ const Category = () => {
     loadData();
   };
   const [t, i18n] = useTranslation('common');
+  const pagination =
+        <div className="my-3 text-center">
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    setNumber(1)
+                }}>
+                {t('paginate_first')}
+            </button>
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    if (number > 1)
+                        setNumber(number - 1)
+                    else
+                        setNumber(1)
+                }}>
+                {t('paginate_previous')}
+            </button>
+            {pageNumber.map((element, index) => {
+                const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
+                return (
+                    <span>{(element < number - 3 || element > number + 3 || element == number) &&
+                        <button key={index}
+                            className={className}
+                            onClick={() => changePage(element)}>
+                            {element}
+                        </button>
+                    }</span>
+                );
+            })}
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    if (number < Math.ceil(categories.length / categoryPerPage))
+                        setNumber(number + 1)
+                    else
+                        setNumber(Math.ceil(categories.length / categoryPerPage))
+                }}>
+                {t('paginate_next')}
+            </button>
+            <button
+                className="px-3 py-1 m-1 text-center btn btn-primary"
+                onClick={() => {
+                    setNumber(Math.ceil(categories.length / categoryPerPage))
+                }}>
+                {t('paginate_last')}
+            </button>
+        </div>
+        ;
   return (
     <CRow>
       <CCol xs={4}>
@@ -208,6 +260,7 @@ const Category = () => {
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text"
                       placeholder={t('category.validate_input_name')} value={categorySearch.name} required/>
         </div>
+        {pagination}
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
@@ -238,28 +291,8 @@ const Category = () => {
               </CTableRow>
             ))}
           </CTableBody>
-        </CTable>
-        <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number - 1)}>
-            {t('paginate_previous')}
-          </button>
-          {pageNumber.map((element, index) => {
-            return (
-              <button key={index}
-                      className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => ChangePage(element)}>
-                {element}
-              </button>
-            );
-          })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number + 1)}>
-            {t('paginate_next')}
-          </button>
-        </div>
+        </CTable>        
+        {pagination}
       </CCol>
     </CRow>
   )
