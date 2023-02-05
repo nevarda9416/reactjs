@@ -38,9 +38,6 @@ app.get('/' + collection_name, function (req, res) {
     dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
       if (response) {
-        setTimeout(() => {
-          dbo.close()
-        }, 3000);
         res.jsonp(response);
       }
     });
