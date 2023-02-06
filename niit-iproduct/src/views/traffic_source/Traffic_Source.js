@@ -57,7 +57,7 @@ const Traffic_Source = () => {
   const [load, setLoad] = useState(0);
   const [trafficSource, setTrafficSource] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [trafficSourcePerPage] = useState(LIMIT);
+  const [trafficSourcePerPage] = LIMIT;
   const lastTrafficSource = number * trafficSourcePerPage;
   const firstTrafficSource = lastTrafficSource - trafficSourcePerPage;
   const currentData = data.slice(firstTrafficSource, lastTrafficSource);

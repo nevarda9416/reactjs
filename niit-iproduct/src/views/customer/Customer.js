@@ -62,7 +62,7 @@ const Customer = () => {
   const [traffic_sources, setTrafficSources] = useState([]);
   const [customer, setCustomer] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [customerPerPage] = useState(LIMIT);
+  const [customerPerPage] = LIMIT;
   const lastCustomer = number * customerPerPage;
   const firstCustomer = lastCustomer - customerPerPage;
   const currentData = data.slice(firstCustomer, lastCustomer);

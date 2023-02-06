@@ -57,7 +57,7 @@ const SEO = () => {
   const [load, setLoad] = useState(0);
   const [seo, setSeo] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [seoPerPage] = useState(LIMIT);
+  const [seoPerPage] = LIMIT;
   const lastSeo = number * seoPerPage;
   const firstSeo = lastSeo - seoPerPage;
   const currentData = data.slice(firstSeo, lastSeo);

@@ -126,8 +126,9 @@
   },
   "system": {
     "breadcrumb": "System",
-    "add": "Add activity",
-    "edit": "Edit activity",
+    "add_or_edit": "Add or Edit config",
+    "add": "Add config",
+    "edit": "Edit config",
     "label_type": "Type",
     "label_is_actived": "Is actived",
     "label_actived_by": "Actived by",

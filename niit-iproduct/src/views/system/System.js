@@ -56,10 +56,10 @@ const System = () => {
   };
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
-  const [category, setCategory] = useState([]);
   const [system, setSystem] = useState([]);
+  const [systems, setSystems] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [systemPerPage] = useState(LIMIT);
+  const [systemPerPage] = LIMIT;
   const lastSystem = number * systemPerPage;
   const firstSystem = lastSystem - systemPerPage;
   const currentData = data.slice(firstSystem, lastSystem);
@@ -74,6 +74,7 @@ const System = () => {
     const getData = async () => {
       const data = await axios.get(url + ':' + system_port + '/' + system_collection);
       const dataJ = await data.data;
+      setSystems(dataJ);
       setData(dataJ);
     };
     getData();
@@ -181,12 +182,62 @@ const System = () => {
     setLoad(1);
   };
   const [t, i18n] = useTranslation('common');
+  const pagination =
+    <div className="my-3 text-center">
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          setNumber(1)
+        }}>
+        {t('paginate_first')}
+      </button>
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          if (number > 1)
+            setNumber(number - 1)
+          else
+            setNumber(1)
+        }}>
+        {t('paginate_previous')}
+      </button>
+      {pageNumber.map((element, index) => {
+        const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
+        return (
+          <span>{(element < number - 3 || element > number + 3 || element == number) &&
+          <button key={index}
+                  className={className}
+                  onClick={() => changePage(element)}>
+            {element}
+          </button>
+          }</span>
+        );
+      })}
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          if (number < Math.ceil(systems.length / systemPerPage))
+            setNumber(number + 1)
+          else
+            setNumber(Math.ceil(systems.length / systemPerPage))
+        }}>
+        {t('paginate_next')}
+      </button>
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          setNumber(Math.ceil(systems.length / systemPerPage))
+        }}>
+        {t('paginate_last')}
+      </button>
+    </div>
+  ;
   return (
     <CRow>
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>{t('system.add')}</strong>
+            <strong>{t('system.add_or_edit')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
@@ -277,6 +328,7 @@ const System = () => {
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="systemSearchName"
                       placeholder={t('system.validate_input_type')} value={systemSearch.name} required/>
         </div>
+        {pagination}
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
@@ -392,27 +444,7 @@ const System = () => {
             ))}
           </CTableBody>
         </CTable>
-        <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number - 1)}>
-            {t('paginate_previous')}
-          </button>
-          {pageNumber.map((element, index) => {
-            return (
-              <button key={index}
-                      className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => changePage(element)}>
-                {element}
-              </button>
-            );
-          })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number + 1)}>
-            {t('paginate_next')}
-          </button>
-        </div>
+        {pagination}
       </CCol>
     </CRow>
   )

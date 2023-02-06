@@ -59,7 +59,7 @@ const Activity = () => {
   const [activity, setActivity] = useState([]);
   const [activities, setActivities] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [activityPerPage] = useState(LIMIT);
+  const [activityPerPage] = LIMIT;
   const lastActivity = number * activityPerPage;
   const firstActivity = lastActivity - activityPerPage;
   const currentData = data.slice(firstActivity, lastActivity);

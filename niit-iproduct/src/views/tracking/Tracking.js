@@ -56,7 +56,7 @@ const Tracking = () => {
   const [load, setLoad] = useState(0);
   const [tracking, setTracking] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [trackingPerPage] = useState(LIMIT);
+  const [trackingPerPage] = LIMIT;
   const lastTracking = number * trackingPerPage;
   const firstTracking = lastTracking - trackingPerPage;
   const currentData = data.slice(firstTracking, lastTracking);
