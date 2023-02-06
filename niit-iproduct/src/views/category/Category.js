@@ -54,7 +54,7 @@ const Category = () => {
   const [category, setCategory] = useState([]);
   const [categories, setCategories] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [categoryPerPage] = LIMIT;
+  const categoryPerPage = LIMIT;
   const lastCategory = number * categoryPerPage;
   const firstCategory = lastCategory - categoryPerPage;
   const currentData = data.slice(firstCategory, lastCategory);

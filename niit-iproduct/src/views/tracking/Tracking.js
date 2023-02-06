@@ -55,8 +55,9 @@ const Tracking = () => {
   const [data, setData] = useState([]);
   const [load, setLoad] = useState(0);
   const [tracking, setTracking] = useState([]);
+  const [trackings, setTrackings] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [trackingPerPage] = LIMIT;
+  const trackingPerPage = LIMIT;
   const lastTracking = number * trackingPerPage;
   const firstTracking = lastTracking - trackingPerPage;
   const currentData = data.slice(firstTracking, lastTracking);
@@ -71,6 +72,7 @@ const Tracking = () => {
     const getData = async () => {
       const data = await axios.get(url + ':' + tracking_port + '/' + tracking_collection);
       const dataJ = await data.data;
+      setTrackings(dataJ);
       setData(dataJ);
     };
     getData();
@@ -93,16 +95,6 @@ const Tracking = () => {
     );
     setState({...state, editor: editor});
   }, [load]);
-  const changeInputName = (value) => {
-    setTracking({
-      name: value
-    })
-  };
-  const changeInputSlug = (value) => {
-    setTracking({
-      slug: value
-    })
-  };
   const changeInputSearch = async (value) => {
     setTrackingSearch({
       name: value
@@ -171,13 +163,57 @@ const Tracking = () => {
       })
       .catch(error => console.log(error));
   };
-  const deleteItem = (event, id) => {
-    setId(id);
-    setAction({'action': 'delete'});
-    deleteById(id);
-    setLoad(1);
-  };
   const [t, i18n] = useTranslation('common');
+  const pagination =
+  <div className="my-3 text-center">
+      <button
+          className="px-3 py-1 m-1 text-center btn btn-primary"
+          onClick={() => {
+              setNumber(1)
+          }}>
+          {t('paginate_first')}
+      </button>
+      <button
+          className="px-3 py-1 m-1 text-center btn btn-primary"
+          onClick={() => {
+              if (number > 1)
+                  setNumber(number - 1)
+              else
+                  setNumber(1)
+          }}>
+          {t('paginate_previous')}
+      </button>
+      {pageNumber.map((element, index) => {
+          const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
+          return (
+              <span>{(element < number - 3 || element > number + 3 || element == number) &&
+                  <button key={index}
+                      className={className}
+                      onClick={() => changePage(element)}>
+                      {element}
+                  </button>
+              }</span>
+          );
+      })}
+      <button
+          className="px-3 py-1 m-1 text-center btn btn-primary"
+          onClick={() => {
+              if (number < Math.ceil(trackings.length / trackingPerPage))
+                  setNumber(number + 1)
+              else
+                  setNumber(Math.ceil(trackings.length / trackingPerPage))
+          }}>
+          {t('paginate_next')}
+      </button>
+      <button
+          className="px-3 py-1 m-1 text-center btn btn-primary"
+          onClick={() => {
+              setNumber(Math.ceil(trackings.length / trackingPerPage))
+          }}>
+          {t('paginate_last')}
+      </button>
+  </div>
+  ;
   return (
     <CRow>
       <CCol xs={12}>
@@ -186,6 +222,7 @@ const Tracking = () => {
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="trackingSearchName"
                       placeholder={t('tracking.validate_input_keyword')} value={trackingSearch.name} required/>
         </div>
+        {pagination}
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
@@ -326,27 +363,7 @@ const Tracking = () => {
             ))}
           </CTableBody>
         </CTable>
-        <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number - 1)}>
-            {t('paginate_previous')}
-          </button>
-          {pageNumber.map((element, index) => {
-            return (
-              <button key={index}
-                      className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => changePage(element)}>
-                {element}
-              </button>
-            );
-          })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number + 1)}>
-            {t('paginate_next')}
-          </button>
-        </div>
+        {pagination}
       </CCol>
     </CRow>
   )

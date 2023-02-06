@@ -60,7 +60,7 @@ const Comment = () => {
   const [comment, setComment] = useState([]);
   const [rating, setRating] = useState(1);
   const [number, setNumber] = useState(1); // No of pages
-  const [commentPerPage] = LIMIT;
+  const commentPerPage = LIMIT;
   const lastComment = number * commentPerPage;
   const firstComment = lastComment - commentPerPage;
   const currentData = data.slice(firstComment, lastComment);

@@ -59,7 +59,7 @@ const System = () => {
   const [system, setSystem] = useState([]);
   const [systems, setSystems] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [systemPerPage] = LIMIT;
+  const systemPerPage = LIMIT;
   const lastSystem = number * systemPerPage;
   const firstSystem = lastSystem - systemPerPage;
   const currentData = data.slice(firstSystem, lastSystem);
