@@ -56,13 +56,14 @@ const DataProduct = () => {
   const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
   const [product, setProduct] = useState([]);
+  const [products, setProducts] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [productPerPage] = LIMIT;
+  const productPerPage = LIMIT;
   const lastProduct = number * productPerPage;
   const firstProduct = lastProduct - productPerPage;
   const currentData = data.slice(firstProduct, lastProduct);
   const pageNumber = [];
-  for (let i = 1; i <= Math.ceil(product.length / productPerPage); i++) {
+  for (let i = 1; i <= Math.ceil(products.length / productPerPage); i++) {
     pageNumber.push(i);
   }
   const changePage = (pageNumber) => {
@@ -75,6 +76,7 @@ const DataProduct = () => {
       setCategory(dataJC);
       const dataP = await axios.get(url + ':' + product_port + '/products');
       const dataJP = await dataP.data;
+      setProducts(dataJP);
       setData(dataJP);
     };
     getData();
@@ -97,11 +99,6 @@ const DataProduct = () => {
     );
     setState({...state, editor: editor});
   }, [load]);
-  const changeInput = (value) => {
-    setProduct({
-      name: value
-    })
-  };
   const changeInputSearch = async (value) => {
     setProductSearch({
       name: value
@@ -181,6 +178,56 @@ const DataProduct = () => {
     setLoad(1);
   };
   const [t, i18n] = useTranslation('common');
+  const pagination =
+    <div className="my-3 text-center">
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          setNumber(1)
+        }}>
+        {t('paginate_first')}
+      </button>
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          if (number > 1)
+            setNumber(number - 1)
+          else
+            setNumber(1)
+        }}>
+        {t('paginate_previous')}
+      </button>
+      {pageNumber.map((element, index) => {
+        const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
+        return (
+          <span>{(element < number - 3 || element > number + 3 || element == number) &&
+          <button key={index}
+                  className={className}
+                  onClick={() => changePage(element)}>
+            {element}
+          </button>
+          }</span>
+        );
+      })}
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          if (number < Math.ceil(products.length / productPerPage))
+            setNumber(number + 1)
+          else
+            setNumber(Math.ceil(products.length / productPerPage))
+        }}>
+        {t('paginate_next')}
+      </button>
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          setNumber(Math.ceil(products.length / productPerPage))
+        }}>
+        {t('paginate_last')}
+      </button>
+    </div>
+  ;
   return (
     <CRow>
       <CCol xs={6}>
@@ -224,6 +271,7 @@ const DataProduct = () => {
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="productSearchName"
                       placeholder={t('product.validate_input_name')} value={productSearch.name} required/>
         </div>
+        {pagination}
         <CTable bordered borderColor='primary'>
           <CTableHead>
             <CTableRow>
@@ -248,28 +296,8 @@ const DataProduct = () => {
               </CTableRow>
             ))}
           </CTableBody>
-        </CTable>
-        <div className="my-3 text-center">
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number - 1)}>
-            {t('paginate_previous')}
-          </button>
-          {pageNumber.map((element, index) => {
-            return (
-              <button key={index}
-                      className="px-3 py-1 m-1 text-center btn-outline-dark"
-                      onClick={() => changePage(element)}>
-                {element}
-              </button>
-            );
-          })}
-          <button
-            className="px-3 py-1 m-1 text-center btn-primary"
-            onClick={() => setNumber(number + 1)}>
-            {t('paginate_next')}
-          </button>
-        </div>
+        </CTable>        
+        {pagination}
       </CCol>
     </CRow>
   )

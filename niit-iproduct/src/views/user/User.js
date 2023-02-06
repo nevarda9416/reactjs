@@ -59,7 +59,7 @@ const User = () => {
   const [user, setUser] = useState([]);
   const [users, setUsers] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
-  const [userPerPage] = LIMIT;
+  const userPerPage = LIMIT;
   const lastUser = number * userPerPage;
   const firstUser = lastUser - userPerPage;
   const currentData = data.slice(firstUser, lastUser);

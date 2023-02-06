@@ -30,7 +30,7 @@ const Product = () => {
     const [data, setData] = useState([]);
     const [product, setProduct] = useState([]);
     const [number, setNumber] = useState(1); // No of pages
-    const [productPerPage] = LIMIT;
+    const productPerPage = LIMIT;
     const lastProduct = number * productPerPage;
     const firstProduct = lastProduct - productPerPage;
     const currentData = data.slice(firstProduct, lastProduct);
