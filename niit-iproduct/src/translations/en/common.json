@@ -101,6 +101,7 @@
   },
   "activity": {
     "breadcrumb": "Activity",
+    "add_or_edit": "Add or Edit activity",
     "add": "Add activity",
     "edit": "Edit activity",
     "label_subject": "Subject",

@@ -101,6 +101,7 @@
   },
   "activity": {
     "breadcrumb": "Thống kê hoạt động",
+    "add_or_edit": "Thêm mới hoặc Sửa hoạt động",
     "add": "Thêm mới hoạt động",
     "edit": "Sửa hoạt động",
     "label_subject": "Tiêu đề",
