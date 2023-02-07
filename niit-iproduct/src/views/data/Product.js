@@ -27,7 +27,7 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {create, edit, deleteById} from "../../services/API/Product/ProductClient";
+import {get, edit, deleteById} from "../../services/API/Product/ProductClient";
 import {useTranslation} from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
@@ -50,6 +50,7 @@ const DataProduct = () => {
   const loadData = async () => {
     const data = await axios.get(url + ':' + product_port + '/products');
     const dataJ = await data.data;
+    setProducts(dataJ);
     setData(dataJ);
   };
   const [data, setData] = useState([]);
@@ -121,19 +122,14 @@ const DataProduct = () => {
       setValidated(false);
       const product = {
         category_id: form.categoryId.value,
-        name: form.productName.value,
-        short_description: form.productShortDescription.value,
-        full_description: form.productFullDescription.value,
-        unit: form.productUnit.value,
-        currency: form.productCurrency.value,
-        price: form.productPrice.value
+        name: form.productName.value
       };
       console.log(action);
       console.log(product);
       if (action === 'edit') {
         edit(id, product, config);
       } else {
-        create(product, config);
+        get(product, config);
       }
       loadData();
     }
@@ -296,7 +292,7 @@ const DataProduct = () => {
               </CTableRow>
             ))}
           </CTableBody>
-        </CTable>        
+        </CTable>
         {pagination}
       </CCol>
     </CRow>

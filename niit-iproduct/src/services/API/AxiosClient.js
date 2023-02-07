@@ -18,6 +18,10 @@ AxiosClient.interceptors.response.use(async (response) => {
 }, (error) => {
   throw error;
 });
+const crawl = (url, port, collection, data, config) => {
+  const response = axios.post(url + ':' + port + '/' + collection + '/crawl/list', data, config);
+  return response.data;
+};
 const store = (url, port, collection, data, config) => {
   const response = axios.post(url + ':' + port + '/' + collection + '/add', data, config);
   return response.data;
@@ -30,4 +34,4 @@ const destroyById = (url, port, collection, id) => {
   const response = axios.get(url + ':' + port + '/' + collection + '/delete/' + id);
   return response.data;
 };
-export {store, update, destroyById};
+export {crawl, store, update, destroyById};

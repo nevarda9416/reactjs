@@ -3,6 +3,8 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
+const cheerio = require('cheerio'); // khai báo module cheerio
+const request = require('request-promise'); // khai báo module request-promise
 const path = require('path');
 const { ObjectId } = require('mongodb');
 const fs = require('fs');
@@ -37,9 +39,7 @@ app.get('/' + collection_name, function (req, res) {
     const dbo = database.db(dbname);
     dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
-      if (response) {
-        res.jsonp(response);
-      }
+      res.jsonp(response);
     });
   })
 });
@@ -174,6 +174,102 @@ app.get('/products/import', function (req, res) {
       res.jsonp({ success: true });
     }
   })
+});
+// Crawl list sample product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
+app.get('/products/crawl/detail', function (req, res) {
+  // Mediamart
+  mongoClient.connect(url, function (error, database) {
+    if (error) throw error;
+    const dbo = database.db(dbname);
+    dbo.collection('products').find().toArray(function (error, response) {
+      if (error) throw error;
+      response.forEach(element => {
+        if (typeof element.link !== 'undefined') {
+          console.log(element.link);
+          request(element.link, (error, response_two, html) => {
+            if (!error && response_two.statusCode === 200) {
+              const $ = cheerio.load(html); // Load HTML
+              $('.wrap-product').each((index, el) => {
+                const listingQuery = { link: element.link };
+                const listProducts = {
+                  $set: {
+                    short_description: $(el).find('.pdetail-desc').html(),
+                    full_description: $(el).find('.pd-content-seemore').html(),
+                    tag: null,
+                    is_combo: 0,
+                    category_id: null,
+                    manufacture_id: null,
+                    display_order: 0,
+                    attribute_id: null,
+                    seo_id: null,
+                    system_id: null
+                  }
+                };
+                mongoClient.connect(url, function (error, database) {
+                  if (error) throw error;
+                  const dbo = database.db(dbname);
+                  dbo.collection('products').updateOne(listingQuery, listProducts, function (error, response) {
+                    if (error) throw error;
+                    console.log('Documents inserted or updated: ' + JSON.stringify(response));
+                  });
+                });
+              })
+            } else {
+              console.log(error);
+            }
+          });
+        }
+      });
+      res.jsonp({ success: true });
+    });
+  });
+});
+app.post('/products/crawl/list', function (req, res) {
+  const name = req.body.name;
+  // Mediamart
+  request('https://mediamart.vn/tag?key=' + name, (error, response, html) => {
+    if (!error && response.statusCode === 200) {
+      const $ = cheerio.load(html); // Load HTML
+      $('.product-item').each((index, el) => {
+        const listingQuery = { link: $(el).attr('href') };
+        const price_saving = $(el).find('.product-price-saving').text().replace(/[^0-9]/g, '');
+        const price_regular = $(el).find('.product-price-regular').text().replace(/[^0-9]/g, '');
+        const price = price_regular - (price_regular / 100 * price_saving);
+        console.log($(el).find('.product-name').text().replace(/\n/g, ''));
+        const listProducts = {
+          $set: {
+            name: $(el).find('.product-name').text().replace(/\n/g, ''),
+            short_description: null,
+            full_description: null,
+            thumbnail_url: $(el).find('img').attr('src'),
+            link: 'https://mediamart.vn' + $(el).attr('href'),
+            unit: 'chiếc',
+            status: 'Còn hàng',
+            tag: null,
+            is_combo: 0,
+            category_id: null,
+            manufacture_id: null,
+            display_order: 0,
+            attribute_id: null,
+            seo_id: null,
+            system_id: null,
+            currency: 'VND',
+            price: price
+          }
+        };
+        mongoClient.connect(url, function (error, database) {
+          if (error) throw error;
+          const dbo = database.db(dbname);
+          dbo.collection('products').updateOne(listingQuery, listProducts, { upsert: true }, function (error, response) {
+            if (error) throw error;
+            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+          });
+        });
+      })
+    } else {
+      console.log(error);
+    }
+  });
 });
 app.listen(port, env.SERVER_NAME, function () {
   console.log('Example app listening on port ' + port + '!')
