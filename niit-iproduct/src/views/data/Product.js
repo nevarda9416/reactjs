@@ -1,5 +1,5 @@
-import {React, useEffect, useState} from 'react'
-import {Link} from 'react-router-dom';
+import { React, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -18,31 +18,32 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CModal, CModalHeader, CModalTitle, CModalBody, CModalFooter
 } from '@coreui/react';
 import {
-  cilPencil,
-  cilTrash
+  cilZoom,
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import {CKEditor} from '@ckeditor/ckeditor5-react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {get, edit, deleteById} from "../../services/API/Product/ProductClient";
-import {useTranslation} from "react-i18next";
+import { get, edit } from "../../services/API/Product/ProductClient";
+import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const category_port = process.env.REACT_APP_PORT_DATABASE_MONGO_CATEGORY_CRUD_DATA;
 const product_port = process.env.REACT_APP_PORT_DATABASE_MONGO_PRODUCT_CRUD_DATA;
 const DataProduct = () => {
   const [validated, setValidated] = useState(false);
-  const [productSearch, setProductSearch] = useState({hits: []});
+  const [productSearch, setProductSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
-  const [action, setAction] = useState({hits: []});
+  const [action, setAction] = useState({ hits: [] });
+  const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
   const token = Math.random().toString(36).substr(2); // remove `0.`
   const config = {
-    headers: {Authorization: `Bearer ${token}`}
+    headers: { Authorization: `Bearer ${token}` }
   };
   const [state, setState] = useState({
     editor: null
@@ -87,7 +88,7 @@ const DataProduct = () => {
         required
         onChange={(event, editor) => {
           const data = editor.getData();
-          console.log({event, editor, data});
+          console.log({ event, editor, data });
           changeTextarea(data);
         }}
         onBlur={(event, editor) => {
@@ -98,7 +99,7 @@ const DataProduct = () => {
         }}
       />
     );
-    setState({...state, editor: editor});
+    setState({ ...state, editor: editor });
   }, [load]);
   const changeInputSearch = async (value) => {
     setProductSearch({
@@ -134,7 +135,8 @@ const DataProduct = () => {
       loadData();
     }
   };
-  const editItem = (event, id) => {
+  const viewItem = (event, id) => {
+    setVisible(!visible);
     setId(id);
     setAction('edit');
     axios.get(url + ':' + product_port + '/products/edit/' + id)
@@ -151,7 +153,7 @@ const DataProduct = () => {
             }}
             onChange={(event, editor) => {
               const data = editor.getData();
-              console.log({event, editor, data});
+              console.log({ event, editor, data });
               changeTextarea(data);
             }}
             onBlur={(event, editor) => {
@@ -162,16 +164,10 @@ const DataProduct = () => {
             }}
           />
         );
-        setState({...state, editor: editor});
+        setState({ ...state, editor: editor });
         setLoad(1);
       })
       .catch(error => console.log(error));
-  };
-  const deleteItem = (event, id) => {
-    setId(id);
-    setAction({'action': 'delete'});
-    deleteById(id);
-    setLoad(1);
   };
   const [t, i18n] = useTranslation('common');
   const pagination =
@@ -197,11 +193,11 @@ const DataProduct = () => {
         const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
         return (
           <span>{(element < number - 3 || element > number + 3 || element == number) &&
-          <button key={index}
-                  className={className}
-                  onClick={() => changePage(element)}>
-            {element}
-          </button>
+            <button key={index}
+              className={className}
+              onClick={() => changePage(element)}>
+              {element}
+            </button>
           }</span>
         );
       })}
@@ -223,10 +219,10 @@ const DataProduct = () => {
         {t('paginate_last')}
       </button>
     </div>
-  ;
+    ;
   return (
     <CRow>
-      <CCol xs={6}>
+      <CCol xs={4}>
         <CCard className="mb-4">
           <CCardHeader>
             <strong>{t('product.title')}</strong>
@@ -236,7 +232,7 @@ const DataProduct = () => {
               {/* category_id */}
               <div className="mb-3">
                 <CFormLabel htmlFor="categoryId">{t('product.label_category_name')}</CFormLabel>
-                <CFormSelect feedbackInvalid={t('product.validate_input_category_name')} id="categoryId" value={product.category_id} required>
+                <CFormSelect feedbackInvalid={t('product.validate_input_category_name')} id="categoryId" required>
                   <option></option>
                   {
                     category.map((item, index) => (
@@ -248,9 +244,7 @@ const DataProduct = () => {
               {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('product.validate_input_name')} id="productName" value={product.name}
-                            required/>
+                <CFormInput type="text" feedbackInvalid={t('product.validate_input_name')} id="productName" required />
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -261,11 +255,11 @@ const DataProduct = () => {
           </CCardBody>
         </CCard>
       </CCol>
-      <CCol xs={6}>
+      <CCol xs={8}>
         <div className="mb-3">
           <CFormLabel htmlFor="productSearchName">{t('product.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="productSearchName"
-                      placeholder={t('product.validate_input_name')} value={productSearch.name} required/>
+            placeholder={t('product.validate_input_name')} value={productSearch.name} required />
         </div>
         {pagination}
         <CTable bordered borderColor='primary'>
@@ -282,13 +276,89 @@ const DataProduct = () => {
                 <CTableHeaderCell scope="row">{item._id}</CTableHeaderCell>
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
-                  <Link onClick={(e) => {
-                    if (window.confirm(t('product.confirm_delete'))) {
-                      deleteItem(e, item._id);
-                    }
-                  }}><CIcon icon={cilTrash}/></Link>
+                  <Link onClick={e => viewItem(e, item._id)}><CIcon icon={cilZoom} /></Link>&nbsp;&nbsp;
                 </CTableDataCell>
+                <CModal size="lg" visible={visible} onClose={() => { setVisible(false); loadData() }}>
+                  <CModalHeader>
+                    <CModalTitle>{t('product.view')}</CModalTitle>
+                  </CModalHeader>
+                  <CModalBody>
+                    <CForm noValidate validated={validated} onSubmit={handleSubmit}>
+                      {/* category_id */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="categoryId">{t('category.label_name')}</CFormLabel>
+                        <CFormSelect feedbackInvalid={t('category.validate_input_name')} id="categoryId" value={product.category_id} required>
+                          <option></option>
+                          {
+                            category.map((item, index) => (
+                              <option key={index} value={item._id}>{item.name}</option>
+                            ))
+                          }
+                        </CFormSelect>
+                      </div>
+                      {/* name */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
+                        <CFormInput type="text"
+                          feedbackInvalid={t('product.validate_input_name')} id="productName" value={product.name}
+                          required />
+                      </div>
+                      {/* short_description
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="productShortDescription">{t('product.label_short_description')}</CFormLabel>
+                        <div className={"w-64"} id={"ck-editor-short"}>
+                          {state.editShortDescription}
+                        </div>
+                        <CFormTextarea className="d-none" onChange={e => changeShortDescription(e.target.value)}
+                          feedbackInvalid={t('product.validate_input_short_description')} id="productShortDescription" rows="3" required
+                          value={product.short_description} />
+                      </div>
+                      {/* full_description */}
+                      {/* <div className="mb-3">
+                        <CFormLabel htmlFor="productFullDescription">{t('product.label_full_description')}</CFormLabel>
+                        <div className={"w-64"} id={"ck-editor-full"}>
+                          {state.editor}
+                        </div>
+                        <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
+                          feedbackInvalid={t('product.validate_input_full_description')} id="productFullDescription" rows="3" required
+                          value={product.full_description} />
+                      </div> */}
+                      {/* link */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="productUnit">{t('product.label_link')}</CFormLabel>
+                        <CFormInput type="text" id="productLink" value={product.link} />
+                      </div>
+                      {/* unit */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="productUnit">{t('product.label_unit')}</CFormLabel>
+                        <CFormSelect feedbackInvalid={t('product.validate_input_unit')} id="productUnit" value={product.unit} required>
+                          <option></option>
+                          <option value="chiếc">Chiếc</option>
+                          <option value="cái">Cái</option>
+                        </CFormSelect>
+                      </div>
+                      {/* concurrency */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="productCurrency">{t('product.label_currency')}</CFormLabel>
+                        <CFormInput type="text"
+                          feedbackInvalid={t('product.validate_input_currency')} id="productCurrency" value={product.currency}
+                          required />
+                      </div>
+                      {/* price */}
+                      <div className="mb-3">
+                        <CFormLabel htmlFor="productPrice">{t('product.label_price')}</CFormLabel>
+                        <CFormInput type="text"
+                          feedbackInvalid={t('product.validate_input_price')} id="productPrice" value={product.price}
+                          required />
+                      </div>
+                    </CForm>
+                  </CModalBody>
+                  <CModalFooter>
+                    <CButton color="secondary" onClick={() => { setVisible(false); }}>
+                      {t('btn_close')}
+                    </CButton>
+                  </CModalFooter>
+                </CModal>
               </CTableRow>
             ))}
           </CTableBody>
