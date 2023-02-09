@@ -243,7 +243,7 @@ const DataProduct = () => {
               </div>
               {/* name */}
               <div className="mb-3">
-                <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
+                <CFormLabel htmlFor="productName">{t('product.label_keyword')}</CFormLabel>
                 <CFormInput type="text" feedbackInvalid={t('product.validate_input_name')} id="productName" required />
               </div>
               <div className="col-auto">

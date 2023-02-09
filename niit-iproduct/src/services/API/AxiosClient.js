@@ -19,8 +19,9 @@ AxiosClient.interceptors.response.use(async (response) => {
   throw error;
 });
 const crawl = (url, port, collection, data, config) => {
-  const response = axios.post(url + ':' + port + '/' + collection + '/crawl/list', data, config);
-  return response.data;
+  const responseList = axios.post(url + ':' + port + '/' + collection + '/crawl/list', data, config);
+  const responseDetail = axios.post(url + ':' + port + '/' + collection + '/crawl/detail', data, config);
+  return responseDetail.data;
 };
 const store = (url, port, collection, data, config) => {
   const response = axios.post(url + ':' + port + '/' + collection + '/add', data, config);

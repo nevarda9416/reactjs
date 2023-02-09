@@ -187,6 +187,7 @@
     "view": "View product",
     "label_category_name": "Category name",
     "label_name": "Product name",
+    "label_keyword": "Product keyword",
     "label_link": "Link product",
     "label_short_description": "Short description",
     "label_full_description": "Full description",

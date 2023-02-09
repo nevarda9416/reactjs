@@ -226,6 +226,28 @@ app.get('/products/crawl/detail', function (req, res) {
 });
 app.post('/products/crawl/list', function (req, res) {
   const name = req.body.name;
+  // Insert new tag
+  app.post('/tags/add', function (req, res) {
+    console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+    console.log(req.body);
+    const listingQuery = {name: name};
+    const updates = {
+      $set: {
+        name: name,
+        slug: null,
+        description: null
+      }
+    };
+    mongoClient.connect(url, function (error, database) {
+      if (error) throw error;
+      const dbo = database.db(dbname);
+      dbo.collection('tags').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+        if (error) throw error;
+        console.log('Tags inserted or updated: ' + JSON.stringify(response));
+        res.jsonp(response);
+      });
+    })
+  });
   // Mediamart
   request('https://mediamart.vn/tag?key=' + name, (error, response, html) => {
     if (!error && response.statusCode === 200) {

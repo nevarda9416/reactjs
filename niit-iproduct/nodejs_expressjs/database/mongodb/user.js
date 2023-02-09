@@ -60,12 +60,17 @@ app.get('/' + collection_name, function (req, res) {
 app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
-  const listingQuery = {dbname: req.body.name};
+  const listingQuery = {username: req.body.username};
   const updates = {
     $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description
+      fullname: req.body.fullname,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      remember_token: req.body.remember_token,
+      refresh_token: req.body.refresh_token,
+      department: req.body.department,
+      system_id: req.body.system_id
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -89,16 +94,21 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
       res.jsonp(response);
     });
   })
-});
+}); 
 // Update user (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
   const listingQuery = {_id: new ObjectId(req.params.id)};
   console.log(req.body);
   const updates = {
     $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description
+      fullname: req.body.fullname,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      remember_token: req.body.remember_token,
+      refresh_token: req.body.refresh_token,
+      department: req.body.department,
+      system_id: req.body.system_id
     }
   };
   mongoClient.connect(url, function (error, database) {
