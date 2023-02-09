@@ -116,12 +116,12 @@ const _nav = [
   //   to: '/customers',
   //   icon: <CIcon icon={cilUserFemale} customClassName="nav-icon" />,
   // },
-  {
-    component: CNavItem,
-    name: 'nav.tracking',
-    to: '/trackings',
-    icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
-  },
+  // {
+  //   component: CNavItem,
+  //   name: 'nav.tracking',
+  //   to: '/trackings',
+  //   icon: <CIcon icon={cilUserFollow} customClassName="nav-icon" />,
+  // },
   // {
   //   component: CNavItem,
   //   name: 'nav.traffic_source',

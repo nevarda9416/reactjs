@@ -72,6 +72,8 @@
   "user": {
     "breadcrumb": "Danh sách người quản lý",
     "add_or_edit": "Thêm mới hoặc Sửa người quản lý",
+    "add": "Thêm mới người quản lý",
+    "edit": "Sửa người quản lý",
     "label_fullname": "Họ và tên",
     "label_email": "Email",
     "label_username": "Tên tài khoản",
@@ -89,6 +91,8 @@
   "tag": {
     "breadcrumb": "Danh sách từ khóa",
     "add_or_edit": "Thêm mới hoặc Sửa từ khóa",
+    "add": "Thêm mới từ khóa",
+    "edit": "Sửa từ khóa",
     "label_name": "Tên từ khóa",
     "label_slug": "Slug",
     "label_description": "Mô tả",

@@ -31,10 +31,11 @@ app.get('/' + collection_name + '/find', function (req, res) {
 });
 // List tags (GET)
 app.get('/' + collection_name, function (req, res) {
+  const limitDocuments = typeof req.query.limit !== 'undefined' ? req.query.limit : 0;
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({}).sort({_id: -1}).limit(parseInt(limitDocuments)).toArray(function (error, response) {
       if (error) throw error;
       if (response) {
         setTimeout(() => {
