@@ -24,11 +24,13 @@ import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const product_port = process.env.REACT_APP_PORT_DATABASE_MONGO_PRODUCT_CRUD_DATA;
+const tag_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TAG_CRUD_DATA;
 const Product = () => {
     const [productSearch, setProductSearch] = useState({ hits: [] });
     const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
     const [data, setData] = useState([]);
     const [product, setProduct] = useState([]);
+    const [tags, setTags] = useState([]);
     const [number, setNumber] = useState(1); // No of pages
     const productPerPage = LIMIT;
     const lastProduct = number * productPerPage;
@@ -47,6 +49,9 @@ const Product = () => {
             const dataJP = await dataP.data;
             setData(dataJP);
             setProduct(dataJP);
+            const dataT = await axios.get(url + ':' + tag_port + '/tags?limit=5');
+            const dataJT = await dataT.data;
+            setTags(dataJT);
         };
         getData();
     });
@@ -142,7 +147,10 @@ const Product = () => {
                                 </CRow>
                             </CContainer>
                         </div>
-                        <div className="mb-3">{t('product.example_keyword')}: Macbook Air M1</div>
+                        <div className="mb-3">{t('product.example_keyword')}:&nbsp;
+                        {tags.map((item, index) => (
+                            <strong key={index}>{item.name},&nbsp;</strong>
+                        ))}</div>
                         {pagination}
                         <CTable bordered borderColor='primary'>
                             <CTableHead>
