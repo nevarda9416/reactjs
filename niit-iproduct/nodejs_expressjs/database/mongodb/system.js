@@ -43,12 +43,23 @@ app.get('/' + collection_name, function (req, res) {
 app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
-  const listingQuery = {dbname: req.body.name};
+  const listingQuery = {type: req.body.type};
   const updates = {
     $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description
+      type: req.body.type,
+      is_actived: req.body.is_actived,
+      actived_by: req.body.actived_by,
+      actived_at: req.body.actived_at,
+      created_by: req.body.created_by,
+      created_at: req.body.created_at,
+      updated_by: req.body.updated_by,
+      updated_at: req.body.updated_at,
+      is_deleted: req.body.is_deleted,
+      deleted_by: req.body.deleted_by,
+      deleted_at: req.body.deleted_at,
+      is_published: req.body.is_published,
+      published_by: req.body.published_by,
+      published_at: req.body.published_at
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -81,9 +92,20 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
   console.log(req.body);
   const updates = {
     $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description
+      type: req.body.type,
+      is_actived: req.body.is_actived,
+      actived_by: req.body.actived_by,
+      actived_at: req.body.actived_at,
+      created_by: req.body.created_by,
+      created_at: req.body.created_at,
+      updated_by: req.body.updated_by,
+      updated_at: req.body.updated_at,
+      is_deleted: req.body.is_deleted,
+      deleted_by: req.body.deleted_by,
+      deleted_at: req.body.deleted_at,
+      is_published: req.body.is_published,
+      published_by: req.body.published_by,
+      published_at: req.body.published_at
     }
   };
   mongoClient.connect(url, function (error, database) {

@@ -326,18 +326,18 @@ app.get('/data/create', function (req, res) {
     {
       type: 'default',
       is_actived: 1, // 1: yes, 0: no
-      actived_by: 'tudt',
-      actived_at: '2022-12-17 01:02:55',
-      created_by: 'tudt',
-      created_at: '2022-12-17 01:03:55',
-      updated_by: 'tudt',
-      updated_at: '2022-12-17 01:04:55',
-      is_deleted: 0, // 1: yes, 0: no
-      deleted_by: null,
-      deleted_at: null,
-      is_published: 0, // 1: yes, 0: no
-      published_by: null,
-      published_at: null
+      actived_by: 1, // 1: yes, 0: no
+      actived_at: 1, // 1: yes, 0: no
+      created_by: 1, // 1: yes, 0: no
+      created_at: 1, // 1: yes, 0: no
+      updated_by: 1, // 1: yes, 0: no
+      updated_at: 1, // 1: yes, 0: no
+      is_deleted: 1, // 1: yes, 0: no
+      deleted_by: 1, // 1: yes, 0: no
+      deleted_at: 1, // 1: yes, 0: no
+      is_published: 1, // 1: yes, 0: no
+      published_by: 1, // 1: yes, 0: no
+      published_at: 1 // 1: yes, 0: no
     }
   ];
   mongoClient.connect(url, function (error, database) {

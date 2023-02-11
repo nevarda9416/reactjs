@@ -1,5 +1,5 @@
-import {React, useEffect, useState} from 'react'
-import {Link} from 'react-router-dom';
+import { React, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 
 import {
   CCard,
@@ -26,25 +26,25 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import {CKEditor} from '@ckeditor/ckeditor5-react';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import {create, edit, deleteById} from "../../services/API/System/SystemClient";
-import {useTranslation} from "react-i18next";
+import { create, edit, deleteById } from "../../services/API/System/SystemClient";
+import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const system_port = process.env.REACT_APP_PORT_DATABASE_MONGO_SYSTEM_CRUD_DATA;
 const system_collection = process.env.REACT_APP_COLLECTION_MONGO_SYSTEM_NAME;
 const System = () => {
   const [validated, setValidated] = useState(false);
-  const [systemSearch, setSystemSearch] = useState({hits: []});
+  const [systemSearch, setSystemSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
-  const [action, setAction] = useState({hits: []});
+  const [action, setAction] = useState({ hits: [] });
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
   const token = Math.random().toString(36).substr(2); // remove `0.`
   const config = {
-    headers: {Authorization: `Bearer ${token}`}
+    headers: { Authorization: `Bearer ${token}` }
   };
   const [state, setState] = useState({
     editor: null
@@ -84,7 +84,7 @@ const System = () => {
         required
         onChange={(event, editor) => {
           const data = editor.getData();
-          console.log({event, editor, data});
+          console.log({ event, editor, data });
           changeTextarea(data);
         }}
         onBlur={(event, editor) => {
@@ -95,18 +95,8 @@ const System = () => {
         }}
       />
     );
-    setState({...state, editor: editor});
+    setState({ ...state, editor: editor });
   }, [load]);
-  const changeInputName = (value) => {
-    setSystem({
-      name: value
-    })
-  };
-  const changeInputSlug = (value) => {
-    setSystem({
-      slug: value
-    })
-  };
   const changeInputSearch = async (value) => {
     setSystemSearch({
       name: value
@@ -115,10 +105,13 @@ const System = () => {
     const dataJ = await data.data;
     setData(dataJ);
   };
-  const changeTextarea = (value) => {
+  const changeInputType = (value) => {
     setSystem({
-      description: value
+      type: value
     })
+  };
+  const checkIsActived = (value) => {
+    console.log(value);
   };
   const handleSubmit = (event) => {
     const form = event.target;
@@ -128,9 +121,20 @@ const System = () => {
     } else {
       setValidated(false);
       const system = {
-        name: form.systemName.value,
-        slug: form.systemSlug.value,
-        description: form.systemDescription.value
+        type: form.systemType.value,
+        is_actived: form.systemIsActived.value,
+        actived_by: form.systemActivedBy.value,
+        actived_at: form.systemActivedAt.value,
+        created_by: form.systemCreatedBy.value,
+        created_at: form.systemCreatedAt.value,
+        updated_by: form.systemUpdatedBy.value,
+        updated_at: form.systemUpdatedAt.value,
+        is_deleted: form.systemIsDeleted.value,
+        deleted_by: form.systemDeletedBy.value,
+        deleted_at: form.systemDeletedAt.value,
+        is_published: form.systemIsPublished.value,
+        published_by: form.systemPublishedBy.value,
+        published_at: form.systemPublishedAt.value
       };
       console.log(action);
       console.log(system);
@@ -139,8 +143,8 @@ const System = () => {
       } else {
         create(system, config);
       }
+      loadData();
     }
-    loadData();
   };
   const editItem = (event, id) => {
     setVisible(!visible);
@@ -160,7 +164,7 @@ const System = () => {
             }}
             onChange={(event, editor) => {
               const data = editor.getData();
-              console.log({event, editor, data});
+              console.log({ event, editor, data });
               changeTextarea(data);
             }}
             onBlur={(event, editor) => {
@@ -171,13 +175,13 @@ const System = () => {
             }}
           />
         );
-        setState({...state, editor: editor});
+        setState({ ...state, editor: editor });
       })
       .catch(error => console.log(error));
   };
   const deleteItem = (event, id) => {
     setId(id);
-    setAction({'action': 'delete'});
+    setAction({ 'action': 'delete' });
     deleteById(id);
     setLoad(1);
   };
@@ -205,11 +209,11 @@ const System = () => {
         const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
         return (
           <span>{(element < number - 3 || element > number + 3 || element == number) &&
-          <button key={index}
-                  className={className}
-                  onClick={() => changePage(element)}>
-            {element}
-          </button>
+            <button key={index}
+              className={className}
+              onClick={() => changePage(element)}>
+              {element}
+            </button>
           }</span>
         );
       })}
@@ -231,7 +235,7 @@ const System = () => {
         {t('paginate_last')}
       </button>
     </div>
-  ;
+    ;
   return (
     <CRow>
       <CCol xs={6}>
@@ -243,75 +247,75 @@ const System = () => {
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
               {/* Type */}
               <div className="mb-3">
-                <CFormLabel htmlFor="systemType">{t('system.label_type')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('system.validate_input_type')} id="systemType" value={system.type}
-                            required/>
+                <CFormLabel htmlFor="systemType">{t('system.label_type')}</CFormLabel>fsfds
+                <CFormInput type="text" onChange={(e) => changeInputType(e.target.value)}
+                  feedbackInvalid={t('system.validate_input_type')} id="systemType" value={system.type || ''}
+                  required />
               </div>
               {/* Is Actived */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemIsActived">{t('system.label_is_actived')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_is_actived')} id="systemIsActived" value={system.is_actived}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_is_actived')} id="systemIsActived" value={system.is_actived || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.is_actived === 1 ? true : false}/>
               </div>
               {/* Actived By */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemActivedBy">{t('system.label_actived_by')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_actived_by')} id="systemActivedBy" value={system.actived_by}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_actived_by')} id="systemActivedBy" value={system.actived_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.actived_by === 1 ? true : false}/>
               </div>
               {/* Actived At */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemActivedAt">{t('system.label_actived_at')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_actived_at')} id="systemActivedAt" value={system.actived_at}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_actived_at')} id="systemActivedAt" value={system.actived_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.actived_at === 1 ? true : false}/>
               </div>
               {/* Created By */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemCreatedBy">{t('system.label_created_by')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_created_by')} id="systemCreatedBy" value={system.created_by}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_created_by')} id="systemCreatedBy" value={system.created_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.created_by === 1 ? true : false}/>
               </div>
               {/* Created At */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemCreatedAt">{t('system.label_created_at')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_created_at')} id="systemCreatedAt" value={system.created_at}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_created_at')} id="systemCreatedAt" value={system.created_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.created_at === 1 ? true : false}/>
               </div>
               {/* Updated By */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemUpdatedBy">{t('system.label_updated_by')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_updated_by')} id="systemUpdatedBy" value={system.updated_by}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_updated_by')} id="systemUpdatedBy" value={system.updated_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.updated_by === 1 ? true : false}/>
               </div>
               {/* Updated At */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemUpdatedAt">{t('system.label_updated_at')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_updated_at')} id="systemUpdatedAt" value={system.updated_at}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_updated_at')} id="systemUpdatedAt" value={system.updated_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.updated_at === 1 ? true : false}/>
               </div>
               {/* Is Deleted */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemIsDeleted">{t('system.label_is_deleted')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_is_deleted')} id="systemIsDeleted" value={system.is_deleted}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_is_deleted')} id="systemIsDeleted" value={system.is_deleted || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.is_deleted === 1 ? true : false}/>
               </div>
               {/* Deleted By */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemDeletedBy">{t('system.label_deleted_by')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_deleted_by')} id="systemDeletedBy" value={system.deleted_by}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_deleted_by')} id="systemDeletedBy" value={system.deleted_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.deleted_by === 1 ? true : false}/>
               </div>
               {/* Deleted At */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemDeletedAt">{t('system.label_deleted_at')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_deleted_at')} id="systemDeletedAt" value={system.deleted_at}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_deleted_at')} id="systemDeletedAt" value={system.deleted_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.deleted_at === 1 ? true : false}/>
               </div>
               {/* Is Published */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemIsPublished">{t('system.label_is_published')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_is_published')} id="systemIsPublished" value={system.is_published}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_is_published')} id="systemIsPublished" value={system.is_published || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.is_published === 1 ? true : false}/>
               </div>
               {/* Published By */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemPublishedBy">{t('system.label_published_by')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_published_by')} id="systemPublishedBy" value={system.published_by}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_published_by')} id="systemPublishedBy" value={system.published_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.published_by === 1 ? true : false}/>
               </div>
               {/* Published At */}
               <div className="mb-3">
                 <CFormLabel htmlFor="systemPublishedAt">{t('system.label_published_at')}</CFormLabel>&nbsp;&nbsp;
-                <CFormCheck feedbackInvalid={t('system.validate_input_published_at')} id="systemPublishedAt" value={system.published_at}/>
+                <CFormCheck feedbackInvalid={t('system.validate_input_published_at')} id="systemPublishedAt" value={system.published_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.published_at === 1 ? true : false}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -326,7 +330,7 @@ const System = () => {
         <div className="mb-3">
           <CFormLabel htmlFor="systemSearchName">{t('system.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="systemSearchName"
-                      placeholder={t('system.validate_input_type')} value={systemSearch.name} required/>
+            placeholder={t('system.validate_input_type')} value={systemSearch.name} required />
         </div>
         {pagination}
         <CTable bordered borderColor='primary'>
@@ -344,14 +348,14 @@ const System = () => {
                 <CTableDataCell>{item.type}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil} /></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('system.confirm_delete'))) {
                       deleteItem(event, item._id);
                     }
-                  }}><CIcon icon={cilTrash}/></Link>
+                  }}><CIcon icon={cilTrash} /></Link>
                 </CTableDataCell>
-                <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
+                <CModal visible={visible} onClose={() => { setVisible(false); loadData() }}>
                   <CModalHeader>
                     <CModalTitle>{t('system.edit')}</CModalTitle>
                   </CModalHeader>
@@ -360,79 +364,79 @@ const System = () => {
                       {/* Type */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemType">{t('system.label_type')}</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid={t('system.validate_input_type')} id="systemType" value={system.type}
-                                    required/>
+                        <CFormInput type="text" onChange={(e) => changeInputType(e.target.value)}
+                          feedbackInvalid={t('system.validate_input_type')} id="systemType" value={system.type || ''}
+                          required />
                       </div>
                       {/* Is Actived */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemIsActived">{t('system.label_is_actived')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_is_actived')} id="systemIsActived" value={system.is_actived}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_is_actived')} id="systemIsActived" value={system.is_actived || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.is_actived === 1 ? true : false}/>
                       </div>
                       {/* Actived By */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemActivedBy">{t('system.label_actived_by')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_actived_by')} id="systemActivedBy" value={system.actived_by}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_actived_by')} id="systemActivedBy" value={system.actived_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.actived_by === 1 ? true : false}/>
                       </div>
                       {/* Actived At */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemActivedAt">{t('system.label_actived_at')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_actived_at')} id="systemActivedAt" value={system.actived_at}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_actived_at')} id="systemActivedAt" value={system.actived_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.actived_at === 1 ? true : false}/>
                       </div>
                       {/* Created By */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemCreatedBy">{t('system.label_created_by')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_created_by')} id="systemCreatedBy" value={system.created_by}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_created_by')} id="systemCreatedBy" value={system.created_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.created_by === 1 ? true : false}/>
                       </div>
                       {/* Created At */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemCreatedAt">{t('system.label_created_at')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_created_at')} id="systemCreatedAt" value={system.created_at}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_created_at')} id="systemCreatedAt" value={system.created_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.created_at === 1 ? true : false}/>
                       </div>
                       {/* Updated By */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemUpdatedBy">{t('system.label_updated_by')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_updated_by')} id="systemUpdatedBy" value={system.updated_by}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_updated_by')} id="systemUpdatedBy" value={system.updated_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.updated_by === 1 ? true : false}/>
                       </div>
                       {/* Updated At */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemUpdatedAt">{t('system.label_updated_at')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_updated_at')} id="systemUpdatedAt" value={system.updated_at}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_updated_at')} id="systemUpdatedAt" value={system.updated_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.updated_at === 1 ? true : false}/>
                       </div>
                       {/* Is Deleted */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemIsDeleted">{t('system.label_is_deleted')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_is_deleted')} id="systemIsDeleted" value={system.is_deleted}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_is_deleted')} id="systemIsDeleted" value={system.is_deleted || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.is_deleted === 1 ? true : false}/>
                       </div>
                       {/* Deleted By */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemDeletedBy">{t('system.label_deleted_by')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_deleted_by')} id="systemDeletedBy" value={system.deleted_by}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_deleted_by')} id="systemDeletedBy" value={system.deleted_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.deleted_by === 1 ? true : false}/>
                       </div>
                       {/* Deleted At */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemDeletedAt">{t('system.label_deleted_at')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_deleted_at')} id="systemDeletedAt" value={system.deleted_at}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_deleted_at')} id="systemDeletedAt" value={system.deleted_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.deleted_at === 1 ? true : false}/>
                       </div>
                       {/* Is Published */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemIsPublished">{t('system.label_is_published')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_is_published')} id="systemIsPublished" value={system.is_published}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_is_published')} id="systemIsPublished" value={system.is_published || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.is_published === 1 ? true : false}/>
                       </div>
                       {/* Published By */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemPublishedBy">{t('system.label_published_by')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_published_by')} id="systemPublishedBy" value={system.published_by}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_published_by')} id="systemPublishedBy" value={system.published_by || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.published_by === 1 ? true : false}/>
                       </div>
                       {/* Published At */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="systemPublishedAt">{t('system.label_published_at')}</CFormLabel>&nbsp;&nbsp;
-                        <CFormCheck feedbackInvalid={t('system.validate_input_published_at')} id="systemPublishedAt" value={system.published_at}/>
+                        <CFormCheck feedbackInvalid={t('system.validate_input_published_at')} id="systemPublishedAt" value={system.published_at || 1} onChange={(e)=>checkIsActived(e.target.checked)} checked={system.published_at === 1 ? true : false}/>
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
-                    <CButton color="secondary" onClick={() => {setVisible(false);}}>
+                    <CButton color="secondary" onClick={() => { setVisible(false); }}>
                       {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'systemForm'}>

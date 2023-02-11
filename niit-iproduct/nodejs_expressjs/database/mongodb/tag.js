@@ -25,7 +25,7 @@ app.get('/' + collection_name + '/find', function (req, res) {
       res.jsonp(response);
       database.close();
     });
-  })
+  });
 });
 // List tags (GET)
 app.get('/' + collection_name, function (req, res) {
