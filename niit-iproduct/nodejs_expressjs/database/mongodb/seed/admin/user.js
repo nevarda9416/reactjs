@@ -27,8 +27,9 @@ app.get('/users/create', function (req, res) {
             if (error) throw error;
             console.log('Documents inserted or updated: ' + JSON.stringify(response));
             res.jsonp(response);
+            database.close();
         });
-    })
+    });
 });
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')

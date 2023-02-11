@@ -26,11 +26,9 @@ app.get('/' + collection_name + '/find', function (req, res) {
     dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        dbo.close()
-      }, 3000);
+      database.close();
     });
-  })
+  });
 });
 // List products (GET)
 app.get('/' + collection_name, function (req, res) {
@@ -40,8 +38,9 @@ app.get('/' + collection_name, function (req, res) {
     dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Add product (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
@@ -66,8 +65,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Edit product (GET)
 app.get('/' + collection_name + '/edit/:id', function (req, res) {
@@ -78,11 +78,9 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
     dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
+      database.close();
     });
-  })
+  });
 });
 // Update product (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
@@ -106,8 +104,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       if (error) throw error;
       console.log('Product updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Delete product (GET)
 app.get('/' + collection_name + '/delete/:id', function (req, res) {
@@ -121,7 +120,7 @@ app.get('/' + collection_name + '/delete/:id', function (req, res) {
       res.jsonp(response);
       database.close();
     });
-  })
+  });
 });
 // Export from database and write to json file
 app.get('/products/export', function (req, res) {
@@ -138,8 +137,9 @@ app.get('/products/export', function (req, res) {
           res.jsonp({ success: true });
         }
       });
+      database.close();
     });
-  })
+  });
 });
 // Import from json file to database
 app.get('/products/import', function (req, res) {
@@ -168,12 +168,13 @@ app.get('/products/import', function (req, res) {
           dbo.collection('products').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
             if (error) throw error;
             console.log('Documents inserted or updated: ' + JSON.stringify(response));
+            database.close();
           });
         })
       });
       res.jsonp({ success: true });
     }
-  })
+  });
 });
 // Crawl list sample product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
 app.get('/products/crawl/detail', function (req, res) {
@@ -211,6 +212,7 @@ app.get('/products/crawl/detail', function (req, res) {
                   dbo.collection('products').updateOne(listingQuery, listProducts, function (error, response) {
                     if (error) throw error;
                     console.log('Documents inserted or updated: ' + JSON.stringify(response));
+                    database.close();
                   });
                 });
               })
@@ -245,8 +247,9 @@ app.post('/products/crawl/list', function (req, res) {
         if (error) throw error;
         console.log('Tags inserted or updated: ' + JSON.stringify(response));
         res.jsonp(response);
+        database.close();
       });
-    })
+    });
   });
   // Mediamart
   request('https://mediamart.vn/tag?key=' + name, (error, response, html) => {
@@ -285,6 +288,7 @@ app.post('/products/crawl/list', function (req, res) {
           dbo.collection('products').updateOne(listingQuery, listProducts, { upsert: true }, function (error, response) {
             if (error) throw error;
             console.log('Documents inserted or updated: ' + JSON.stringify(response));
+            database.close();
           });
         });
       })

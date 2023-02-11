@@ -4,8 +4,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
 const path = require('path');
-const { ObjectId } = require('mongodb');
-require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+const {ObjectId} = require('mongodb');
+require('dotenv').config({path: path.resolve(__dirname, '../../.env')});
 const env = process.env;
 const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATABASE_PORT + '/';
 const port = env.DATABASE_PORT_TRAFFIC_SOURCE_CRUD_DATA;
@@ -13,7 +13,7 @@ const dbname = env.DATABASE_NAME;
 const collection_name = env.COLLECTION_TRAFFIC_SOURCE_NAME;
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({extended: false}));
 // Find tag name like input data (GET)
 app.get('/' + collection_name + '/find', function (req, res) {
   const search_name = req.query.name;
@@ -23,11 +23,9 @@ app.get('/' + collection_name + '/find', function (req, res) {
     dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
+      database.close();
     });
-  })
+  });
 });
 // List tags (GET)
 app.get('/' + collection_name, function (req, res) {
@@ -36,14 +34,10 @@ app.get('/' + collection_name, function (req, res) {
     const dbo = database.db(dbname);
     dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
-      if (response) {
-        setTimeout(() => {
-          database.close()
-        }, 3000);
-        res.jsonp(response);
-      }
+      res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Add tag (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
@@ -64,8 +58,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Edit tag (GET)
 app.get('/' + collection_name + '/edit/:id', function (req, res) {
@@ -76,11 +71,9 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
     dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
+      database.close();
     });
-  })
+  });
 });
 // Update tag (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
@@ -100,8 +93,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       if (error) throw error;
       console.log('Tag updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Delete tag (GET)
 app.get('/' + collection_name + '/delete/:id', function (req, res) {
@@ -115,7 +109,7 @@ app.get('/' + collection_name + '/delete/:id', function (req, res) {
       res.jsonp(response);
       database.close();
     });
-  })
+  });
 });
 app.listen(port, env.SERVER_NAME, function () {
   console.log('Example app listening on port ' + port + '!')

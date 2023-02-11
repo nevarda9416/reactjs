@@ -24,10 +24,11 @@ app.get('/' + collection_name + '/count', function (req, res) {
         dbo.collection('tags').count({}, function (error, response_t) {
           if (error) throw error;
           res.jsonp({ product: response_p, category: response_c, tag: response_t });
+          database.close();
         });
       });
     });
-  })
+  });
 });
 // Find activity name like input data (GET)
 app.get('/' + collection_name + '/find', function (req, res) {
@@ -38,11 +39,9 @@ app.get('/' + collection_name + '/find', function (req, res) {
     dbo.collection(collection_name).find({ name: new RegExp(search_name, 'i') }).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
+      database.close();
     });
-  })
+  });
 });
 // List activitys (GET)
 app.get('/' + collection_name, function (req, res) {
@@ -51,14 +50,10 @@ app.get('/' + collection_name, function (req, res) {
     const dbo = database.db(dbname);
     dbo.collection(collection_name).find({}).sort({ _id: -1 }).toArray(function (error, response) {
       if (error) throw error;
-      if (response) {
-        setTimeout(() => {
-          database.close()
-        }, 3000);
-        res.jsonp(response);
-      }
+      res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Add activity (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
@@ -79,8 +74,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Edit activity (GET)
 app.get('/' + collection_name + '/edit/:id', function (req, res) {
@@ -91,11 +87,9 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
     dbo.collection(collection_name).findOne({ _id: new ObjectId(_id) }, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
-      setTimeout(() => {
-        database.close()
-      }, 3000);
+      database.close();
     });
-  })
+  });
 });
 // Update activity (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
@@ -115,8 +109,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       if (error) throw error;
       console.log('Activity updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Delete activity (GET)
 app.get('/' + collection_name + '/delete/:id', function (req, res) {
@@ -130,7 +125,7 @@ app.get('/' + collection_name + '/delete/:id', function (req, res) {
       res.jsonp(response);
       database.close();
     });
-  })
+  });
 });
 app.listen(port, env.SERVER_NAME, function () {
   console.log('Example app listening on port ' + port + '!')

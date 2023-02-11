@@ -27,11 +27,10 @@ app.post('/admin/login', (req, res) => {
         const dbo = database.db('niit-iproduct');
         dbo.collection('users').findOne({ username: username, password: hashedPassword }, function (error, response) {
             if (error) throw error;
-            if (response !== null) {
-                res.jsonp({user:true});
-            }
+            res.jsonp({user:true});
+            database.close();
         });
-    })
+    });
 });
 // Find user name like input data (GET)
 app.get('/' + collection_name + '/find', function (req, res) {
@@ -42,8 +41,9 @@ app.get('/' + collection_name + '/find', function (req, res) {
     dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // List users (GET)
 app.get('/' + collection_name, function (req, res) {
@@ -53,8 +53,9 @@ app.get('/' + collection_name, function (req, res) {
     dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Add user (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
@@ -80,8 +81,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
       if (error) throw error;
       console.log('Documents inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Edit user (GET)
 app.get('/' + collection_name + '/edit/:id', function (req, res) {
@@ -92,8 +94,9 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
     dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 }); 
 // Update user (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
@@ -118,8 +121,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       if (error) throw error;
       console.log('User updated: ' + JSON.stringify(response));
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 // Delete user (GET)
 app.get('/' + collection_name + '/delete/:id', function (req, res) {
@@ -131,8 +135,9 @@ app.get('/' + collection_name + '/delete/:id', function (req, res) {
       if (error) throw error;
       console.log('User deleted');
       res.jsonp(response);
+      database.close();
     });
-  })
+  });
 });
 app.listen(port, env.SERVER_NAME, function () {
     console.log('Example app listening on port ' + port + '!')
