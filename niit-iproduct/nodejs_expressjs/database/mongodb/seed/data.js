@@ -294,7 +294,8 @@ app.get('/data/create', function (req, res) {
       ip: '127.0.0.1',
       agent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1',
       user_id: null,
-      system_id: null
+      system_id: null,
+      system_type: 'default'
     }
   ];
   mongoClient.connect(url, function (error, database) {

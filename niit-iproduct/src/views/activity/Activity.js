@@ -102,9 +102,12 @@ const Activity = () => {
       name: value
     })
   };
-  const changeInputSlug = (value) => {
-    setActivity({
-      slug: value
+  const handleChange = (e) => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+    setActivity({...activity,
+      [name]: value
     })
   };
   const changeInputSearch = async (value) => {
@@ -128,9 +131,16 @@ const Activity = () => {
     } else {
       setValidated(false);
       const activity = {
-        name: form.activityName.value,
-        slug: form.activitySlug.value,
-        description: form.activityDescription.value
+        subject: form.activitySubject.value,
+        content: form.activityContent.value,
+        url: form.activityUrl.value,
+        method: form.activityMethod.value,
+        function: form.activityFunction.value,
+        ip: form.activityIP.value,
+        agent: form.activityAgent.value,
+        user_id: null, // Chờ code set user ID qua session 
+        system_id: null, // = system_type: 'default'
+        system_type: 'default' // Default type
       };
       console.log(action);
       console.log(activity);
@@ -139,8 +149,8 @@ const Activity = () => {
       } else {
         create(activity, config);
       }
+      loadData();
     }
-    loadData();
   };
   const editItem = (event, id) => {
     setVisible(!visible);
@@ -244,27 +254,27 @@ const Activity = () => {
               {/* Subject */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activitySubject">{t('activity.label_subject')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" value={activity.subject}
+                <CFormInput type="text" onChange={handleChange}
+                            feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" name="subject" value={activity.subject}
                             required/>
               </div>
               {/* Content */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activityContent">{t('activity.label_content')}</CFormLabel>
-                <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" rows="3" required
-                               value={activity.content}/>
+                <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" name="content" rows="3" required
+                               value={activity.content} onChange={handleChange}/>
               </div>
               {/* URL */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activityUrl">{t('activity.label_url')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" value={activity.url}
+                <CFormInput type="text" onChange={handleChange}
+                            feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" name="url" value={activity.url}
                             required/>
               </div>
               {/* Method */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activityMethod">{t('activity.label_method')}</CFormLabel>
-                <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" value={activity.method} required>
+                <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" name="method" value={activity.method} required onChange={handleChange}>
                   <option value="GET">GET</option>
                   <option value="POST">POST</option>
                   <option value="PUT">PUT</option>
@@ -274,22 +284,22 @@ const Activity = () => {
               {/* Function */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activityFunction">{t('activity.label_function')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" value={activity.function}
+                <CFormInput type="text" onChange={handleChange}
+                            feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" name="function" value={activity.function}
                             required/>
               </div>
               {/* IP */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activityIP">{t('activity.label_ip')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" value={activity.ip}
+                <CFormInput type="text" onChange={handleChange}
+                            feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" name="ip" value={activity.ip}
                             required/>
               </div>
               {/* Agent */}
               <div className="mb-3">
                 <CFormLabel htmlFor="activityAgent">{t('activity.label_agent')}</CFormLabel>
-                <CFormInput type="text"
-                            feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" value={activity.agent}
+                <CFormInput type="text" onChange={handleChange}
+                            feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" name="agent" value={activity.agent}
                             required/>
               </div>
               <div className="col-auto">
@@ -339,27 +349,27 @@ const Activity = () => {
                       {/* Subject */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activitySubject">{t('activity.label_subject')}</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" value={activity.subject}
+                        <CFormInput type="text" onChange={handleChange}
+                                    feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" name="subject" value={activity.subject}
                                     required/>
                       </div>
                       {/* Content */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activityContent">{t('activity.label_content')}</CFormLabel>
-                        <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" rows="3" required
-                                       value={activity.content}/>
+                        <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" name="content" rows="3" required
+                                       value={activity.content} onChange={handleChange}/>
                       </div>
                       {/* URL */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activityUrl">{t('activity.label_url')}</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" value={activity.url}
+                        <CFormInput type="text" onChange={handleChange}
+                                    feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" name="url" value={activity.url}
                                     required/>
                       </div>
                       {/* Method */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activityMethod">{t('activity.label_method')}</CFormLabel>
-                        <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" value={activity.method} required>
+                        <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" name="method" value={activity.method} required onChange={handleChange}>
                           <option value="GET">GET</option>
                           <option value="POST">POST</option>
                           <option value="PUT">PUT</option>
@@ -369,22 +379,22 @@ const Activity = () => {
                       {/* Function */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activityFunction">{t('activity.label_function')}</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" value={activity.function}
+                        <CFormInput type="text" onChange={handleChange}
+                                    feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" name="function" value={activity.function}
                                     required/>
                       </div>
                       {/* IP */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activityIP">{t('activity.label_ip')}</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" value={activity.ip}
+                        <CFormInput type="text" onChange={handleChange}
+                                    feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" name="ip" value={activity.ip}
                                     required/>
                       </div>
                       {/* Agent */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="activityAgent">{t('activity.label_agent')}</CFormLabel>
-                        <CFormInput type="text"
-                                    feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" value={activity.agent}
+                        <CFormInput type="text" onChange={handleChange}
+                                    feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" name="agent" value={activity.agent}
                                     required/>
                       </div>
                     </CForm>

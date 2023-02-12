@@ -59,12 +59,18 @@ app.get('/' + collection_name, function (req, res) {
 app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
-  const listingQuery = { dbname: req.body.name };
+  const listingQuery = { subject: req.body.subject };
   const updates = {
     $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description
+      subject: req.body.subject,
+      content: req.body.content,
+      url: req.body.url,
+      method: req.body.method,
+      function: req.body.function,
+      ip: req.body.ip,
+      agent: req.body.agent,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -97,9 +103,15 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
   console.log(req.body);
   const updates = {
     $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description
+      subject: req.body.subject,
+      content: req.body.content,
+      url: req.body.url,
+      method: req.body.method,
+      function: req.body.function,
+      ip: req.body.ip,
+      agent: req.body.agent,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {
