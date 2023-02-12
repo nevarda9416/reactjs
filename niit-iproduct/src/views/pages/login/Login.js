@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
@@ -17,7 +17,7 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cifGb, cifVn } from '@coreui/icons'
 import axios from 'axios'
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_USER_CRUD_DATA;
@@ -27,33 +27,35 @@ const Login = () => {
   const handleSubmit = (event) => {
     const form = event.currentTarget
     if (form.checkValidity() === false) {
-        setValidated(true)
-        event.preventDefault()
-        event.stopPropagation()
-    } else {
-        setValidated(false)
-        const user = {
-            username: form.username.value,
-            password: form.password.value,
-        };
-        console.log(user);
-        // Generate a random number and convert it to base 36 (0-9a-z)
-        const token = Math.random().toString(36).substr(2); // remove `0.`
-        const config = {
-            headers: { Authorization: `Bearer ${token}` }
-        };
+      setValidated(true)
       event.preventDefault()
       event.stopPropagation()
-        axios.post(url + ':' + port + '/admin/login', user, config)
-            .then(res => {
-                console.log(res);
-                if (res.data.user === true) {
-                  navigate ('/dashboard');
-                } else {
-                  return res;
-                }
-            })
-            .catch(error => console.log(error));
+    } else {
+      setValidated(false)
+      const user = {
+        username: form.username.value,
+        password: form.password.value,
+      };
+      // Generate a random number and convert it to base 36 (0-9a-z)
+      const token = Math.random().toString(36).substr(2); // remove `0.`
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+      event.preventDefault()
+      event.stopPropagation()
+      axios.post(url + ':' + port + '/admin/login', user, config)
+        .then(res => {
+          if (res.data.user) {
+            console.log((res.data.user._id));
+            // store the user in localStorage
+            const user = res.data.user;
+            localStorage.setItem('userLoggedInfo', JSON.stringify({ id: user._id, email: user._id, fullname: user.fullname, username: user.username }));
+            navigate('/dashboard');
+          } else {
+            return res;
+          }
+        })
+        .catch(error => console.log(error));
     }
   }
   const [t, i18n] = useTranslation('common');
@@ -65,12 +67,12 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                        <CNavLink onClick={() => i18n.changeLanguage('vi')} style={{ display: "inline-block", margin: "0 1rem 1rem 0" }}>
-                            <CIcon icon={cifVn} size="lg" />
-                        </CNavLink>
-                        <CNavLink onClick={() => i18n.changeLanguage('en')} className="d-inline">
-                            <CIcon icon={cifGb} size="lg" />
-                        </CNavLink>
+                  <CNavLink onClick={() => i18n.changeLanguage('vi')} style={{ display: "inline-block", margin: "0 1rem 1rem 0" }}>
+                    <CIcon icon={cifVn} size="lg" />
+                  </CNavLink>
+                  <CNavLink onClick={() => i18n.changeLanguage('en')} className="d-inline">
+                    <CIcon icon={cifGb} size="lg" />
+                  </CNavLink>
                   <CForm noValidate validated={validated} onSubmit={handleSubmit}>
                     <h1>{t('login.title')}</h1>
                     <p className="text-medium-emphasis">{t('login.label')}</p>
@@ -78,7 +80,7 @@ const Login = () => {
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder={t('placeholder_input_username')} autoComplete="off" id="username" required/>
+                      <CFormInput placeholder={t('placeholder_input_username')} autoComplete="off" id="username" required />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
@@ -88,7 +90,7 @@ const Login = () => {
                         type="password"
                         placeholder={t('placeholder_input_password')}
                         autoComplete="off"
-                        id="password" required/>
+                        id="password" required />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>

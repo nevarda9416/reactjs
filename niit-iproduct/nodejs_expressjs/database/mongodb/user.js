@@ -27,7 +27,8 @@ app.post('/admin/login', (req, res) => {
         const dbo = database.db('niit-iproduct');
         dbo.collection('users').findOne({ username: username, password: hashedPassword }, function (error, response) {
             if (error) throw error;
-            res.jsonp({user:true});
+            console.log(response);
+            res.jsonp({user:response});
             database.close();
         });
     });

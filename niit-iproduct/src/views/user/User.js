@@ -71,6 +71,11 @@ const User = () => {
     setNumber(pageNumber);
   };
   useEffect(() => {
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      console.log(foundUser);      
+    }
     const getData = async () => {
       const data = await axios.get(url + ':' + user_port + '/' + user_collection);
       const dataJ = await data.data;
