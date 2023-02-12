@@ -134,10 +134,10 @@ const Category = () => {
       } else {
         create(category, config);
       }
+      loadData();
     }
-    loadData();
   };
-  const editItem = (event, id) => {
+  const editItem = (id) => {
     setId(id);
     setAction('edit');
     axios.get(url + ':' + port + '/categories/edit/' + id)
@@ -169,7 +169,7 @@ const Category = () => {
       })
       .catch(error => console.log(error));
   };
-  const deleteItem = (event, id) => {
+  const deleteItem = (id) => {
     setId(id);
     setAction({'action': 'delete'});
     deleteById(id);
@@ -238,7 +238,7 @@ const Category = () => {
               <div className="mb-3">
                 <CFormLabel htmlFor="categoryName">{t('category.label_name')}</CFormLabel>
                 <CFormInput onChange={e => changeInput(e.target.value)} type="text"
-                            feedbackInvalid={t('category.validate_input_name')} id="categoryName" value={category.name}
+                            feedbackInvalid={t('category.validate_input_name')} id="categoryName" value={category.name || ''}
                             required/>
               </div>
               <div className="mb-3">
@@ -248,7 +248,7 @@ const Category = () => {
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
                                feedbackInvalid={t('category.validate_input_description')} id="categoryDescription" rows="3" required
-                               value={category.description}/>
+                               value={category.description || ''}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -263,7 +263,7 @@ const Category = () => {
         <div className="mb-3">
           <CFormLabel htmlFor="categoryName">{t('category.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text"
-                      placeholder={t('category.validate_input_name')} value={categorySearch.name} required/>
+                      placeholder={t('category.validate_input_name')} value={categorySearch.name || ''} required/>
         </div>
         {pagination}
         <CTable bordered borderColor='primary'>
@@ -286,10 +286,10 @@ const Category = () => {
                   }
                 </CTableDataCell>
                 <CTableDataCell>
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('category.confirm_delete'))) {
-                      deleteItem(event, item._id);
+                      deleteItem(item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>

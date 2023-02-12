@@ -26,8 +26,6 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import {CKEditor} from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Activity/ActivityClient";
 import {useTranslation} from "react-i18next";
 
@@ -46,9 +44,6 @@ const Activity = () => {
   const config = {
     headers: {Authorization: `Bearer ${token}`}
   };
-  const [state, setState] = useState({
-    editor: null
-  });
   const loadData = async () => {
     const data = await axios.get(url + ':' + activity_port + '/' + activity_collection);
     const dataJ = await data.data;
@@ -78,30 +73,7 @@ const Activity = () => {
       setData(dataJ);
     };
     getData();
-    const editor = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({event, editor, data});
-          changeTextarea(data);
-        }}
-        onBlur={(event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    setState({...state, editor: editor});
   }, [load]);
-  const changeInputName = (value) => {
-    setActivity({
-      name: value
-    })
-  };
   const handleChange = (e) => {
     const target = e.target;
     const value = target.value;
@@ -117,11 +89,6 @@ const Activity = () => {
     const data = await axios.get(url + ':' + activity_port + '/' + activity_collection + '/find?name=' + value);
     const dataJ = await data.data;
     setData(dataJ);
-  };
-  const changeTextarea = (value) => {
-    setActivity({
-      description: value
-    })
   };
   const handleSubmit = (event) => {
     const form = event.target;
@@ -152,46 +119,23 @@ const Activity = () => {
       loadData();
     }
   };
-  const editItem = (event, id) => {
+  const editItem = (id) => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
     axios.get(url + ':' + activity_port + '/' + activity_collection + '/edit/' + id)
       .then(res => {
         setActivity(res.data);
-        const editor = (
-          <CKEditor
-            editor={ClassicEditor}
-            required
-            data={res.data.full_description ?? ''}
-            onReady={editor => {
-              // You can store the "editor" and use when it is needed.
-              editor.setData(res.data.full_description);
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              console.log({event, editor, data});
-              changeTextarea(data);
-            }}
-            onBlur={(event, editor) => {
-              console.log('Blur.', editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log('Focus.', editor);
-            }}
-          />
-        );
-        setState({...state, editor: editor});
       })
       .catch(error => console.log(error));
   };
-  const deleteItem = (event, id) => {
+  const deleteItem = (id) => {
     setId(id);
     setAction({'action': 'delete'});
     deleteById(id);
     setLoad(1);
   };
-  const [t, i18n] = useTranslation('common');
+  const [t] = useTranslation('common');
   const pagination =
     <div className="my-3 text-center">
       <button
@@ -333,10 +277,10 @@ const Activity = () => {
                 <CTableDataCell>{item.subject}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('activity.confirm_delete'))) {
-                      deleteItem(event, item._id);
+                      deleteItem(item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
