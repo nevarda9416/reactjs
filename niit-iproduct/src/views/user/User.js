@@ -83,25 +83,15 @@ const User = () => {
       setData(dataJ);
     };
     getData();
-    const editor = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({event, editor, data});
-          changeTextarea(data);
-        }}
-        onBlur={(event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    setState({...state, editor: editor});
   }, [load]);
+  const handleChange = (e) => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+    setTag({...tag,
+      [name]: value
+    })
+  };
   const changeInputSearch = async (value) => {
     setUserSearch({
       name: value
@@ -139,46 +129,23 @@ const User = () => {
     }
     loadData();
   };
-  const editItem = (event, id) => {
+  const editItem = (id) => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
     axios.get(url + ':' + user_port + '/' + user_collection + '/edit/' + id)
       .then(res => {
         setUser(res.data);
-        const editor = (
-          <CKEditor
-            editor={ClassicEditor}
-            required
-            data={res.data.full_description ?? ''}
-            onReady={editor => {
-              // You can store the "editor" and use when it is needed.
-              editor.setData(res.data.full_description);
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              console.log({event, editor, data});
-              changeTextarea(data);
-            }}
-            onBlur={(event, editor) => {
-              console.log('Blur.', editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log('Focus.', editor);
-            }}
-          />
-        );
-        setState({...state, editor: editor});
       })
       .catch(error => console.log(error));
   };
-  const deleteItem = (event, id) => {
+  const deleteItem = (id) => {
     setId(id);
     setAction({'action': 'delete'});
     deleteById(id);
     setLoad(1);
   };
-  const [t, i18n] = useTranslation('common');
+  const [t] = useTranslation('common');
   const pagination =
         <div className="my-3 text-center">
             <button
@@ -242,36 +209,36 @@ const User = () => {
               <div className="mb-3">
                 <CFormLabel htmlFor="userFullName">{t('user.label_fullname')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" value={user.fullname}
-                            required/>
+                            feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" name="fullname" value={user.fullname || ''}
+                            required onChange={handleChange}/>
               </div>
               {/* email */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userEmail">{t('user.label_email')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid={t('user.validate_input_email')} id="userEmail" value={user.email}
-                            required/>
+                            feedbackInvalid={t('user.validate_input_email')} id="userEmail" name="email" value={user.email || ''}
+                            required onChange={handleChange}/>
               </div>
               {/* username */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userName">{t('user.label_username')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid={t('user.validate_input_username')} id="userName" value={user.username}
-                            required/>
+                            feedbackInvalid={t('user.validate_input_username')} id="userName" name="username" value={user.username || ''}
+                            required onChange={handleChange}/>
               </div>
               {/* password */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userPassword">{t('user.label_password')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid={t('user.validate_input_password')} id="userPassword" value={user.password}
-                            required/>
+                            feedbackInvalid={t('user.validate_input_password')} id="userPassword" name="password" value={user.password || ''}
+                            required onChange={handleChange}/>
               </div>
               {/* department */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userDepartment">{t('user.label_department')}</CFormLabel>
                 <CFormInput type="text"
-                            feedbackInvalid={t('user.validate_input_department')} id="userDepartment" value={user.department}
-                            required/>
+                            feedbackInvalid={t('user.validate_input_department')} id="userDepartment" name="department" value={user.department || ''}
+                            required onChange={handleChange}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -304,10 +271,10 @@ const User = () => {
                 <CTableDataCell>{item.email}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('user.confirm_delete'))) {
-                      deleteItem(event, item._id);
+                      deleteItem(item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
@@ -321,36 +288,36 @@ const User = () => {
                       <div className="mb-3">
                         <CFormLabel htmlFor="userFullName">{t('user.label_fullname')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" value={user.fullname}
-                                    required/>
+                                    feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" name="fullname" value={user.fullname || ''}
+                                    required onChange={handleChange}/>
                       </div>
                       {/* email */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="userEmail">{t('user.label_email')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid={t('user.validate_input_email')} id="userEmail" value={user.email}
-                                    required/>
+                                    feedbackInvalid={t('user.validate_input_email')} id="userEmail" name="email" value={user.email || ''}
+                                    required onChange={handleChange}/>
                       </div>
                       {/* username */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="userName">{t('user.label_username')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid={t('user.validate_input_username')} id="userName" value={user.username}
-                                    required/>
+                                    feedbackInvalid={t('user.validate_input_username')} id="userName" name="username" value={user.username || ''}
+                                    required onChange={handleChange}/>
                       </div>
                       {/* password */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="userPassword">{t('user.label_password')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid={t('user.validate_input_password')} id="userPassword" value={user.password}
-                                    required/>
+                                    feedbackInvalid={t('user.validate_input_password')} id="userPassword" name="password" value={user.password || ''}
+                                    required onChange={handleChange}/>
                       </div>
                       {/* department */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="userDepartment">{t('user.label_department')}</CFormLabel>
                         <CFormInput type="text"
-                                    feedbackInvalid={t('user.validate_input_department')} id="userDepartment" value={user.department}
-                                    required/>
+                                    feedbackInvalid={t('user.validate_input_department')} id="userDepartment" name="department" value={user.department || ''}
+                                    required onChange={handleChange}/>
                       </div>
                     </CForm>
                   </CModalBody>

@@ -117,7 +117,7 @@ const Tag = () => {
     }
     loadData();
   };
-  const editItem = (event, id) => {
+  const editItem = (id) => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
@@ -127,7 +127,7 @@ const Tag = () => {
       })
       .catch(error => console.log(error));
   };
-  const deleteItem = (event, id) => {
+  const deleteItem = (id) => {
     setId(id);
     setAction({'action': 'delete'});
     deleteById(id);
@@ -239,10 +239,10 @@ const Tag = () => {
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(e, item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('tag.confirm_delete'))) {
-                      deleteItem(event, item._id);
+                      deleteItem(item._id);
                     }
                   }}><CIcon icon={cilTrash}/></Link>
                 </CTableDataCell>
