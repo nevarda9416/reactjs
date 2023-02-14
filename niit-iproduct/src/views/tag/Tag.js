@@ -26,8 +26,6 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import {CKEditor} from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/Tag/TagClient";
 import {useTranslation} from "react-i18next";
 
@@ -46,9 +44,6 @@ const Tag = () => {
   const config = {
     headers: {Authorization: `Bearer ${token}`}
   };
-  const [state, setState] = useState({
-    editor: null
-  });
   const loadData = async () => {
     const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
     const dataJ = await data.data;
@@ -83,25 +78,15 @@ const Tag = () => {
       setData(dataJ);
     };
     getData();
-    const editor = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({event, editor, data});
-          changeTextarea(data);
-        }}
-        onBlur={(event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    setState({...state, editor: editor});
   }, [load]);
+  const handleChange = (e) => {
+    const target = e.target;
+    const value = target.value;
+    const name = target.name;
+    setTag({...tag,
+      [name]: value
+    })
+  };
   const changeInputSearch = async (value) => {
     setTagSearch({
       name: value
@@ -109,11 +94,6 @@ const Tag = () => {
     const data = await axios.get(url + ':' + tag_port + '/' + tag_collection + '/find?name=' + value);
     const dataJ = await data.data;
     setData(dataJ);
-  };
-  const changeTextarea = (value) => {
-    setTag({
-      description: value
-    })
   };
   const handleSubmit = (event) => {
     const form = event.target;
@@ -144,29 +124,6 @@ const Tag = () => {
     axios.get(url + ':' + tag_port + '/' + tag_collection + '/edit/' + id)
       .then(res => {
         setTag(res.data);
-        const editor = (
-          <CKEditor
-            editor={ClassicEditor}
-            required
-            data={res.data.full_description ?? ''}
-            onReady={editor => {
-              // You can store the "editor" and use when it is needed.
-              editor.setData(res.data.full_description);
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              console.log({event, editor, data});
-              changeTextarea(data);
-            }}
-            onBlur={(event, editor) => {
-              console.log('Blur.', editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log('Focus.', editor);
-            }}
-          />
-        );
-        setState({...state, editor: editor});
       })
       .catch(error => console.log(error));
   };
@@ -239,17 +196,17 @@ const Tag = () => {
               {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
-                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" value={tag.name} required/>
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange}/>
               </div>
               {/* slug */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
-                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" value={tag.slug} required/>
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange}/>
               </div>
               {/* description */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
-                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" rows="3" required value={tag.description}/>
+                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -298,17 +255,17 @@ const Tag = () => {
                       {/* name */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
-                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" value={tag.name} required/>
+                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange}/>
                       </div>
                       {/* slug */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
-                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" value={tag.slug} required/>
+                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange}/>
                       </div>
                       {/* description */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
-                        <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" rows="3" required value={tag.description}/>
+                        <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange}/>
                       </div>
                     </CForm>
                   </CModalBody>
