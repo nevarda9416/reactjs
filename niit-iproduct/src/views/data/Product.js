@@ -9,7 +9,6 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormTextarea,
   CFormSelect,
   CButton,
   CTable,
@@ -38,6 +37,7 @@ const DataProduct = () => {
   const [productSearch, setProductSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
   const [action, setAction] = useState({ hits: [] });
+  const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
@@ -75,7 +75,7 @@ const DataProduct = () => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      console.log(foundUser);      
+      setLoggedInUser(foundUser);      
     }
     const getData = async () => {
       const dataC = await axios.get(url + ':' + category_port + '/categories');
@@ -96,10 +96,10 @@ const DataProduct = () => {
           console.log({ event, editor, data });
           changeTextarea(data);
         }}
-        onBlur={(event, editor) => {
+        onBlur={(_event, editor) => {
           console.log('Blur.', editor);
         }}
-        onFocus={(event, editor) => {
+        onFocus={(_event, editor) => {
           console.log('Focus.', editor);
         }}
       />
@@ -140,7 +140,7 @@ const DataProduct = () => {
       loadData();
     }
   };
-  const viewItem = (event, id) => {
+  const viewItem = (_event, id) => {
     setVisible(!visible);
     setId(id);
     setAction('edit');
@@ -161,10 +161,10 @@ const DataProduct = () => {
               console.log({ event, editor, data });
               changeTextarea(data);
             }}
-            onBlur={(event, editor) => {
+            onBlur={(_event, editor) => {
               console.log('Blur.', editor);
             }}
-            onFocus={(event, editor) => {
+            onFocus={(_event, editor) => {
               console.log('Focus.', editor);
             }}
           />
@@ -174,7 +174,7 @@ const DataProduct = () => {
       })
       .catch(error => console.log(error));
   };
-  const [t, i18n] = useTranslation('common');
+  const [t] = useTranslation('common');
   const pagination =
     <div className="my-3 text-center">
       <button

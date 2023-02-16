@@ -23,7 +23,7 @@ app.get('/' + collection_name + '/find', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).sort({price: 1}).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       database.close();

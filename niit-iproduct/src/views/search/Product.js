@@ -54,7 +54,7 @@ const Product = () => {
             setTags(dataJT);
         };
         getData();
-    });
+    }, []);
     const changeInputSearch = async (value) => {
         setProductSearch({
             name: value
