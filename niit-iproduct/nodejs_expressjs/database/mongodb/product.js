@@ -55,7 +55,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
       full_description: req.body.full_description,
       unit: req.body.unit,
       currency: req.body.currency,
-      price: req.body.price
+      price: req.body.price,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -94,7 +96,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       full_description: req.body.full_description,
       unit: req.body.unit,
       currency: req.body.currency,
-      price: req.body.price
+      price: req.body.price,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {
