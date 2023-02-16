@@ -36,6 +36,7 @@ const Category = () => {
   const [categorySearch, setCategorySearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
+  const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
   const token = Math.random().toString(36).substr(2); // remove `0.`
@@ -63,14 +64,14 @@ const Category = () => {
   for (let i = 1; i <= Math.ceil(category.length / categoryPerPage); i++) {
     pageNumber.push(i);
   }
-  const ChangePage = (pageNumber) => {
+  const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
   useEffect(() => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      console.log(foundUser);      
+      setLoggedInUser(foundUser);      
     }
     const getData = async () => {
       const data = await axios.get(url + ':' + port + '/categories');
@@ -88,10 +89,10 @@ const Category = () => {
           console.log({event, editor, data});
           changeTextarea(data);
         }}
-        onBlur={(event, editor) => {
+        onBlur={(_event, editor) => {
           console.log('Blur.', editor);
         }}
-        onFocus={(event, editor) => {
+        onFocus={(_event, editor) => {
           console.log('Focus.', editor);
         }}
       />
@@ -119,6 +120,7 @@ const Category = () => {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     console.log(form);
+    console.log(loggedInUser.id);
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
@@ -126,11 +128,13 @@ const Category = () => {
       const category = {
         name: form.categoryName.value,
         dbname: form.categoryName.value,
-        description: form.categoryDescription.value
+        description: form.categoryDescription.value,
+        user_id: loggedInUser.id,
+        system_type: 'default' // CRUD action, replace system_id
       };
       console.log(action);
       if (action === 'edit') {
-        update(id, category, config);
+        edit(id, category, config);
       } else {
         create(category, config);
       }
@@ -157,10 +161,10 @@ const Category = () => {
               console.log({event, editor, data});
               changeTextarea(data);
             }}
-            onBlur={(event, editor) => {
+            onBlur={(_event, editor) => {
               console.log('Blur.', editor);
             }}
-            onFocus={(event, editor) => {
+            onFocus={(_event, editor) => {
               console.log('Focus.', editor);
             }}
           />
@@ -175,7 +179,7 @@ const Category = () => {
     deleteById(id);
     loadData();
   };
-  const [t, i18n] = useTranslation('common');
+  const [t] = useTranslation('common');
   const pagination =
         <div className="my-3 text-center">
             <button
@@ -286,8 +290,8 @@ const Category = () => {
                   }
                 </CTableDataCell>
                 <CTableDataCell>
-                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
-                  <Link onClick={(e) => {
+                  <Link onClick={() => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={() => {
                     if (window.confirm(t('category.confirm_delete'))) {
                       deleteItem(item._id);
                     }
