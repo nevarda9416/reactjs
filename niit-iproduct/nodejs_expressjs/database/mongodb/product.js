@@ -181,7 +181,7 @@ app.get('/products/import', function (req, res) {
   });
 });
 // Crawl list sample product (POST) | https://viblo.asia/p/lay-du-lieu-trang-web-trong-phut-mot-su-dung-nodejs-va-cheerio-yMnKMjPmZ7P
-app.get('/products/crawl/detail', function (req, res) {
+app.post('/products/crawl/detail', function (req, res) {
   // Mediamart
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
@@ -207,7 +207,8 @@ app.get('/products/crawl/detail', function (req, res) {
                     display_order: 0,
                     attribute_id: null,
                     seo_id: null,
-                    system_id: null
+                    user_id: req.body.user_id,
+                    system_type: req.body.system_type
                   }
                 };
                 mongoClient.connect(url, function (error, database) {
@@ -232,10 +233,10 @@ app.get('/products/crawl/detail', function (req, res) {
 });
 app.post('/products/crawl/list', function (req, res) {
   const name = req.body.name;
+  console.log(req.body);
   // Insert new tag
   app.post('/tags/add', function (req, res) {
     console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-    console.log(req.body);
     const listingQuery = {name: name};
     const updates = {
       $set: {
@@ -281,7 +282,8 @@ app.post('/products/crawl/list', function (req, res) {
             display_order: 0,
             attribute_id: null,
             seo_id: null,
-            system_id: null,
+            user_id: req.body.user_id,
+            system_type: req.body.system_type,
             currency: 'VND',
             price: price
           }

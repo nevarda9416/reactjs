@@ -128,7 +128,9 @@ const DataProduct = () => {
       setValidated(false);
       const product = {
         category_id: form.categoryId.value,
-        name: form.productName.value
+        name: form.productName.value,
+        user_id: loggedInUser.id,
+        system_type: 'crawl' // CRUD action, replace system_id
       };
       console.log(action);
       console.log(product);
