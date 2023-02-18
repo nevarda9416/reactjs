@@ -206,7 +206,7 @@ const Traffic_Source = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>{t('traffic_source.view')}</CModalTitle>
+                    <CModalTitle>{t('traffic_source.show')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trafficSourceForm'}>

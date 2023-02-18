@@ -285,7 +285,7 @@ const DataProduct = () => {
                 </CTableDataCell>
                 <CModal size="lg" visible={visible} onClose={() => { setVisible(false); loadData() }}>
                   <CModalHeader>
-                    <CModalTitle>{t('product.view')}</CModalTitle>
+                    <CModalTitle>{t('product.show')}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit}>

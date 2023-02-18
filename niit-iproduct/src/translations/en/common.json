@@ -108,6 +108,7 @@
     "add_or_edit": "Add or Edit activity",
     "add": "Add activity",
     "edit": "Edit activity",
+    "show": "Show activity",
     "label_subject": "Subject",
     "label_content": "Content",
     "label_url": "URL",
@@ -188,7 +189,7 @@
   "product": {
     "breadcrumb": "Product Management",
     "add_or_edit": "Add or Edit product",
-    "view": "View product",
+    "show": "Show product",
     "label_category_name": "Category name",
     "label_name": "Product name",
     "label_keyword": "Product keyword",
@@ -239,7 +240,7 @@
   },
   "tracking": {
     "breadcrumb": "Tracking",
-    "view": "View tracking",
+    "show": "Show tracking",
     "label_customer_id": "Customer ID",
     "label_datetime": "Datetime",
     "label_keyword": "Keyword",
@@ -267,7 +268,7 @@
   },
   "traffic_source": {
     "breadcrumb": "Traffic Source",
-    "view": "View traffic source",
+    "show": "Show traffic source",
     "label_register_source": "Register Source",
     "label_source_id": "Source ID",
     "label_customer_id": "Customer ID",

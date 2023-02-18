@@ -242,7 +242,7 @@ const Tracking = () => {
                 </CTableDataCell>
                 <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
                   <CModalHeader>
-                    <CModalTitle>{t('tracking.view')} ID: {tracking._id}</CModalTitle>
+                    <CModalTitle>{t('tracking.show')} ID: {tracking._id}</CModalTitle>
                   </CModalHeader>
                   <CModalBody>
                     <CForm noValidate validated={validated} onSubmit={handleSubmit} id={'trackingForm'}>
