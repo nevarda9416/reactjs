@@ -72,7 +72,8 @@ app.post('/' + collection_name + '/add', function (req, res) {
       remember_token: req.body.remember_token,
       refresh_token: req.body.refresh_token,
       department: req.body.department,
-      system_id: req.body.system_id
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -112,7 +113,8 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       remember_token: req.body.remember_token,
       refresh_token: req.body.refresh_token,
       department: req.body.department,
-      system_id: req.body.system_id
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {

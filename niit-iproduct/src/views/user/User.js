@@ -10,7 +10,6 @@ import {
   CForm,
   CFormInput,
   CFormLabel,
-  CFormTextarea,
   CButton,
   CTable,
   CTableBody,
@@ -26,8 +25,6 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import {CKEditor} from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {create, edit, deleteById} from "../../services/API/User/UserClient";
 import {useTranslation} from "react-i18next";
 
@@ -39,6 +36,7 @@ const User = () => {
   const [userSearch, setUserSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
+  const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
@@ -46,9 +44,6 @@ const User = () => {
   const config = {
     headers: {Authorization: `Bearer ${token}`}
   };
-  const [state, setState] = useState({
-    editor: null
-  });
   const loadData = async () => {
     const data = await axios.get(url + ':' + user_port + '/' + user_collection);
     const dataJ = await data.data;
@@ -74,7 +69,7 @@ const User = () => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      console.log(foundUser);      
+      setLoggedInUser(foundUser);     
     }
     const getData = async () => {
       const data = await axios.get(url + ':' + user_port + '/' + user_collection);
@@ -88,7 +83,7 @@ const User = () => {
     const target = e.target;
     const value = target.value;
     const name = target.name;
-    setTag({...tag,
+    setUser({...user,
       [name]: value
     })
   };
@@ -99,11 +94,6 @@ const User = () => {
     const data = await axios.get(url + ':' + user_port + '/' + user_collection + '/find?name=' + value);
     const dataJ = await data.data;
     setData(dataJ);
-  };
-  const changeTextarea = (value) => {
-    setUser({
-      description: value
-    })
   };
   const handleSubmit = (event) => {
     const form = event.target;
@@ -118,6 +108,8 @@ const User = () => {
         username: form.userName.value,
         password: form.userPassword.value,
         department: form.userDepartment.value,
+        user_id: loggedInUser.id,
+        system_type: 'default' // CRUD action, replace system_id
       };
       console.log(action);
       console.log(user);
@@ -126,8 +118,8 @@ const User = () => {
       } else {
         create(user, config);
       }
+      loadData();
     }
-    loadData();
   };
   const editItem = (id) => {
     setVisible(!visible);
