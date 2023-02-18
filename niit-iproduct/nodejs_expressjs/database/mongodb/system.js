@@ -59,7 +59,8 @@ app.post('/' + collection_name + '/add', function (req, res) {
       deleted_at: req.body.deleted_at,
       is_published: req.body.is_published,
       published_by: req.body.published_by,
-      published_at: req.body.published_at
+      published_at: req.body.published_at,
+      user_id: req.body.user_id
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -105,7 +106,8 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       deleted_at: req.body.deleted_at,
       is_published: req.body.is_published,
       published_by: req.body.published_by,
-      published_at: req.body.published_at
+      published_at: req.body.published_at,
+      user_id: req.body.user_id
     }
   };
   mongoClient.connect(url, function (error, database) {

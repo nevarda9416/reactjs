@@ -36,6 +36,7 @@ const System = () => {
   const [systemSearch, setSystemSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
   const [action, setAction] = useState({ hits: [] });
+  const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
@@ -68,7 +69,7 @@ const System = () => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      console.log(foundUser);      
+      setLoggedInUser(foundUser);
     }
     const getData = async () => {
       const data = await axios.get(url + ':' + system_port + '/' + system_collection);
@@ -125,7 +126,8 @@ const System = () => {
         deleted_at: form.systemDeletedAt.checked === true ? 1 : 0,
         is_published: form.systemIsPublished.checked === true ? 1 : 0,
         published_by: form.systemPublishedBy.checked === true ? 1 : 0,
-        published_at: form.systemPublishedAt.checked === true ? 1 : 0
+        published_at: form.systemPublishedAt.checked === true ? 1 : 0,
+        user_id: loggedInUser.id
       };
       console.log(action);
       console.log(system);
