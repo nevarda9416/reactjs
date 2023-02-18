@@ -49,7 +49,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
     $set: {
       name: req.body.name,
       slug: req.body.slug,
-      description: req.body.description
+      description: req.body.description,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {
@@ -84,7 +86,9 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
     $set: {
       name: req.body.name,
       slug: req.body.slug,
-      description: req.body.description
+      description: req.body.description,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
     }
   };
   mongoClient.connect(url, function (error, database) {

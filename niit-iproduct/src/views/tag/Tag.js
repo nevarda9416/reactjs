@@ -37,6 +37,7 @@ const Tag = () => {
   const [tagSearch, setTagSearch] = useState({hits: []});
   const [id, setId] = useState(0);
   const [action, setAction] = useState({hits: []});
+  const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
@@ -69,7 +70,7 @@ const Tag = () => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      console.log(foundUser);      
+      setLoggedInUser(foundUser);           
     }
     const getData = async () => {
       const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
@@ -105,7 +106,9 @@ const Tag = () => {
       const tag = {
         name: form.tagName.value,
         slug: form.tagSlug.value,
-        description: form.tagDescription.value
+        description: form.tagDescription.value,
+        user_id: loggedInUser.id,
+        system_type: 'default' // CRUD action, replace system_id
       };
       console.log(action);
       console.log(tag);
@@ -114,8 +117,8 @@ const Tag = () => {
       } else {
         create(tag, config);
       }
+      loadData();
     }
-    loadData();
   };
   const editItem = (id) => {
     setVisible(!visible);
@@ -133,7 +136,7 @@ const Tag = () => {
     deleteById(id);
     setLoad(1);
   };
-  const [t, i18n] = useTranslation('common');
+  const [t] = useTranslation('common');
   const pagination =
         <div className="my-3 text-center">
             <button
