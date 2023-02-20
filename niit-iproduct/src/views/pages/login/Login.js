@@ -36,20 +36,15 @@ const Login = () => {
         username: form.username.value,
         password: form.password.value,
       };
-      // Generate a random number and convert it to base 36 (0-9a-z)
-      const token = Math.random().toString(36).substr(2); // remove `0.`
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
       event.preventDefault()
       event.stopPropagation()
-      axios.post(url + ':' + port + '/admin/login', user, config)
+      axios.post(url + ':' + port + '/admin/login', user)
         .then(res => {
           if (res.data.user) {
             console.log((res.data.user._id));
             // store the user in localStorage
             const user = res.data.user;
-            localStorage.setItem('userLoggedInfo', JSON.stringify({ id: user._id, email: user._id, fullname: user.fullname, username: user.username }));
+            localStorage.setItem('userLoggedInfo', JSON.stringify({ id: user._id, email: user._id, fullname: user.fullname, username: user.username, token: user.access_token }));
             navigate('/dashboard');
           } else {
             return res;

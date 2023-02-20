@@ -15,9 +15,13 @@ const crypto = require('crypto');
 const getHashedPassword = (password) => {
   return crypto.createHash('sha256').update(password).digest('base64');
 };
+const jwt = require('jsonwebtoken');
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+const generateAccessToken = (username) => {
+  return jwt.sign(username, env.TOKEN_SECRET);
+};
 // https://stackabuse.com/handling-authentication-in-express-js/
 app.post('/admin/login', (req, res) => {
     const {username, password} = req.body;
@@ -32,6 +36,20 @@ app.post('/admin/login', (req, res) => {
             database.close();
         });
     });
+});
+app.get('/admin/logout', (req, res) => {
+  const {username, password} = req.body;
+  const hashedPassword = getHashedPassword(password);
+  mongoClient.connect(url, function (error, database) {
+      if (error) throw error;
+      const dbo = database.db('niit-iproduct');
+      dbo.collection('users').findOne({ username: username, password: hashedPassword }, function (error, response) {
+          if (error) throw error;
+          console.log(response);
+          res.jsonp({user:response});
+          database.close();
+      });
+  });
 });
 // Find user name like input data (GET)
 app.get('/' + collection_name + '/find', function (req, res) {
@@ -104,6 +122,7 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
   const listingQuery = {_id: new ObjectId(req.params.id)};
   console.log(req.body);
+  const token = generateAccessToken({username: req.body.username});
   const updates = {
     $set: {
       fullname: req.body.fullname,
@@ -114,7 +133,8 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
       refresh_token: req.body.refresh_token,
       department: req.body.department,
       user_id: req.body.user_id,
-      system_type: req.body.system_type
+      system_type: req.body.system_type,
+      access_token: token
     }
   };
   mongoClient.connect(url, function (error, database) {
