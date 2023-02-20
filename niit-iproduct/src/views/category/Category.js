@@ -38,11 +38,6 @@ const Category = () => {
   const [action, setAction] = useState({hits: []});
   const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
-  // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
-  const token = Math.random().toString(36).substr(2); // remove `0.`
-  const config = {
-    headers: {Authorization: `Bearer ${token}`}
-  };
   const [state, setState] = useState({
     editor: null
   });
@@ -100,7 +95,7 @@ const Category = () => {
     setState({...state, editor: editor});
   }, []);
   const changeInput = (value) => {
-    setCategory({
+    setCategory({...category,
       name: value
     })
   };
@@ -113,18 +108,20 @@ const Category = () => {
     setData(dataJ);
   };
   const changeTextarea = (value) => {
-    setCategory({
+    setCategory({...category,
       description: value
     })
   };
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     console.log(form);
-    console.log(loggedInUser.id);
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
       setValidated(false);
+      const config = {
+        headers: {Authorization: `Bearer ${loggedInUser.token}`}
+      };
       const category = {
         name: form.categoryName.value,
         dbname: form.categoryName.value,
