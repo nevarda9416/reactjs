@@ -31,8 +31,8 @@ const update = (url, port, collection, id, data, config) => {
   const response = axios.post(url + ':' + port + '/' + collection + '/edit/' + id, data, config);
   return response.data;
 };
-const destroyById = (url, port, collection, id) => {
-  const response = axios.get(url + ':' + port + '/' + collection + '/delete/' + id);
+const destroyById = (url, port, collection, id, data, config) => {
+  const response = axios.post(url + ':' + port + '/' + collection + '/delete/' + id, data, config);
   return response.data;
 };
 export {crawl, store, update, destroyById};

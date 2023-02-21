@@ -35,8 +35,7 @@ const Category = () => {
   const [validated, setValidated] = useState(false);
   const [categorySearch, setCategorySearch] = useState({hits: []});
   const [id, setId] = useState(0);
-  const [action, setAction] = useState({hits: []});
-  const [loggedInUser, setLoggedInUser] = useState({hits: []});
+  const [action, setAction] = useState();
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   const [state, setState] = useState({
     editor: null
@@ -63,11 +62,6 @@ const Category = () => {
     setNumber(pageNumber);
   };
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setLoggedInUser(foundUser);      
-    }
     const getData = async () => {
       const data = await axios.get(url + ':' + port + '/categories');
       const dataJ = await data.data;
@@ -119,23 +113,27 @@ const Category = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const config = {
-        headers: {Authorization: `Bearer ${loggedInUser.token}`}
-      };
-      const category = {
-        name: form.categoryName.value,
-        dbname: form.categoryName.value,
-        description: form.categoryDescription.value,
-        user_id: loggedInUser.id,
-        system_type: 'default' // CRUD action, replace system_id
-      };
-      console.log(action);
-      if (action === 'edit') {
-        edit(id, category, config);
-      } else {
-        create(category, config);
+      const loggedInUser = localStorage.getItem('userLoggedInfo');
+      if (loggedInUser) {
+        const foundUser = JSON.parse(loggedInUser);
+        const config = {
+          headers: {Authorization: `Bearer ${foundUser.token}`}
+        };
+        const category = {
+          name: form.categoryName.value,
+          dbname: form.categoryName.value,
+          description: form.categoryDescription.value,
+          user_id: foundUser.id,
+          system_type: 'default' // CRUD action, replace system_id
+        };
+        console.log(action);
+        if (action === 'edit') {
+          edit(id, category, config);
+        } else {
+          create(category, config);
+        }
+        loadData();
       }
-      loadData();
     }
   };
   const editItem = (id) => {
@@ -173,7 +171,17 @@ const Category = () => {
   const deleteItem = (id) => {
     setId(id);
     setAction({'action': 'delete'});
-    deleteById(id);
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      const config = {
+        headers: {Authorization: `Bearer ${foundUser.token}`}
+      };
+      const category = {
+        user_id: foundUser.id
+      };
+      deleteById(id, category, config);
+    }
     loadData();
   };
   const [t] = useTranslation('common');
