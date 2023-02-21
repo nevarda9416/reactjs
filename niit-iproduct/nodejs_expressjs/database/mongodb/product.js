@@ -14,6 +14,7 @@ const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATA
 const port = env.DATABASE_PORT_PRODUCT_CRUD_DATA;
 const dbname = env.DATABASE_NAME;
 const collection_name = env.COLLECTION_PRODUCT_NAME;
+const collection_auth_name = env.COLLECTION_USER_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -23,7 +24,7 @@ app.get('/' + collection_name + '/find', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).find({name: new RegExp(search_name, 'i')}).sort({price: 1}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({ name: new RegExp(search_name, 'i') }).sort({ price: 1 }).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       database.close();
@@ -35,7 +36,7 @@ app.get('/' + collection_name, function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).find({}).sort({_id: -1}).toArray(function (error, response) {
+    dbo.collection(collection_name).find({}).sort({ _id: -1 }).toArray(function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       database.close();
@@ -46,7 +47,7 @@ app.get('/' + collection_name, function (req, res) {
 app.post('/' + collection_name + '/add', function (req, res) {
   console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
   console.log(req.body);
-  const listingQuery = {name: req.body.name};
+  const listingQuery = { name: req.body.name };
   const updates = {
     $set: {
       category_id: req.body.category_id,
@@ -63,9 +64,9 @@ app.post('/' + collection_name + '/add', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
       if (error) throw error;
-      console.log('Documents inserted or updated: ' + JSON.stringify(response));
+      console.log('Product is inserted or updated: ' + JSON.stringify(response));
       res.jsonp(response);
       database.close();
     });
@@ -77,7 +78,7 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).findOne({_id: new ObjectId(_id)}, function (error, response) {
+    dbo.collection(collection_name).findOne({ _id: new ObjectId(_id) }, function (error, response) {
       if (error) throw error;
       res.jsonp(response);
       database.close();
@@ -86,7 +87,7 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Update product (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
-  const listingQuery = {_id: new ObjectId(req.params.id)};
+  const listingQuery = { _id: new ObjectId(req.params.id) };
   console.log(req.body);
   const updates = {
     $set: {
@@ -104,25 +105,41 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
       if (error) throw error;
-      console.log('Product updated: ' + JSON.stringify(response));
+      console.log('Product is updated: ' + JSON.stringify(response));
       res.jsonp(response);
       database.close();
     });
   });
 });
 // Delete product (GET)
-app.get('/' + collection_name + '/delete/:id', function (req, res) {
-  const listingQuery = {_id: new ObjectId(req.params.id)};
+app.post('/' + collection_name + '/delete/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
-      if (error) throw error;
-      console.log('Product deleted');
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { _id: new ObjectId(req.params.id) };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
+              if (error) throw error;
+              console.log('Product is deleted!');
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
@@ -147,14 +164,14 @@ app.get('/products/export', function (req, res) {
 });
 // Import from json file to database
 app.get('/products/import', function (req, res) {
-  fs.readFile('./nodejs_expressjs/database/mongodb/products.json', function(error, response) {
+  fs.readFile('./nodejs_expressjs/database/mongodb/products.json', function (error, response) {
     if (error) {
       res.jsonp({ success: false });
     } else {
       const parseJSON = JSON.parse(response);
       parseJSON.forEach(element => {
         console.log(element.name);
-        const listingQuery = {name: element.name};
+        const listingQuery = { name: element.name };
         const updates = {
           $set: {
             category_id: element.category_id,
@@ -169,9 +186,9 @@ app.get('/products/import', function (req, res) {
         mongoClient.connect(url, function (error, database) {
           if (error) throw error;
           const dbo = database.db(dbname);
-          dbo.collection('products').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+          dbo.collection('products').updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
             if (error) throw error;
-            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+            console.log('Product is inserted or updated: ' + JSON.stringify(response));
             database.close();
           });
         })
@@ -216,7 +233,7 @@ app.post('/products/crawl/detail', function (req, res) {
                   const dbo = database.db(dbname);
                   dbo.collection('products').updateOne(listingQuery, listProducts, function (error, response) {
                     if (error) throw error;
-                    console.log('Documents inserted or updated: ' + JSON.stringify(response));
+                    console.log('Product is inserted or updated: ' + JSON.stringify(response));
                     database.close();
                   });
                 });
@@ -237,7 +254,7 @@ app.post('/products/crawl/list', function (req, res) {
   // Insert new tag
   app.post('/tags/add', function (req, res) {
     console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-    const listingQuery = {name: name};
+    const listingQuery = { name: name };
     const updates = {
       $set: {
         name: name,
@@ -248,9 +265,9 @@ app.post('/products/crawl/list', function (req, res) {
     mongoClient.connect(url, function (error, database) {
       if (error) throw error;
       const dbo = database.db(dbname);
-      dbo.collection('tags').updateOne(listingQuery, updates, {upsert: true}, function (error, response) {
+      dbo.collection('tags').updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
         if (error) throw error;
-        console.log('Tags inserted or updated: ' + JSON.stringify(response));
+        console.log('Tag is inserted or updated: ' + JSON.stringify(response));
         res.jsonp(response);
         database.close();
       });
@@ -293,7 +310,7 @@ app.post('/products/crawl/list', function (req, res) {
           const dbo = database.db(dbname);
           dbo.collection('products').updateOne(listingQuery, listProducts, { upsert: true }, function (error, response) {
             if (error) throw error;
-            console.log('Documents inserted or updated: ' + JSON.stringify(response));
+            console.log('Product is inserted or updated: ' + JSON.stringify(response));
             database.close();
           });
         });
@@ -304,5 +321,5 @@ app.post('/products/crawl/list', function (req, res) {
   });
 });
 app.listen(port, env.SERVER_NAME, function () {
-  console.log('Example app listening on port ' + port + '!')
+  console.log('Product service is listening on port ' + port + '!')
 });
