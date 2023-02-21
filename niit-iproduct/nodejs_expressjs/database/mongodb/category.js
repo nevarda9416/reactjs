@@ -40,7 +40,7 @@ app.get('/' + collection_name, function (req, res) {
     });
   });
 });
-// Add product (POST)
+// Add category (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
@@ -79,7 +79,7 @@ app.post('/' + collection_name + '/add', function (req, res) {
     });
   });
 });
-// Edit product (GET)
+// Edit category (GET)
 app.get('/' + collection_name + '/edit/:id', function (req, res) {
   const _id = req.params.id;
   mongoClient.connect(url, function (error, database) {
@@ -92,7 +92,7 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
     });
   });
 });
-// Update product (POST)
+// Update category (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
@@ -131,7 +131,7 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
     });
   });
 });
-// Delete product (GET)
+// Delete category (POST)
 app.post('/' + collection_name + '/delete/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;

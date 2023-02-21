@@ -45,30 +45,44 @@ app.get('/' + collection_name, function (req, res) {
 });
 // Add product (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
-  console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-  console.log(req.body);
-  const listingQuery = { name: req.body.name };
-  const updates = {
-    $set: {
-      category_id: req.body.category_id,
-      name: req.body.name,
-      short_description: req.body.short_description,
-      full_description: req.body.full_description,
-      unit: req.body.unit,
-      currency: req.body.currency,
-      price: req.body.price,
-      user_id: req.body.user_id,
-      system_type: req.body.system_type
-    }
-  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-      if (error) throw error;
-      console.log('Product is inserted or updated: ' + JSON.stringify(response));
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { name: req.body.name };
+          const updates = {
+            $set: {
+              category_id: req.body.category_id,
+              name: req.body.name,
+              short_description: req.body.short_description,
+              full_description: req.body.full_description,
+              unit: req.body.unit,
+              currency: req.body.currency,
+              price: req.body.price,
+              user_id: req.body.user_id,
+              system_type: req.body.system_type
+            }
+          };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+              if (error) throw error;
+              console.log('Product is inserted or updated: ' + JSON.stringify(response));
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
@@ -87,33 +101,49 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Update product (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
-  const listingQuery = { _id: new ObjectId(req.params.id) };
-  console.log(req.body);
-  const updates = {
-    $set: {
-      category_id: req.body.category_id,
-      name: req.body.name,
-      short_description: req.body.short_description,
-      full_description: req.body.full_description,
-      unit: req.body.unit,
-      currency: req.body.currency,
-      price: req.body.price,
-      user_id: req.body.user_id,
-      system_type: req.body.system_type
-    }
-  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-      if (error) throw error;
-      console.log('Product is updated: ' + JSON.stringify(response));
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { _id: new ObjectId(req.params.id) };
+          console.log(req.body);
+          const updates = {
+            $set: {
+              category_id: req.body.category_id,
+              name: req.body.name,
+              short_description: req.body.short_description,
+              full_description: req.body.full_description,
+              unit: req.body.unit,
+              currency: req.body.currency,
+              price: req.body.price,
+              user_id: req.body.user_id,
+              system_type: req.body.system_type
+            }
+          };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+              if (error) throw error;
+              console.log('Product is updated: ' + JSON.stringify(response));
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
-// Delete product (GET)
+// Delete product (POST)
 app.post('/' + collection_name + '/delete/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;

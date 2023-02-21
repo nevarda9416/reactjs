@@ -38,13 +38,7 @@ const Product = () => {
   const [productSearch, setProductSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
   const [action, setAction] = useState({ hits: [] });
-  const [loggedInUser, setLoggedInUser] = useState({ hits: [] });
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
-  // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
-  const token = Math.random().toString(36).substr(2); // remove `0.`
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
   const [state, setState] = useState({
     editor: null,
     editShortDescription: null
@@ -72,11 +66,6 @@ const Product = () => {
     setNumber(pageNumber);
   };
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setLoggedInUser(foundUser);
-    }
     const getData = async () => {
       const dataC = await axios.get(url + ':' + category_port + '/categories');
       const dataJC = await dataC.data;

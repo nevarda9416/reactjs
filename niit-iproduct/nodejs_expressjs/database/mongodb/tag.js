@@ -43,26 +43,40 @@ app.get('/' + collection_name, function (req, res) {
 });
 // Add tag (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
-  console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-  console.log(req.body);
-  const listingQuery = { dbname: req.body.name };
-  const updates = {
-    $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description,
-      user_id: req.body.user_id,
-      system_type: req.body.system_type
-    }
-  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-      if (error) throw error;
-      console.log('Tag is inserted or updated: ' + JSON.stringify(response));
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { dbname: req.body.name };
+          const updates = {
+            $set: {
+              name: req.body.name,
+              slug: req.body.slug,
+              description: req.body.description,
+              user_id: req.body.user_id,
+              system_type: req.body.system_type
+            }
+          };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+              if (error) throw error;
+              console.log('Tag is inserted or updated: ' + JSON.stringify(response));
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
@@ -81,29 +95,45 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Update tag (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
-  const listingQuery = { _id: new ObjectId(req.params.id) };
-  console.log(req.body);
-  const updates = {
-    $set: {
-      name: req.body.name,
-      slug: req.body.slug,
-      description: req.body.description,
-      user_id: req.body.user_id,
-      system_type: req.body.system_type
-    }
-  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-      if (error) throw error;
-      console.log('Tag is updated: ' + JSON.stringify(response));
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { _id: new ObjectId(req.params.id) };
+          console.log(req.body);
+          const updates = {
+            $set: {
+              name: req.body.name,
+              slug: req.body.slug,
+              description: req.body.description,
+              user_id: req.body.user_id,
+              system_type: req.body.system_type
+            }
+          };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+              if (error) throw error;
+              console.log('Tag is updated: ' + JSON.stringify(response));
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
-// Delete tag (GET)
+// Delete tag (POST)
 app.post('/' + collection_name + '/delete/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
