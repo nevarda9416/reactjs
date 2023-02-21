@@ -1,5 +1,5 @@
-import {React, useEffect, useState} from 'react'
-import {Link} from 'react-router-dom';
+import { React, useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 
 import {
   CCard,
@@ -26,24 +26,24 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import {create, edit, deleteById} from "../../services/API/Tag/TagClient";
-import {useTranslation} from "react-i18next";
+import { create, edit, deleteById } from "../../services/API/Tag/TagClient";
+import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const tag_port = process.env.REACT_APP_PORT_DATABASE_MONGO_TAG_CRUD_DATA;
 const tag_collection = process.env.REACT_APP_COLLECTION_MONGO_TAG_NAME;
 const Tag = () => {
   const [validated, setValidated] = useState(false);
-  const [tagSearch, setTagSearch] = useState({hits: []});
+  const [tagSearch, setTagSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
-  const [action, setAction] = useState({hits: []});
-  const [loggedInUser, setLoggedInUser] = useState({hits: []});
+  const [action, setAction] = useState({ hits: [] });
+  const [loggedInUser, setLoggedInUser] = useState({ hits: [] });
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
   // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
   const token = Math.random().toString(36).substr(2); // remove `0.`
   const config = {
-    headers: {Authorization: `Bearer ${token}`}
+    headers: { Authorization: `Bearer ${token}` }
   };
   const loadData = async () => {
     const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
@@ -70,7 +70,7 @@ const Tag = () => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      setLoggedInUser(foundUser);           
+      setLoggedInUser(foundUser);
     }
     const getData = async () => {
       const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
@@ -84,7 +84,8 @@ const Tag = () => {
     const target = e.target;
     const value = target.value;
     const name = target.name;
-    setTag({...tag,
+    setTag({
+      ...tag,
       [name]: value
     })
   };
@@ -103,21 +104,28 @@ const Tag = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const tag = {
-        name: form.tagName.value,
-        slug: form.tagSlug.value,
-        description: form.tagDescription.value,
-        user_id: loggedInUser.id,
-        system_type: 'default' // CRUD action, replace system_id
-      };
-      console.log(action);
-      console.log(tag);
-      if (action === 'edit') {
-        edit(id, tag, config);
-      } else {
-        create(tag, config);
+      const loggedInUser = localStorage.getItem('userLoggedInfo');
+      if (loggedInUser) {
+        const foundUser = JSON.parse(loggedInUser);
+        const config = {
+          headers: { Authorization: `Bearer ${foundUser.token}` }
+        };
+        const tag = {
+          name: form.tagName.value,
+          slug: form.tagSlug.value,
+          description: form.tagDescription.value,
+          user_id: foundUser.id,
+          system_type: 'default' // CRUD action, replace system_id
+        };
+        console.log(action);
+        console.log(tag);
+        if (action === 'edit') {
+          edit(id, tag, config);
+        } else {
+          create(tag, config);
+        }
+        loadData();
       }
-      loadData();
     }
   };
   const editItem = (id) => {
@@ -132,61 +140,71 @@ const Tag = () => {
   };
   const deleteItem = (id) => {
     setId(id);
-    setAction({'action': 'delete'});
-    deleteById(id);
+    setAction({ 'action': 'delete' });
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      const config = {
+        headers: {Authorization: `Bearer ${foundUser.token}`}
+      };
+      const tag = {
+        user_id: foundUser.id
+      };
+      deleteById(id, tag, config);
+    }
     setLoad(1);
   };
   const [t] = useTranslation('common');
   const pagination =
-        <div className="my-3 text-center">
-            <button
-                className="px-3 py-1 m-1 text-center btn btn-primary"
-                onClick={() => {
-                    setNumber(1)
-                }}>
-                {t('paginate_first')}
+    <div className="my-3 text-center">
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          setNumber(1)
+        }}>
+        {t('paginate_first')}
+      </button>
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          if (number > 1)
+            setNumber(number - 1)
+          else
+            setNumber(1)
+        }}>
+        {t('paginate_previous')}
+      </button>
+      {pageNumber.map((element, index) => {
+        const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
+        return (
+          <span>{(element < number - 3 || element > number + 3 || element == number) &&
+            <button key={index}
+              className={className}
+              onClick={() => changePage(element)}>
+              {element}
             </button>
-            <button
-                className="px-3 py-1 m-1 text-center btn btn-primary"
-                onClick={() => {
-                    if (number > 1)
-                        setNumber(number - 1)
-                    else
-                        setNumber(1)
-                }}>
-                {t('paginate_previous')}
-            </button>
-            {pageNumber.map((element, index) => {
-                const className = (number === element) ? 'px-3 py-1 m-1 text-center btn btn-primary' : 'px-3 py-1 m-1 text-center btn btn-outline-dark'
-                return (
-                    <span>{(element < number - 3 || element > number + 3 || element == number) &&
-                        <button key={index}
-                            className={className}
-                            onClick={() => changePage(element)}>
-                            {element}
-                        </button>
-                    }</span>
-                );
-            })}
-            <button
-                className="px-3 py-1 m-1 text-center btn btn-primary"
-                onClick={() => {
-                    if (number < Math.ceil(tags.length / tagPerPage))
-                        setNumber(number + 1)
-                    else
-                        setNumber(Math.ceil(tags.length / tagPerPage))
-                }}>
-                {t('paginate_next')}
-            </button>
-            <button
-                className="px-3 py-1 m-1 text-center btn btn-primary"
-                onClick={() => {
-                    setNumber(Math.ceil(tags.length / tagPerPage))
-                }}>
-                {t('paginate_last')}
-            </button>
-        </div>
-        ;
+          }</span>
+        );
+      })}
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          if (number < Math.ceil(tags.length / tagPerPage))
+            setNumber(number + 1)
+          else
+            setNumber(Math.ceil(tags.length / tagPerPage))
+        }}>
+        {t('paginate_next')}
+      </button>
+      <button
+        className="px-3 py-1 m-1 text-center btn btn-primary"
+        onClick={() => {
+          setNumber(Math.ceil(tags.length / tagPerPage))
+        }}>
+        {t('paginate_last')}
+      </button>
+    </div>
+    ;
   return (
     <CRow>
       <CCol xs={6}>
@@ -199,17 +217,17 @@ const Tag = () => {
               {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
-                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange}/>
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange} />
               </div>
               {/* slug */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
-                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange}/>
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange} />
               </div>
               {/* description */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
-                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange}/>
+                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange} />
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
@@ -224,7 +242,7 @@ const Tag = () => {
         <div className="mb-3">
           <CFormLabel htmlFor="tagSearchName">{t('tag.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="tagSearchName"
-                      placeholder={t('tag.validate_input_name')} value={tagSearch.name} required/>
+            placeholder={t('tag.validate_input_name')} value={tagSearch.name} required />
         </div>
         {pagination}
         <CTable bordered borderColor='primary'>
@@ -242,14 +260,14 @@ const Tag = () => {
                 <CTableDataCell>{item.name}</CTableDataCell>
                 <CTableDataCell>
                   {/*<Link onClick={() => setVisible(!visible)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;*/}
-                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil}/></Link>&nbsp;&nbsp;
+                  <Link onClick={e => editItem(item._id)}><CIcon icon={cilPencil} /></Link>&nbsp;&nbsp;
                   <Link onClick={(e) => {
                     if (window.confirm(t('tag.confirm_delete'))) {
                       deleteItem(item._id);
                     }
-                  }}><CIcon icon={cilTrash}/></Link>
+                  }}><CIcon icon={cilTrash} /></Link>
                 </CTableDataCell>
-                <CModal visible={visible} onClose={() => {setVisible(false); loadData()}}>
+                <CModal visible={visible} onClose={() => { setVisible(false); loadData() }}>
                   <CModalHeader>
                     <CModalTitle>{t('tag.edit')}</CModalTitle>
                   </CModalHeader>
@@ -258,22 +276,22 @@ const Tag = () => {
                       {/* name */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
-                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange}/>
+                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange} />
                       </div>
                       {/* slug */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
-                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange}/>
+                        <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange} />
                       </div>
                       {/* description */}
                       <div className="mb-3">
                         <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
-                        <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange}/>
+                        <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange} />
                       </div>
                     </CForm>
                   </CModalBody>
                   <CModalFooter>
-                    <CButton color="secondary" onClick={() => {setVisible(false);}}>
+                    <CButton color="secondary" onClick={() => { setVisible(false); }}>
                       {t('btn_close')}
                     </CButton>
                     <CButton color="primary" type="submit" form={'tagForm'}>
@@ -284,7 +302,7 @@ const Tag = () => {
               </CTableRow>
             ))}
           </CTableBody>
-        </CTable>        
+        </CTable>
         {pagination}
       </CCol>
     </CRow>
