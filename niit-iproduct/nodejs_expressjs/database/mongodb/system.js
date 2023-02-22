@@ -11,6 +11,7 @@ const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATA
 const port = env.DATABASE_PORT_SYSTEM_CRUD_DATA;
 const dbname = env.DATABASE_NAME;
 const collection_name = env.COLLECTION_SYSTEM_NAME;
+const collection_auth_name = env.COLLECTION_USER_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
