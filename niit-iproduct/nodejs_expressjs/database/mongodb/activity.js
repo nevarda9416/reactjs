@@ -11,6 +11,7 @@ const url = env.DATABASE_CONNECTION + '://' + env.DATABASE_HOST + ':' + env.DATA
 const port = env.DATABASE_PORT_ACTIVITY_CRUD_DATA;
 const dbname = env.DATABASE_NAME;
 const collection_name = env.COLLECTION_ACTIVITY_NAME;
+const collection_auth_name = env.COLLECTION_USER_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -57,30 +58,44 @@ app.get('/' + collection_name, function (req, res) {
 });
 // Add activity (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
-  console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-  console.log(req.body);
-  const listingQuery = { subject: req.body.subject };
-  const updates = {
-    $set: {
-      subject: req.body.subject,
-      content: req.body.content,
-      url: req.body.url,
-      method: req.body.method,
-      function: req.body.function,
-      ip: req.body.ip,
-      agent: req.body.agent,
-      user_id: req.body.user_id,
-      system_type: req.body.system_type
-    }
-  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-      if (error) throw error;
-      console.log('Documents inserted or updated: ' + JSON.stringify(response));
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { subject: req.body.subject };
+          const updates = {
+            $set: {
+              subject: req.body.subject,
+              content: req.body.content,
+              url: req.body.url,
+              method: req.body.method,
+              function: req.body.function,
+              ip: req.body.ip,
+              agent: req.body.agent,
+              user_id: req.body.user_id,
+              system_type: req.body.system_type
+            }
+          };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+              if (error) throw error;
+              console.log('Activity is inserted or updated: ' + JSON.stringify(response));
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
@@ -99,46 +114,78 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Update activity (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
-  const listingQuery = { _id: new ObjectId(req.params.id) };
-  console.log(req.body);
-  const updates = {
-    $set: {
-      subject: req.body.subject,
-      content: req.body.content,
-      url: req.body.url,
-      method: req.body.method,
-      function: req.body.function,
-      ip: req.body.ip,
-      agent: req.body.agent,
-      user_id: req.body.user_id,
-      system_type: req.body.system_type
-    }
-  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-      if (error) throw error;
-      console.log('Activity updated: ' + JSON.stringify(response));
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { _id: new ObjectId(req.params.id) };
+          console.log(req.body);
+          const updates = {
+            $set: {
+              subject: req.body.subject,
+              content: req.body.content,
+              url: req.body.url,
+              method: req.body.method,
+              function: req.body.function,
+              ip: req.body.ip,
+              agent: req.body.agent,
+              user_id: req.body.user_id,
+              system_type: req.body.system_type
+            }
+          };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+              if (error) throw error;
+              console.log('Activity is updated: ' + JSON.stringify(response));
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
-// Delete activity (GET)
-app.get('/' + collection_name + '/delete/:id', function (req, res) {
-  const listingQuery = { _id: new ObjectId(req.params.id) };
+// Delete activity (POST)
+app.post('/' + collection_name + '/delete/:id', function (req, res) {
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
-      if (error) throw error;
-      console.log('Activity deleted');
-      res.jsonp(response);
-      database.close();
+    dbo.collection(collection_auth_name).find({
+      _id: new ObjectId(req.body.user_id),
+      access_token: req.headers.authorization.split(' ')[1]
+    }).toArray(function (error, response) {
+      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
+      if (error) {
+        throw error;
+      } else {
+        if (response.length) {
+          const listingQuery = { _id: new ObjectId(req.params.id) };
+          mongoClient.connect(url, function (error, database) {
+            if (error) throw error;
+            const dbo = database.db(dbname);
+            dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
+              if (error) throw error;
+              console.log('Activity deleted');
+              res.jsonp(response);
+              database.close();
+            });
+          });
+        }
+      }
     });
   });
 });
 app.listen(port, env.SERVER_NAME, function () {
-  console.log('Example app listening on port ' + port + '!')
+  console.log('Activity service is listening on port ' + port + '!')
 });

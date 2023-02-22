@@ -37,14 +37,8 @@ const Tag = () => {
   const [tagSearch, setTagSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
   const [action, setAction] = useState({ hits: [] });
-  const [loggedInUser, setLoggedInUser] = useState({ hits: [] });
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
-  // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
-  const token = Math.random().toString(36).substr(2); // remove `0.`
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
   const loadData = async () => {
     const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
     const dataJ = await data.data;
