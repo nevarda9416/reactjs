@@ -8,6 +8,7 @@ import {
 } from '@coreui/react';
 import axios from 'axios';
 import {useTranslation} from "react-i18next";
+import { useNavigate } from 'react-router-dom';
 
 const url = process.env.REACT_APP_URL;
 const activity_port = process.env.REACT_APP_PORT_DATABASE_MONGO_ACTIVITY_CRUD_DATA;
@@ -16,15 +17,21 @@ const Dashboard = () => {
   const [cproduct, setCProduct] = useState(0);
   const [ccategory, setCCategory] = useState(0);
   const [ctag, setCTag] = useState(0);
-  useEffect(() => {    
-    const getData = async () => {
-      const data = await axios.get(url + ':' + activity_port + '/' + activity_collection + '/count');
-      const dataC = await data.data;
-      setCProduct(dataC.product);
-      setCCategory(dataC.category);
-      setCTag(dataC.tag);
-    };
-    getData();
+  const navigate = useNavigate();
+  useEffect(() => {   
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const getData = async () => {
+        const data = await axios.get(url + ':' + activity_port + '/' + activity_collection + '/count');
+        const dataC = await data.data;
+        setCProduct(dataC.product);
+        setCCategory(dataC.category);
+        setCTag(dataC.tag);
+      };
+      getData();
+    } else {
+      navigate('/login');
+    }
   });
   const [t, i18n] = useTranslation('common');
   return (

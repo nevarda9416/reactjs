@@ -1,5 +1,5 @@
 import { React, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -62,34 +62,41 @@ const Category = () => {
   const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
+  const navigate = useNavigate();
   useEffect(() => {
-    const getData = async () => {
-      const data = await axios.get(url + ':' + port + '/categories');
-      const dataJ = await data.data;
-      setCategories(dataJ);
-      setData(dataJ);
-    };
-    getData();
-    const editor = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({ event, editor, data });
-        }}
-        onBlur={(_event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(_event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    setState({ ...state, editor: editor });
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const getData = async () => {
+        const data = await axios.get(url + ':' + port + '/categories');
+        const dataJ = await data.data;
+        setCategories(dataJ);
+        setData(dataJ);
+      };
+      getData();
+      const editor = (
+        <CKEditor
+          editor={ClassicEditor}
+          required
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log({ event, editor, data });
+          }}
+          onBlur={(_event, editor) => {
+            console.log('Blur.', editor);
+          }}
+          onFocus={(_event, editor) => {
+            console.log('Focus.', editor);
+          }}
+        />
+      );
+      setState({ ...state, editor: editor });
+    } else {
+      navigate('/login');
+    }
   }, []);
   const changeInput = (value) => {
-    setCategory({...category,
+    setCategory({
+      ...category,
       name: value
     })
   };
@@ -102,7 +109,8 @@ const Category = () => {
     setData(dataJ);
   };
   const changeTextarea = (value) => {
-    setCategory({...category,
+    setCategory({
+      ...category,
       name: inputRef.current.value ?? '',
       description: value
     })
@@ -118,7 +126,7 @@ const Category = () => {
       if (loggedInUser) {
         const foundUser = JSON.parse(loggedInUser);
         const config = {
-          headers: {Authorization: `Bearer ${foundUser.token}`}
+          headers: { Authorization: `Bearer ${foundUser.token}` }
         };
         const category = {
           name: form.categoryName.value,
@@ -133,7 +141,7 @@ const Category = () => {
         } else {
           create(category, config);
         }
-        setTimeout(function(){
+        setTimeout(function () {
           loadData();
         }, 500);
       }
@@ -245,7 +253,7 @@ const Category = () => {
                 <CFormLabel htmlFor="categoryName">{t('category.label_name')}</CFormLabel>
                 <CFormInput onChange={e => changeInput(e.target.value)} type="text"
                   feedbackInvalid={t('category.validate_input_name')} id="categoryName" value={category.name || ''}
-                  required ref={inputRef}/>
+                  required ref={inputRef} />
               </div>
               <div className="mb-3">
                 <CFormLabel htmlFor="exampleFormControlTextarea1">{t('category.label_description')}</CFormLabel>

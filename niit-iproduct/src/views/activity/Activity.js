@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   CCard,
@@ -26,7 +26,7 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 import axios from 'axios';
-import { create, edit, deleteById } from "../../services/API/Activity/ActivityClient";
+import { create, deleteById } from "../../services/API/Activity/ActivityClient";
 import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
@@ -60,14 +60,20 @@ const Activity = () => {
   const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
+  const navigate = useNavigate();
   useEffect(() => {
-    const getData = async () => {
-      const data = await axios.get(url + ':' + activity_port + '/' + activity_collection);
-      const dataJ = await data.data;
-      setActivities(dataJ);
-      setData(dataJ);
-    };
-    getData();
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const getData = async () => {
+        const data = await axios.get(url + ':' + activity_port + '/' + activity_collection);
+        const dataJ = await data.data;
+        setActivities(dataJ);
+        setData(dataJ);
+      };
+      getData();
+    } else {
+      navigate('/login');
+    }
   }, [load]);
   const handleChange = (e) => {
     const target = e.target;
@@ -138,7 +144,7 @@ const Activity = () => {
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
       const config = {
-        headers: {Authorization: `Bearer ${foundUser.token}`}
+        headers: { Authorization: `Bearer ${foundUser.token}` }
       };
       const activity = {
         user_id: foundUser.id

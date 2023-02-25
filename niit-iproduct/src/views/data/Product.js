@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -26,7 +26,7 @@ import CIcon from '@coreui/icons-react'
 import axios from 'axios';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { get, edit } from "../../services/API/Product/ProductClient";
+import { get } from "../../services/API/Product/ProductClient";
 import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
@@ -37,14 +37,8 @@ const DataProduct = () => {
   const [productSearch, setProductSearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
   const [action, setAction] = useState({ hits: [] });
-  const [loggedInUser, setLoggedInUser] = useState({hits: []});
   const [visible, setVisible] = useState(false);
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
-  // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
-  const token = Math.random().toString(36).substr(2); // remove `0.`
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
   const [state, setState] = useState({
     editor: null
   });
@@ -71,40 +65,41 @@ const DataProduct = () => {
   const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
+  const navigate = useNavigate();
   useEffect(() => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setLoggedInUser(foundUser);
+      const getData = async () => {
+        const dataC = await axios.get(url + ':' + category_port + '/categories');
+        const dataJC = await dataC.data;
+        setCategory(dataJC);
+        const dataP = await axios.get(url + ':' + product_port + '/products');
+        const dataJP = await dataP.data;
+        setProducts(dataJP);
+        setData(dataJP);
+      };
+      getData();
+      const editor = (
+        <CKEditor
+          editor={ClassicEditor}
+          required
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log({ event, editor, data });
+            changeTextarea(data);
+          }}
+          onBlur={(_event, editor) => {
+            console.log('Blur.', editor);
+          }}
+          onFocus={(_event, editor) => {
+            console.log('Focus.', editor);
+          }}
+        />
+      );
+      setState({ ...state, editor: editor });
+    } else {
+      navigate('/login');
     }
-    const getData = async () => {
-      const dataC = await axios.get(url + ':' + category_port + '/categories');
-      const dataJC = await dataC.data;
-      setCategory(dataJC);
-      const dataP = await axios.get(url + ':' + product_port + '/products');
-      const dataJP = await dataP.data;
-      setProducts(dataJP);
-      setData(dataJP);
-    };
-    getData();
-    const editor = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({ event, editor, data });
-          changeTextarea(data);
-        }}
-        onBlur={(_event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(_event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    setState({ ...state, editor: editor });
   }, [load]);
   const changeInputSearch = async (value) => {
     setProductSearch({
@@ -126,20 +121,27 @@ const DataProduct = () => {
       setValidated(true);
     } else {
       setValidated(false);
-      const product = {
-        category_id: form.categoryId.value,
-        name: form.productName.value,
-        user_id: loggedInUser.id,
-        system_type: 'crawl' // CRUD action, replace system_id
-      };
-      console.log(action);
-      console.log(product);
-      if (action === 'edit') {
-        //edit(id, product, config); // Product not need edit
-      } else {
-        get(product, config);
+      const loggedInUser = localStorage.getItem('userLoggedInfo');
+      if (loggedInUser) {
+        const foundUser = JSON.parse(loggedInUser);
+        const config = {
+          headers: { Authorization: `Bearer ${foundUser.token}` }
+        };
+        const product = {
+          category_id: form.categoryId.value,
+          name: form.productName.value,
+          user_id: foundUser.id,
+          system_type: 'crawl' // CRUD action, replace system_id
+        };
+        console.log(action);
+        console.log(product);
+        if (action === 'edit') {
+          //edit(id, product, config); // Product not need edit
+        } else {
+          get(product, config);
+        }
+        loadData();
       }
-      loadData();
     }
   };
   const viewItem = (_event, id) => {

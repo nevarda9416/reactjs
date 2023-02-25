@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     CCard,
     CCardBody,
@@ -7,7 +7,8 @@ import {
     CRow,
 } from '@coreui/react';
 import GoogleTrend from 'src/components/GoogleTrend';
-import {useTranslation} from "react-i18next";
+import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 const GoogleTrends = () => {
     const useQuery = () => new URLSearchParams(location.search);
@@ -16,7 +17,15 @@ const GoogleTrends = () => {
     const [inputField, setInputField] = useState({
         keyword: keyword,
     });
-    const [t, i18n] = useTranslation('common');
+    const navigate = useNavigate();
+    useEffect(() => {
+        const loggedInUser = localStorage.getItem('userLoggedInfo');
+        if (loggedInUser) {
+        } else {
+            navigate('/login');
+        }
+    }, []);
+    const [t] = useTranslation('common');
     return (
         <CRow>
             <CCol xs={12}>

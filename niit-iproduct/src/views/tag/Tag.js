@@ -1,5 +1,5 @@
 import { React, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import {
   CCard,
@@ -60,14 +60,20 @@ const Tag = () => {
   const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
+  const navigate = useNavigate();
   useEffect(() => {
-    const getData = async () => {
-      const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
-      const dataJ = await data.data;
-      setTags(dataJ);
-      setData(dataJ);
-    };
-    getData();
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const getData = async () => {
+        const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
+        const dataJ = await data.data;
+        setTags(dataJ);
+        setData(dataJ);
+      };
+      getData();
+    } else {
+      navigate('/login');
+    }
   }, [load]);
   const handleChange = (e) => {
     const target = e.target;
@@ -134,7 +140,7 @@ const Tag = () => {
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
       const config = {
-        headers: {Authorization: `Bearer ${foundUser.token}`}
+        headers: { Authorization: `Bearer ${foundUser.token}` }
       };
       const tag = {
         user_id: foundUser.id

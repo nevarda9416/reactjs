@@ -1,5 +1,5 @@
 import { React, useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CCard,
   CCardBody,
@@ -71,51 +71,57 @@ const Product = () => {
   const changePage = (pageNumber) => {
     setNumber(pageNumber);
   };
+  const navigate = useNavigate();
   useEffect(() => {
-    const getData = async () => {
-      const dataC = await axios.get(url + ':' + category_port + '/categories');
-      const dataJC = await dataC.data;
-      setCategory(dataJC);
-      const dataP = await axios.get(url + ':' + product_port + '/products');
-      const dataJP = await dataP.data;
-      setProducts(dataJP);
-      console.log(products);
-      setData(dataJP);
-    };
-    getData();
-    const editor = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({ event, editor, data });
-        }}
-        onBlur={(_event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(_event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    const editShortDescription = (
-      <CKEditor
-        editor={ClassicEditor}
-        required
-        onChange={(event, editor) => {
-          const data = editor.getData();
-          console.log({ event, editor, data });
-        }}
-        onBlur={(_event, editor) => {
-          console.log('Blur.', editor);
-        }}
-        onFocus={(_event, editor) => {
-          console.log('Focus.', editor);
-        }}
-      />
-    );
-    setState({ ...state, editor: editor, editShortDescription: editShortDescription });
+    const loggedInUser = localStorage.getItem('userLoggedInfo');
+    if (loggedInUser) {
+      const getData = async () => {
+        const dataC = await axios.get(url + ':' + category_port + '/categories');
+        const dataJC = await dataC.data;
+        setCategory(dataJC);
+        const dataP = await axios.get(url + ':' + product_port + '/products');
+        const dataJP = await dataP.data;
+        setProducts(dataJP);
+        console.log(products);
+        setData(dataJP);
+      };
+      getData();
+      const editor = (
+        <CKEditor
+          editor={ClassicEditor}
+          required
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log({ event, editor, data });
+          }}
+          onBlur={(_event, editor) => {
+            console.log('Blur.', editor);
+          }}
+          onFocus={(_event, editor) => {
+            console.log('Focus.', editor);
+          }}
+        />
+      );
+      const editShortDescription = (
+        <CKEditor
+          editor={ClassicEditor}
+          required
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log({ event, editor, data });
+          }}
+          onBlur={(_event, editor) => {
+            console.log('Blur.', editor);
+          }}
+          onFocus={(_event, editor) => {
+            console.log('Focus.', editor);
+          }}
+        />
+      );
+      setState({ ...state, editor: editor, editShortDescription: editShortDescription });
+    } else {
+      navigate('/login');
+    }
   }, [load]);
   const handleChange = (e) => {
     const target = e.target;
@@ -136,8 +142,9 @@ const Product = () => {
   };
   const changeTextarea = (value) => {
     console.log(inputNameRef.current.value);
-    setProduct({...product,
-      name: inputNameRef.current.value ?? '',    
+    setProduct({
+      ...product,
+      name: inputNameRef.current.value ?? '',
       short_description: textareaShortDescriptionRef.current.value ?? '',
       full_description: value,
       unit: selectUnitRef.current.value ?? '',
@@ -146,7 +153,8 @@ const Product = () => {
     })
   };
   const changeShortDescription = (value) => {
-    setProduct({...product,
+    setProduct({
+      ...product,
       name: inputNameRef.current.value ?? '',
       short_description: value,
       full_description: textareaShortDescriptionRef.current.value ?? '',
@@ -187,7 +195,7 @@ const Product = () => {
         } else {
           create(product, config);
         }
-        setTimeout(function(){ // After timeout call list data again
+        setTimeout(function () { // After timeout call list data again
           loadData();
         }, 500);
       }
@@ -340,7 +348,7 @@ const Product = () => {
                 <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
                 <CFormInput type="text" onChange={handleChange}
                   feedbackInvalid={t('product.validate_input_name')} id="productName" name="name" value={product.name || ''}
-                  required ref={inputNameRef}/>
+                  required ref={inputNameRef} />
               </div>
               {/* short_description */}
               <div className="mb-3">
@@ -350,7 +358,7 @@ const Product = () => {
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeShortDescription(e.target.value)}
                   feedbackInvalid={t('product.validate_input_short_description')} id="productShortDescription" rows="3" required
-                  value={product.short_description || ''} ref={textareaShortDescriptionRef}/>
+                  value={product.short_description || ''} ref={textareaShortDescriptionRef} />
               </div>
               {/* full_description */}
               <div className="mb-3">
@@ -360,7 +368,7 @@ const Product = () => {
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
                   feedbackInvalid={t('product.validate_input_full_description')} id="productFullDescription" rows="3" required
-                  value={product.full_description || ''} ref={textareaFullDescriptionRef}/>
+                  value={product.full_description || ''} ref={textareaFullDescriptionRef} />
               </div>
               {/* unit */}
               <div className="mb-3">
@@ -376,14 +384,14 @@ const Product = () => {
                 <CFormLabel htmlFor="productCurrency">{t('product.label_currency')}</CFormLabel>
                 <CFormInput type="text" onChange={handleChange}
                   feedbackInvalid={t('product.validate_input_currency')} id="productCurrency" name="currency" value={product.currency || ''}
-                  required ref={inputCurrencyRef}/>
+                  required ref={inputCurrencyRef} />
               </div>
               {/* price */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productPrice">{t('product.label_price')}</CFormLabel>
                 <CFormInput type="text" onChange={handleChange}
                   feedbackInvalid={t('product.validate_input_price')} id="productPrice" name="price" value={product.price || ''}
-                  required ref={inputPriceRef}/>
+                  required ref={inputPriceRef} />
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
