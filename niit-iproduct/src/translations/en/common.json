@@ -133,7 +133,8 @@
     "validate_input_agent": "Please input agent",
     "search": "Search subject",
     "column_action_name": "Action Name",
-    "confirm_delete": "Delete this subject?"
+    "confirm_delete": "Delete this subject?",
+    "alert_delete_success": "Delete subject successfully!"
   },
   "system": {
     "breadcrumb": "System",

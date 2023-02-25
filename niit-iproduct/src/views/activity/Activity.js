@@ -150,8 +150,11 @@ const Activity = () => {
         user_id: foundUser.id
       };
       deleteById(id, activity, config);
+      alert(t('activity.alert_delete_success'));
+      setTimeout(function () { // After timeout call list data again
+        loadData();
+      }, 500);
     }
-    setLoad(1);
   };
   const [t] = useTranslation('common');
   const pagination =
@@ -206,74 +209,7 @@ const Activity = () => {
     ;
   return (
     <CRow>
-      <CCol xs={6}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <strong>{t('activity.show')}</strong>
-          </CCardHeader>
-          <CCardBody>
-            <CForm noValidate validated={validated} onSubmit={handleSubmit}>
-              {/* Subject */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activitySubject">{t('activity.label_subject')}</CFormLabel>
-                <CFormInput type="text" onChange={handleChange}
-                  feedbackInvalid={t('activity.validate_input_subject')} id="activitySubject" name="subject" value={activity.subject || ''}
-                  required />
-              </div>
-              {/* Content */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activityContent">{t('activity.label_content')}</CFormLabel>
-                <CFormTextarea feedbackInvalid={t('activity.validate_input_content')} id="activityContent" name="content" rows="3" required
-                  value={activity.content || ''} onChange={handleChange} />
-              </div>
-              {/* URL */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activityUrl">{t('activity.label_url')}</CFormLabel>
-                <CFormInput type="text" onChange={handleChange}
-                  feedbackInvalid={t('activity.validate_input_url')} id="activityUrl" name="url" value={activity.url || ''}
-                  required />
-              </div>
-              {/* Method */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activityMethod">{t('activity.label_method')}</CFormLabel>
-                <CFormSelect feedbackInvalid={t('product.validate_input_method')} id="activityMethod" name="method" value={activity.method || ''} required onChange={handleChange}>
-                  <option value="GET">GET</option>
-                  <option value="POST">POST</option>
-                  <option value="PUT">PUT</option>
-                  <option value="DELETE">DELETE</option>
-                </CFormSelect>
-              </div>
-              {/* Function */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activityFunction">{t('activity.label_function')}</CFormLabel>
-                <CFormInput type="text" onChange={handleChange}
-                  feedbackInvalid={t('activity.validate_input_function')} id="activityFunction" name="function" value={activity.function || ''}
-                  required />
-              </div>
-              {/* IP */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activityIP">{t('activity.label_ip')}</CFormLabel>
-                <CFormInput type="text" onChange={handleChange}
-                  feedbackInvalid={t('activity.validate_input_ip')} id="activityIP" name="ip" value={activity.ip || ''}
-                  required />
-              </div>
-              {/* Agent */}
-              <div className="mb-3">
-                <CFormLabel htmlFor="activityAgent">{t('activity.label_agent')}</CFormLabel>
-                <CFormInput type="text" onChange={handleChange}
-                  feedbackInvalid={t('activity.validate_input_agent')} id="activityAgent" name="agent" value={activity.agent || ''}
-                  required />
-              </div>
-              <div className="col-auto">
-                <CButton type="submit" className="mb-3">
-                  {t('btn_save')}
-                </CButton>
-              </div>
-            </CForm>
-          </CCardBody>
-        </CCard>
-      </CCol>
-      <CCol xs={6}>
+      <CCol xs={12}>
         <div className="mb-3">
           <CFormLabel htmlFor="activitySearchName">{t('activity.search')}</CFormLabel>
           <CFormInput onChange={e => changeInputSearch(e.target.value)} type="text" id="activitySearchName"
@@ -302,7 +238,7 @@ const Activity = () => {
                     }
                   }}><CIcon icon={cilTrash} /></Link>
                 </CTableDataCell>
-                <CModal visible={visible} onClose={() => { setVisible(false); loadData() }}>
+                <CModal size="lg" visible={visible} onClose={() => { setVisible(false); loadData() }}>
                   <CModalHeader>
                     <CModalTitle>{t('activity.show')}</CModalTitle>
                   </CModalHeader>

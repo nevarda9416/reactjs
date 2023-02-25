@@ -132,7 +132,8 @@
     "validate_input_ip": "Vui lòng nhập địa chỉ ip hoạt động",
     "validate_input_agent": "Vui lòng nhập trình duyệt hoạt động",
     "search": "Tìm kiếm hoạt động",
-    "confirm_delete": "Xóa hoạt động này?"
+    "confirm_delete": "Xóa hoạt động này?",
+    "alert_delete_success": "Xóa hoạt động thành công!"
   },
   "system": {
     "breadcrumb": "Hệ thống",
