@@ -133,11 +133,10 @@ const Category = () => {
         } else {
           create(category, config);
         }
-        loadData();
+        setTimeout(function(){
+          loadData();
+        }, 500);
       }
-      setTimeout(function(){
-        loadData();
-      }, 500);
     }
   };
   const editItem = (id) => {

@@ -1,4 +1,4 @@
-import { React, useEffect, useState } from 'react'
+import { React, useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom';
 import {
   CCard,
@@ -43,6 +43,12 @@ const Product = () => {
     editor: null,
     editShortDescription: null
   });
+  const inputNameRef = useRef(null);
+  const textareaShortDescriptionRef = useRef(null);
+  const textareaFullDescriptionRef = useRef(null);
+  const selectUnitRef = useRef(null);
+  const inputCurrencyRef = useRef(null);
+  const inputPriceRef = useRef(null);
   const loadData = async () => {
     const data = await axios.get(url + ':' + product_port + '/products');
     const dataJ = await data.data;
@@ -84,7 +90,6 @@ const Product = () => {
         onChange={(event, editor) => {
           const data = editor.getData();
           console.log({ event, editor, data });
-          changeTextarea(data);
         }}
         onBlur={(_event, editor) => {
           console.log('Blur.', editor);
@@ -101,7 +106,6 @@ const Product = () => {
         onChange={(event, editor) => {
           const data = editor.getData();
           console.log({ event, editor, data });
-          changeShortDescription(data);
         }}
         onBlur={(_event, editor) => {
           console.log('Blur.', editor);
@@ -131,16 +135,28 @@ const Product = () => {
     setData(dataJ);
   };
   const changeTextarea = (value) => {
-    setProduct({
-      full_description: value
+    console.log(inputNameRef.current.value);
+    setProduct({...product,
+      name: inputNameRef.current.value ?? '',    
+      short_description: textareaShortDescriptionRef.current.value ?? '',
+      full_description: value,
+      unit: selectUnitRef.current.value ?? '',
+      currency: inputCurrencyRef.current.value ?? '',
+      price: inputPriceRef.current.value ?? ''
     })
   };
   const changeShortDescription = (value) => {
-    setProduct({
-      short_description: value
+    setProduct({...product,
+      name: inputNameRef.current.value ?? '',
+      short_description: value,
+      full_description: textareaShortDescriptionRef.current.value ?? '',
+      unit: selectUnitRef.current.value ?? '',
+      currency: inputCurrencyRef.current.value ?? '',
+      price: inputPriceRef.current.value ?? ''
     })
   };
   const handleSubmit = (event) => {
+    event.preventDefault(); // Fix prevent submit form immediately
     const form = event.currentTarget;
     console.log(form);
     if (form.checkValidity() === false) {
@@ -171,7 +187,9 @@ const Product = () => {
         } else {
           create(product, config);
         }
-        loadData();
+        setTimeout(function(){ // After timeout call list data again
+          loadData();
+        }, 500);
       }
     }
   };
@@ -322,7 +340,7 @@ const Product = () => {
                 <CFormLabel htmlFor="productName">{t('product.label_name')}</CFormLabel>
                 <CFormInput type="text" onChange={handleChange}
                   feedbackInvalid={t('product.validate_input_name')} id="productName" name="name" value={product.name || ''}
-                  required />
+                  required ref={inputNameRef}/>
               </div>
               {/* short_description */}
               <div className="mb-3">
@@ -332,7 +350,7 @@ const Product = () => {
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeShortDescription(e.target.value)}
                   feedbackInvalid={t('product.validate_input_short_description')} id="productShortDescription" rows="3" required
-                  value={product.short_description || ''} />
+                  value={product.short_description || ''} ref={textareaShortDescriptionRef}/>
               </div>
               {/* full_description */}
               <div className="mb-3">
@@ -342,30 +360,30 @@ const Product = () => {
                 </div>
                 <CFormTextarea className="d-none" onChange={e => changeTextarea(e.target.value)}
                   feedbackInvalid={t('product.validate_input_full_description')} id="productFullDescription" rows="3" required
-                  value={product.full_description || ''} />
+                  value={product.full_description || ''} ref={textareaFullDescriptionRef}/>
               </div>
               {/* unit */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productUnit">{t('product.label_unit')}</CFormLabel>
-                <CFormSelect feedbackInvalid={t('product.validate_input_unit')} onChange={handleChange} id="productUnit" name="unit" value={product.unit || ''} required>
+                <CFormSelect feedbackInvalid={t('product.validate_input_unit')} onChange={handleChange} id="productUnit" name="unit" value={product.unit || ''} required ref={selectUnitRef}>
                   <option></option>
                   <option value="chiếc">Chiếc</option>
                   <option value="cái">Cái</option>
                 </CFormSelect>
               </div>
-              {/* concurrency */}
+              {/* Currency */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productCurrency">{t('product.label_currency')}</CFormLabel>
                 <CFormInput type="text" onChange={handleChange}
                   feedbackInvalid={t('product.validate_input_currency')} id="productCurrency" name="currency" value={product.currency || ''}
-                  required />
+                  required ref={inputCurrencyRef}/>
               </div>
               {/* price */}
               <div className="mb-3">
                 <CFormLabel htmlFor="productPrice">{t('product.label_price')}</CFormLabel>
                 <CFormInput type="text" onChange={handleChange}
                   feedbackInvalid={t('product.validate_input_price')} id="productPrice" name="price" value={product.price || ''}
-                  required />
+                  required ref={inputPriceRef}/>
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
