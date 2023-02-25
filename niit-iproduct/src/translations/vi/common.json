@@ -101,7 +101,10 @@
     "validate_input_description": "Vui lòng nhập mô tả",
     "search": "Tìm kiếm từ khóa",
     "column_name": "Tên từ khóa",
-    "confirm_delete": "Xóa từ khóa này?"
+    "confirm_delete": "Xóa từ khóa này?",
+    "alert_create_success": "Thêm mới từ khóa thành công!",
+    "alert_edit_success": "Sửa từ khóa thành công!",
+    "alert_delete_success": "Xóa từ khóa thành công!"
   },
   "activity": {
     "breadcrumb": "Thống kê hoạt động",

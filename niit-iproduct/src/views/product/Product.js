@@ -55,7 +55,6 @@ const Product = () => {
     setData(dataJ);
   };
   const [data, setData] = useState([]);
-  const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
   const [product, setProduct] = useState([]);
   const [products, setProducts] = useState([]);
@@ -122,7 +121,7 @@ const Product = () => {
     } else {
       navigate('/login');
     }
-  }, [load]);
+  }, []);
   const handleChange = (e) => {
     const target = e.target;
     const value = target.value;
@@ -269,7 +268,9 @@ const Product = () => {
       };
       deleteById(id, product, config);
     }
-    setLoad(1);
+    setTimeout(function () { // After timeout call list data again
+      loadData();
+    }, 500);
   };
   const [t] = useTranslation('common');
   const pagination =

@@ -101,7 +101,10 @@
     "validate_input_description": "Please input description",
     "search": "Search name",
     "column_name": "Name",
-    "confirm_delete": "Delete this tag?"
+    "confirm_delete": "Delete this tag?",
+    "alert_create_success": "Create tag successfully!",
+    "alert_edit_success": "Edit tag successfully!",
+    "alert_delete_success": "Delete tag successfully!"
   },
   "activity": {
     "breadcrumb": "Activity",

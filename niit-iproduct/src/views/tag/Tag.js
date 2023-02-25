@@ -45,7 +45,6 @@ const Tag = () => {
     setData(dataJ);
   };
   const [data, setData] = useState([]);
-  const [load, setLoad] = useState(0);
   const [tag, setTag] = useState([]);
   const [tags, setTags] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
@@ -74,7 +73,7 @@ const Tag = () => {
     } else {
       navigate('/login');
     }
-  }, [load]);
+  }, []);
   const handleChange = (e) => {
     const target = e.target;
     const value = target.value;
@@ -116,10 +115,18 @@ const Tag = () => {
         console.log(tag);
         if (action === 'edit') {
           edit(id, tag, config);
+          alert(t('tag.alert_edit_success'));
         } else {
           create(tag, config);
+          // Reset form input data
+          form.tagName.value = '';
+          form.tagSlug.value = '';
+          form.tagDescription.value = '';
+          alert(t('tag.alert_create_success'));
         }
-        loadData();
+        setTimeout(function () { // After timeout call list data again
+          loadData();
+        }, 500);
       }
     }
   };
@@ -146,8 +153,11 @@ const Tag = () => {
         user_id: foundUser.id
       };
       deleteById(id, tag, config);
+      alert(t('tag.alert_delete_success'));
+      setTimeout(function () { // After timeout call list data again
+        loadData();
+      }, 500);
     }
-    setLoad(1);
   };
   const [t] = useTranslation('common');
   const pagination =
@@ -212,17 +222,17 @@ const Tag = () => {
               {/* name */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagName">{t('tag.label_name')}</CFormLabel>
-                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" value={tag.name || ''} required onChange={handleChange} />
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_name')} id="tagName" name="name" required onChange={handleChange} />
               </div>
               {/* slug */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagSlug">{t('tag.label_slug')}</CFormLabel>
-                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" value={tag.slug || ''} required onChange={handleChange} />
+                <CFormInput type="text" feedbackInvalid={t('tag.validate_input_slug')} id="tagSlug" name="slug" required onChange={handleChange} />
               </div>
               {/* description */}
               <div className="mb-3">
                 <CFormLabel htmlFor="tagDescription">{t('tag.label_description')}</CFormLabel>
-                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required value={tag.description || ''} onChange={handleChange} />
+                <CFormTextarea feedbackInvalid={t('tag.validate_input_description')} id="tagDescription" name="description" rows="3" required onChange={handleChange} />
               </div>
               <div className="col-auto">
                 <CButton type="submit" className="mb-3">
