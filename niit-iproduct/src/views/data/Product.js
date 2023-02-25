@@ -75,7 +75,7 @@ const DataProduct = () => {
     const loggedInUser = localStorage.getItem('userLoggedInfo');
     if (loggedInUser) {
       const foundUser = JSON.parse(loggedInUser);
-      setLoggedInUser(foundUser);      
+      setLoggedInUser(foundUser);
     }
     const getData = async () => {
       const dataC = await axios.get(url + ':' + category_port + '/categories');
@@ -135,7 +135,7 @@ const DataProduct = () => {
       console.log(action);
       console.log(product);
       if (action === 'edit') {
-        edit(id, product, config);
+        //edit(id, product, config); // Product not need edit
       } else {
         get(product, config);
       }

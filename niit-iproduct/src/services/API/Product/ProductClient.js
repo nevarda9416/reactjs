@@ -17,8 +17,8 @@ const edit = (id, data, config) => {
   update(url, port, collection, id, data, config);
 };
 
-const deleteById = (id) => {
-  destroyById(url, port, collection, id);
+const deleteById = (id, data, config) => {
+  destroyById(url, port, collection, id, data, config);
 };
 
 export {get, create, edit, deleteById}

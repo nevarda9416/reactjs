@@ -35,14 +35,8 @@ const Category = () => {
   const [validated, setValidated] = useState(false);
   const [categorySearch, setCategorySearch] = useState({ hits: [] });
   const [id, setId] = useState(0);
-  const [action, setAction] = useState({ hits: [] });
-  const [loggedInUser, setLoggedInUser] = useState({ hits: [] });
+  const [action, setAction] = useState();
   const LIMIT = process.env.REACT_APP_LIMIT_DATA_RETURN_TABLE;
-  // Generate a random number and convert it to base 36 (0-9a-z): TOKEN CHƯA ĐƯỢC SỬ DỤNG
-  const token = Math.random().toString(36).substr(2); // remove `0.`
-  const config = {
-    headers: { Authorization: `Bearer ${token}` }
-  };
   const [state, setState] = useState({
     editor: null
   });
@@ -69,11 +63,6 @@ const Category = () => {
     setNumber(pageNumber);
   };
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
-      const foundUser = JSON.parse(loggedInUser);
-      setLoggedInUser(foundUser);
-    }
     const getData = async () => {
       const data = await axios.get(url + ':' + port + '/categories');
       const dataJ = await data.data;
@@ -121,23 +110,30 @@ const Category = () => {
   const handleSubmit = (event) => {
     const form = event.currentTarget;
     console.log(form);
-    console.log(loggedInUser.id);
     if (form.checkValidity() === false) {
       setValidated(true);
     } else {
       setValidated(false);
-      const category = {
-        name: form.categoryName.value,
-        dbname: form.categoryName.value,
-        description: form.categoryDescription.value,
-        user_id: loggedInUser.id,
-        system_type: 'default' // CRUD action, replace system_id
-      };
-      console.log(action);
-      if (action === 'edit') {
-        edit(id, category, config);
-      } else {
-        create(category, config);
+      const loggedInUser = localStorage.getItem('userLoggedInfo');
+      if (loggedInUser) {
+        const foundUser = JSON.parse(loggedInUser);
+        const config = {
+          headers: {Authorization: `Bearer ${foundUser.token}`}
+        };
+        const category = {
+          name: form.categoryName.value,
+          dbname: form.categoryName.value,
+          description: form.categoryDescription.value,
+          user_id: foundUser.id,
+          system_type: 'default' // CRUD action, replace system_id
+        };
+        console.log(action);
+        if (action === 'edit') {
+          edit(id, category, config);
+        } else {
+          create(category, config);
+        }
+        loadData();
       }
       setTimeout(function(){
         loadData();
