@@ -86,7 +86,10 @@
     "validate_input_department": "Please input department",
     "search": "Search user",
     "column_email": "Email",
-    "confirm_delete": "Delete this user?"
+    "confirm_delete": "Delete this user?",
+    "alert_create_success": "Create user successfully!",
+    "alert_edit_success": "Edit user successfully!",
+    "alert_delete_success": "Delete user successfully!"
   },
   "tag": {
     "breadcrumb": "Tag management",

@@ -79,44 +79,28 @@ app.get('/' + collection_name, function (req, res) {
 });
 // Add user (POST)
 app.post('/' + collection_name + '/add', function (req, res) {
+  const listingQuery = { username: req.body.username };
+  const updates = {
+    $set: {
+      fullname: req.body.fullname,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      remember_token: req.body.remember_token,
+      refresh_token: req.body.refresh_token,
+      department: req.body.department,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type
+    }
+  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_auth_name).find({
-      _id: new ObjectId(req.body.user_id),
-      access_token: req.headers.authorization.split(' ')[1]
-    }).toArray(function (error, response) {
-      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-      if (error) {
-        throw error;
-      } else {
-        if (response.length) {
-          const listingQuery = { username: req.body.username };
-          const updates = {
-            $set: {
-              fullname: req.body.fullname,
-              email: req.body.email,
-              username: req.body.username,
-              password: req.body.password,
-              remember_token: req.body.remember_token,
-              refresh_token: req.body.refresh_token,
-              department: req.body.department,
-              user_id: req.body.user_id,
-              system_type: req.body.system_type
-            }
-          };
-          mongoClient.connect(url, function (error, database) {
-            if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-              if (error) throw error;
-              console.log('Documents inserted or updated: ' + JSON.stringify(response));
-              res.jsonp(response);
-              database.close();
-            });
-          });
-        }
-      }
+    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+      if (error) throw error;
+      console.log('Documents inserted or updated: ' + JSON.stringify(response));
+      res.jsonp(response);
+      database.close();
     });
   });
 });
@@ -135,77 +119,45 @@ app.get('/' + collection_name + '/edit/:id', function (req, res) {
 });
 // Update user (POST)
 app.post('/' + collection_name + '/edit/:id', function (req, res) {
+  const listingQuery = { _id: new ObjectId(req.params.id) };
+  console.log(req.body);
+  const token = generateAccessToken({ username: req.body.username });
+  const updates = {
+    $set: {
+      fullname: req.body.fullname,
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      remember_token: req.body.remember_token,
+      refresh_token: req.body.refresh_token,
+      department: req.body.department,
+      user_id: req.body.user_id,
+      system_type: req.body.system_type,
+      access_token: token
+    }
+  };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_auth_name).find({
-      _id: new ObjectId(req.body.user_id),
-      access_token: req.headers.authorization.split(' ')[1]
-    }).toArray(function (error, response) {
-      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-      if (error) {
-        throw error;
-      } else {
-        if (response.length) {
-          const listingQuery = { _id: new ObjectId(req.params.id) };
-          console.log(req.body);
-          const token = generateAccessToken({ username: req.body.username });
-          const updates = {
-            $set: {
-              fullname: req.body.fullname,
-              email: req.body.email,
-              username: req.body.username,
-              password: req.body.password,
-              remember_token: req.body.remember_token,
-              refresh_token: req.body.refresh_token,
-              department: req.body.department,
-              user_id: req.body.user_id,
-              system_type: req.body.system_type,
-              access_token: token
-            }
-          };
-          mongoClient.connect(url, function (error, database) {
-            if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-              if (error) throw error;
-              console.log('User updated: ' + JSON.stringify(response));
-              res.jsonp(response);
-              database.close();
-            });
-          });
-        }
-      }
+    dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+      if (error) throw error;
+      console.log('User updated: ' + JSON.stringify(response));
+      res.jsonp(response);
+      database.close();
     });
   });
 });
 // Delete user (POST)
 app.post('/' + collection_name + '/delete/:id', function (req, res) {
+  const listingQuery = { _id: new ObjectId(req.params.id) };
   mongoClient.connect(url, function (error, database) {
     if (error) throw error;
     const dbo = database.db(dbname);
-    dbo.collection(collection_auth_name).find({
-      _id: new ObjectId(req.body.user_id),
-      access_token: req.headers.authorization.split(' ')[1]
-    }).toArray(function (error, response) {
-      console.log('Bearer token: ' + req.headers.authorization.split(' ')[1]);
-      if (error) {
-        throw error;
-      } else {
-        if (response.length) {
-          const listingQuery = { _id: new ObjectId(req.params.id) };
-          mongoClient.connect(url, function (error, database) {
-            if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
-              if (error) throw error;
-              console.log('User deleted');
-              res.jsonp(response);
-              database.close();
-            });
-          });
-        }
-      }
+    dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
+      if (error) throw error;
+      console.log('User deleted');
+      res.jsonp(response);
+      database.close();
     });
   });
 });

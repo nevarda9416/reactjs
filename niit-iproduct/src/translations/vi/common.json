@@ -86,7 +86,10 @@
     "validate_input_department": "Vui lòng nhập phòng ban",
     "search": "Tìm kiếm người quản lý",
     "column_email": "Email",
-    "confirm_delete": "Xóa người quản lý này?"
+    "confirm_delete": "Xóa người quản lý này?",
+    "alert_create_success": "Thêm mới người quản lý thành công!",
+    "alert_edit_success": "Sửa người quản lý thành công!",
+    "alert_delete_success": "Xóa người quản lý thành công!"
   },
   "tag": {
     "breadcrumb": "Danh sách từ khóa",

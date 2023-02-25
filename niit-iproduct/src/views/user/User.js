@@ -44,7 +44,6 @@ const User = () => {
     setData(dataJ);
   };
   const [data, setData] = useState([]);
-  const [load, setLoad] = useState(0);
   const [user, setUser] = useState([]);
   const [users, setUsers] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
@@ -73,7 +72,7 @@ const User = () => {
     } else {
       navigate('/login');
     }
-  }, [load]);
+  }, []);
   const handleChange = (e) => {
     const target = e.target;
     const value = target.value;
@@ -117,10 +116,20 @@ const User = () => {
         console.log(user);
         if (action === 'edit') {
           edit(id, user, config);
+          alert(t('user.alert_edit_success'));
         } else {
           create(user, config);
+          // Reset form input data
+          form.userFullName.value = '';
+          form.userEmail.value = '';
+          form.userName.value = '';
+          form.userPassword.value = '';
+          form.userDepartment.value = '';
+          alert(t('user.alert_create_success'));
         }
-        loadData();
+        setTimeout(function () { // After timeout call list data again
+          loadData();
+        }, 500);
       }
     }
   };
@@ -147,8 +156,11 @@ const User = () => {
         user_id: foundUser.id
       };
       deleteById(id, user, config);
+      alert(t('user.alert_delete_success'));
+      setTimeout(function () { // After timeout call list data again
+        loadData();
+      }, 500);
     }
-    setLoad(1);
   };
   const [t] = useTranslation('common');
   const pagination =
@@ -206,7 +218,7 @@ const User = () => {
       <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>{t('user.add_or_edit')}</strong>
+            <strong>{t('user.add')}</strong>
           </CCardHeader>
           <CCardBody>
             <CForm noValidate validated={validated} onSubmit={handleSubmit}>
@@ -214,35 +226,35 @@ const User = () => {
               <div className="mb-3">
                 <CFormLabel htmlFor="userFullName">{t('user.label_fullname')}</CFormLabel>
                 <CFormInput type="text"
-                  feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" name="fullname" value={user.fullname || ''}
+                  feedbackInvalid={t('user.validate_input_fullname')} id="userFullName" name="fullname"
                   required onChange={handleChange} />
               </div>
               {/* email */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userEmail">{t('user.label_email')}</CFormLabel>
                 <CFormInput type="text"
-                  feedbackInvalid={t('user.validate_input_email')} id="userEmail" name="email" value={user.email || ''}
+                  feedbackInvalid={t('user.validate_input_email')} id="userEmail" name="email"
                   required onChange={handleChange} />
               </div>
               {/* username */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userName">{t('user.label_username')}</CFormLabel>
                 <CFormInput type="text"
-                  feedbackInvalid={t('user.validate_input_username')} id="userName" name="username" value={user.username || ''}
+                  feedbackInvalid={t('user.validate_input_username')} id="userName" name="username"
                   required onChange={handleChange} />
               </div>
               {/* password */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userPassword">{t('user.label_password')}</CFormLabel>
                 <CFormInput type="text"
-                  feedbackInvalid={t('user.validate_input_password')} id="userPassword" name="password" value={user.password || ''}
+                  feedbackInvalid={t('user.validate_input_password')} id="userPassword" name="password"
                   required onChange={handleChange} />
               </div>
               {/* department */}
               <div className="mb-3">
                 <CFormLabel htmlFor="userDepartment">{t('user.label_department')}</CFormLabel>
                 <CFormInput type="text"
-                  feedbackInvalid={t('user.validate_input_department')} id="userDepartment" name="department" value={user.department || ''}
+                  feedbackInvalid={t('user.validate_input_department')} id="userDepartment" name="department"
                   required onChange={handleChange} />
               </div>
               <div className="col-auto">
