@@ -157,7 +157,10 @@
     "validate_input_type": "Vui lòng nhập loại cấu hình",
     "search": "Tìm kiếm cấu hình",
     "column_type": "Loại",
-    "confirm_delete": "Xóa cấu hình này?"
+    "confirm_delete": "Xóa cấu hình này?",
+    "alert_create_success": "Thêm mới cấu hình thành công!",
+    "alert_edit_success": "Sửa cấu hình thành công!",
+    "alert_delete_success": "Xóa cấu hình thành công!"
   },
   "seo": {
     "breadcrumb": "SEO",

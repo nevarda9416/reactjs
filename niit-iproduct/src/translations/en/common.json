@@ -158,7 +158,10 @@
     "validate_input_type": "Please input type",
     "search": "Search config",
     "column_type": "Type",
-    "confirm_delete": "Delete this config?"
+    "confirm_delete": "Delete this config?",
+    "alert_create_success": "Create config successfully!",
+    "alert_edit_success": "Edit config successfully!",
+    "alert_delete_success": "Delete config successfully!"
   },
   "seo": {
     "breadcrumb": "SEO",

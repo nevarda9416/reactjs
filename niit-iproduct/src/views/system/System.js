@@ -44,7 +44,6 @@ const System = () => {
     setData(dataJ);
   };
   const [data, setData] = useState([]);
-  const [load, setLoad] = useState(0);
   const [system, setSystem] = useState([]);
   const [systems, setSystems] = useState([]);
   const [number, setNumber] = useState(1); // No of pages
@@ -73,7 +72,7 @@ const System = () => {
     } else {
       navigate('/login');
     }
-  }, [load]);
+  }, []);
   const changeInputSearch = async (value) => {
     setSystemSearch({
       name: value
@@ -136,10 +135,29 @@ const System = () => {
         console.log(system);
         if (action === 'edit') {
           edit(id, system, config);
+          alert(t('system.alert_edit_success'));
         } else {
           create(system, config);
+          // Reset form input data
+          form.systemType.value = '';
+          form.systemIsActived.checked = false;
+          form.systemActivedBy.checked = false;
+          form.systemActivedAt.checked = false;
+          form.systemCreatedBy.checked = false;
+          form.systemCreatedAt.checked = false;
+          form.systemUpdatedBy.checked = false;
+          form.systemUpdatedAt.checked = false;
+          form.systemIsDeleted.checked = false;
+          form.systemDeletedBy.checked = false;
+          form.systemDeletedAt.checked = false;
+          form.systemIsPublished.checked = false;
+          form.systemPublishedBy.checked = false;
+          form.systemPublishedAt.checked = false;
+          alert(t('system.alert_create_success'));
         }
-        loadData();
+        setTimeout(function () { // After timeout call list data again
+          loadData();
+        }, 500);
       }
     }
   };
@@ -166,8 +184,11 @@ const System = () => {
         user_id: foundUser.id
       };
       deleteById(id, activity, config);
+      alert(t('system.alert_delete_success'));
+      setTimeout(function () { // After timeout call list data again
+        loadData();
+      }, 500);
     }
-    setLoad(1);
   };
   const [t] = useTranslation('common');
   const pagination =
