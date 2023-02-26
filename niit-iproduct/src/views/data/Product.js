@@ -49,7 +49,6 @@ const DataProduct = () => {
     setData(dataJ);
   };
   const [data, setData] = useState([]);
-  const [load, setLoad] = useState(0);
   const [category, setCategory] = useState([]);
   const [product, setProduct] = useState([]);
   const [products, setProducts] = useState([]);
@@ -100,7 +99,7 @@ const DataProduct = () => {
     } else {
       navigate('/login');
     }
-  }, [load]);
+  }, []);
   const changeInputSearch = async (value) => {
     setProductSearch({
       name: value
@@ -139,8 +138,11 @@ const DataProduct = () => {
           //edit(id, product, config); // Product not need edit
         } else {
           get(product, config);
+          alert(t('product.alert_get_success'));
         }
-        loadData();
+        setTimeout(function () { // After timeout call list data again
+          loadData();
+        }, 500);
       }
     }
   };

@@ -220,7 +220,8 @@
     "column_name": "Tên sản phẩm",
     "column_price": "Giá",
     "column_link": "Nơi mua",
-    "confirm_delete": "Xóa sản phẩm này?"
+    "confirm_delete": "Xóa sản phẩm này?",
+    "alert_get_success": "Lấy dữ liệu sản phẩm thành công!"
   },
   "customer": {
     "breadcrumb": "Người dùng",

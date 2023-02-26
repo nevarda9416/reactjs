@@ -222,7 +222,8 @@
     "column_name": "Product Name",
     "column_price": "Price",
     "column_link": "Link buy",
-    "confirm_delete": "Delete this product?"
+    "confirm_delete": "Delete this product?",
+    "alert_get_success": "Get data product successfully!"
   },
   "customer": {
     "breadcrumb": "Customer",
