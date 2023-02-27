@@ -66,8 +66,9 @@ const DataProduct = () => {
   };
   const navigate = useNavigate();
   useEffect(() => {
+    const expiredTime = localStorage.getItem('expiredTime');
     const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
+    if (loggedInUser && Date.now() <= expiredTime) {
       const getData = async () => {
         const dataC = await axios.get(url + ':' + category_port + '/categories');
         const dataJC = await dataC.data;

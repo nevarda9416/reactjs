@@ -21,11 +21,12 @@ import { useTranslation } from "react-i18next";
 
 const url = process.env.REACT_APP_URL;
 const port = process.env.REACT_APP_PORT_DATABASE_MONGO_USER_CRUD_DATA;
+const timeout = process.env.REACT_APP_TIMEOUT;
 const Login = () => {
   const [validated, setValidated] = useState(false)
   const navigate = useNavigate();
   const handleSubmit = (event) => {
-    const form = event.currentTarget
+    const form = event.currentTarget;
     if (form.checkValidity() === false) {
       setValidated(true)
       event.preventDefault()
@@ -44,6 +45,7 @@ const Login = () => {
             console.log((res.data.user._id));
             // store the user in localStorage
             const user = res.data.user;
+            localStorage.setItem('expiredTime', Date.now() + parseInt(timeout));
             localStorage.setItem('userLoggedInfo', JSON.stringify({ id: user._id, email: user._id, fullname: user.fullname, username: user.username, token: user.access_token }));
             navigate('/dashboard');
           } else {

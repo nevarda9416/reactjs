@@ -63,9 +63,10 @@ const Category = () => {
     setNumber(pageNumber);
   };
   const navigate = useNavigate();
-  useEffect(() => {
+  useEffect(() => {   
+    const expiredTime = localStorage.getItem('expiredTime');
     const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
+    if (loggedInUser && Date.now() <= expiredTime) {
       const getData = async () => {
         const data = await axios.get(url + ':' + port + '/categories');
         const dataJ = await data.data;

@@ -61,8 +61,9 @@ const Tag = () => {
   };
   const navigate = useNavigate();
   useEffect(() => {
+    const expiredTime = localStorage.getItem('expiredTime');
     const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
+    if (loggedInUser && Date.now() <= expiredTime) {
       const getData = async () => {
         const data = await axios.get(url + ':' + tag_port + '/' + tag_collection);
         const dataJ = await data.data;

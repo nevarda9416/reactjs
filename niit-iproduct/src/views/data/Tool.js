@@ -19,8 +19,9 @@ const ToolProduct = () => {
   const [load, setLoad] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
+    const expiredTime = localStorage.getItem('expiredTime');
     const loggedInUser = localStorage.getItem('userLoggedInfo');
-    if (loggedInUser) {
+    if (loggedInUser && Date.now() <= expiredTime) {
     } else {
       navigate('/login');
     }
