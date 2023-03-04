@@ -164,7 +164,7 @@ app.post('/' + collection_name + '/add', function (req, res) {
               mongoClient.connect(url, function (error, database) {
                 if (error) throw error;
                 const dbo = database.db(dbname);
-                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, {upsert: true}, function (error, response) {
+                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, { upsert: true }, function (error, response) {
                   if (error) throw error;
                   console.log('Activity is created: ' + JSON.stringify(response));
                 });
@@ -314,7 +314,7 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
               mongoClient.connect(url, function (error, database) {
                 if (error) throw error;
                 const dbo = database.db(dbname);
-                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, {upsert: true}, function (error, response) {
+                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, { upsert: true }, function (error, response) {
                   if (error) throw error;
                   console.log('Activity is created: ' + JSON.stringify(response));
                 });
@@ -348,7 +348,7 @@ app.post('/' + collection_name + '/delete/:id', function (req, res) {
         if (response.length) {
           // Start write system log
           const user_id = req.body.user_id;
-          dbo.collection(collection_system_name).findOne({type: req.body.system_type}, function (error, response) {
+          dbo.collection(collection_system_name).findOne({ type: req.body.system_type }, function (error, response) {
             if (error) throw error;
             if (response) {
               // created_by
@@ -403,7 +403,7 @@ app.post('/' + collection_name + '/delete/:id', function (req, res) {
               if (response.published_at === '1' || response.published_at === 1) {
                 published_at = moment().format('YYYY-MM-DD HH:mm:ss');
               }
-              const listingQueryAction = {subject: 'Update category'};
+              const listingQueryAction = { subject: 'Update category' };
               const updateActions = {
                 $set: {
                   subject: 'Delete product',
@@ -420,27 +420,27 @@ app.post('/' + collection_name + '/delete/:id', function (req, res) {
                 }
               };
               // End write system log
-          const listingQuery = { _id: new ObjectId(req.params.id) };
-          mongoClient.connect(url, function (error, database) {
-            if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, {upsert: true}, function (error, response) {
-              if (error) throw error;
-              console.log('Activity is created: ' + JSON.stringify(response));
-            });
-            dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
-              if (error) throw error;
-              console.log('Product is deleted!');
-              res.jsonp(response);
-              database.close();
-            });
+              const listingQuery = { _id: new ObjectId(req.params.id) };
+              mongoClient.connect(url, function (error, database) {
+                if (error) throw error;
+                const dbo = database.db(dbname);
+                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, { upsert: true }, function (error, response) {
+                  if (error) throw error;
+                  console.log('Activity is created: ' + JSON.stringify(response));
+                });
+                dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
+                  if (error) throw error;
+                  console.log('Product is deleted!');
+                  res.jsonp(response);
+                  database.close();
+                });
+              });
+            }
           });
         }
-      });
-    }
-  }
-});
-});
+      }
+    });
+  });
 });
 // Export from database and write to json file
 app.get('/products/export', function (req, res) {

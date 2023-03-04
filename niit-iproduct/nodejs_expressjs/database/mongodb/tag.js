@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const moment = require('moment');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoClient = require('mongodb').MongoClient;
@@ -12,6 +13,8 @@ const port = env.DATABASE_PORT_TAG_CRUD_DATA;
 const dbname = env.DATABASE_NAME;
 const collection_name = env.COLLECTION_TAG_NAME;
 const collection_auth_name = env.COLLECTION_USER_NAME;
+const collection_system_name = env.COLLECTION_SYSTEM_NAME;
+const collection_activity_name = env.COLLECTION_ACTIVITY_NAME;
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -55,25 +58,105 @@ app.post('/' + collection_name + '/add', function (req, res) {
         throw error;
       } else {
         if (response.length) {
-          const listingQuery = { dbname: req.body.name };
-          const updates = {
-            $set: {
-              name: req.body.name,
-              slug: req.body.slug,
-              description: req.body.description,
-              user_id: req.body.user_id,
-              system_type: req.body.system_type
-            }
-          };
-          mongoClient.connect(url, function (error, database) {
+          // Start write system log
+          const user_id = req.body.user_id;
+          dbo.collection(collection_system_name).findOne({ type: req.body.system_type }, function (error, response) {
             if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-              if (error) throw error;
-              console.log('Tag is inserted or updated: ' + JSON.stringify(response));
-              res.jsonp(response);
-              database.close();
-            });
+            if (response) {
+              // created_by
+              if (response.created_by === '1' || response.created_by === 1) {
+                created_by = user_id;
+              }
+              // created_at
+              if (response.created_at === '1' || response.created_at === 1) {
+                created_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // updated_by
+              if (response.updated_by === '1' || response.updated_by === 1) {
+                updated_by = user_id;
+              }
+              // updated_at
+              if (response.updated_at === '1' || response.updated_at === 1) {
+                updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_actived
+              if (response.is_actived === '1' || response.is_actived === 1) {
+                is_actived = 1;
+              }
+              // actived_by
+              if (response.actived_by === '1' || response.actived_by === 1) {
+                actived_by = user_id;
+              }
+              // actived_at
+              if (response.actived_at === '1' || response.actived_at === 1) {
+                actived_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_deleted
+              if (response.is_deleted === '1' || response.is_deleted === 1) {
+                is_deleted = 1;
+              }
+              // deleted_by
+              if (response.deleted_by === '1' || response.deleted_by === 1) {
+                deleted_by = user_id;
+              }
+              // deleted_at
+              if (response.deleted_at === '1' || response.deleted_at === 1) {
+                deleted_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_published
+              if (response.is_published === '1' || response.is_published === 1) {
+                is_published = 1;
+              }
+              // published_by
+              if (response.published_by === '1' || response.published_by === 1) {
+                published_by = user_id;
+              }
+              // published_at
+              if (response.published_at === '1' || response.published_at === 1) {
+                published_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              const listingQueryAction = { subject: 'Update category' };
+              const updateActions = {
+                $set: {
+                  subject: 'Create tag',
+                  content: 'Create tag: ' + req.body.name,
+                  url: '/tags/add',
+                  method: 'POST',
+                  function: null,
+                  ip: null,
+                  agent: null,
+                  created_by: created_by,
+                  created_at: created_at,
+                  updated_by: updated_by,
+                  updated_at: updated_at
+                }
+              };
+              // End write system log
+              const listingQuery = { dbname: req.body.name };
+              const updates = {
+                $set: {
+                  name: req.body.name,
+                  slug: req.body.slug,
+                  description: req.body.description,
+                  user_id: req.body.user_id,
+                  system_type: req.body.system_type
+                }
+              };
+              mongoClient.connect(url, function (error, database) {
+                if (error) throw error;
+                const dbo = database.db(dbname);
+                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, { upsert: true }, function (error, response) {
+                  if (error) throw error;
+                  console.log('Activity is created: ' + JSON.stringify(response));
+                });
+                dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+                  if (error) throw error;
+                  console.log('Tag is inserted or updated: ' + JSON.stringify(response));
+                  res.jsonp(response);
+                  database.close();
+                });
+              });
+            }
           });
         }
       }
@@ -107,26 +190,106 @@ app.post('/' + collection_name + '/edit/:id', function (req, res) {
         throw error;
       } else {
         if (response.length) {
-          const listingQuery = { _id: new ObjectId(req.params.id) };
-          console.log(req.body);
-          const updates = {
-            $set: {
-              name: req.body.name,
-              slug: req.body.slug,
-              description: req.body.description,
-              user_id: req.body.user_id,
-              system_type: req.body.system_type
-            }
-          };
-          mongoClient.connect(url, function (error, database) {
+          // Start write system log
+          const user_id = req.body.user_id;
+          dbo.collection(collection_system_name).findOne({ type: req.body.system_type }, function (error, response) {
             if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
-              if (error) throw error;
-              console.log('Tag is updated: ' + JSON.stringify(response));
-              res.jsonp(response);
-              database.close();
-            });
+            if (response) {
+              // created_by
+              if (response.created_by === '1' || response.created_by === 1) {
+                created_by = user_id;
+              }
+              // created_at
+              if (response.created_at === '1' || response.created_at === 1) {
+                created_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // updated_by
+              if (response.updated_by === '1' || response.updated_by === 1) {
+                updated_by = user_id;
+              }
+              // updated_at
+              if (response.updated_at === '1' || response.updated_at === 1) {
+                updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_actived
+              if (response.is_actived === '1' || response.is_actived === 1) {
+                is_actived = 1;
+              }
+              // actived_by
+              if (response.actived_by === '1' || response.actived_by === 1) {
+                actived_by = user_id;
+              }
+              // actived_at
+              if (response.actived_at === '1' || response.actived_at === 1) {
+                actived_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_deleted
+              if (response.is_deleted === '1' || response.is_deleted === 1) {
+                is_deleted = 1;
+              }
+              // deleted_by
+              if (response.deleted_by === '1' || response.deleted_by === 1) {
+                deleted_by = user_id;
+              }
+              // deleted_at
+              if (response.deleted_at === '1' || response.deleted_at === 1) {
+                deleted_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_published
+              if (response.is_published === '1' || response.is_published === 1) {
+                is_published = 1;
+              }
+              // published_by
+              if (response.published_by === '1' || response.published_by === 1) {
+                published_by = user_id;
+              }
+              // published_at
+              if (response.published_at === '1' || response.published_at === 1) {
+                published_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              const listingQueryAction = { subject: 'Update category' };
+              const updateActions = {
+                $set: {
+                  subject: 'Update tag',
+                  content: 'Update tag: ' + req.body.name,
+                  url: '/tags/edit/:id',
+                  method: 'POST',
+                  function: null,
+                  ip: null,
+                  agent: null,
+                  created_by: created_by,
+                  created_at: created_at,
+                  updated_by: updated_by,
+                  updated_at: updated_at
+                }
+              };
+              // End write system log
+              const listingQuery = { _id: new ObjectId(req.params.id) };
+              console.log(req.body);
+              const updates = {
+                $set: {
+                  name: req.body.name,
+                  slug: req.body.slug,
+                  description: req.body.description,
+                  user_id: req.body.user_id,
+                  system_type: req.body.system_type
+                }
+              };
+              mongoClient.connect(url, function (error, database) {
+                if (error) throw error;
+                const dbo = database.db(dbname);
+                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, { upsert: true }, function (error, response) {
+                  if (error) throw error;
+                  console.log('Activity is created: ' + JSON.stringify(response));
+                });
+                dbo.collection(collection_name).updateOne(listingQuery, updates, { upsert: true }, function (error, response) {
+                  if (error) throw error;
+                  console.log('Tag is updated: ' + JSON.stringify(response));
+                  res.jsonp(response);
+                  database.close();
+                });
+              });
+            }
           });
         }
       }
@@ -147,16 +310,96 @@ app.post('/' + collection_name + '/delete/:id', function (req, res) {
         throw error;
       } else {
         if (response.length) {
-          const listingQuery = { _id: new ObjectId(req.params.id) };
-          mongoClient.connect(url, function (error, database) {
+          // Start write system log
+          const user_id = req.body.user_id;
+          dbo.collection(collection_system_name).findOne({ type: req.body.system_type }, function (error, response) {
             if (error) throw error;
-            const dbo = database.db(dbname);
-            dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
-              if (error) throw error;
-              console.log('Tag is deleted!');
-              res.jsonp(response);
-              database.close();
-            });
+            if (response) {
+              // created_by
+              if (response.created_by === '1' || response.created_by === 1) {
+                created_by = user_id;
+              }
+              // created_at
+              if (response.created_at === '1' || response.created_at === 1) {
+                created_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // updated_by
+              if (response.updated_by === '1' || response.updated_by === 1) {
+                updated_by = user_id;
+              }
+              // updated_at
+              if (response.updated_at === '1' || response.updated_at === 1) {
+                updated_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_actived
+              if (response.is_actived === '1' || response.is_actived === 1) {
+                is_actived = 1;
+              }
+              // actived_by
+              if (response.actived_by === '1' || response.actived_by === 1) {
+                actived_by = user_id;
+              }
+              // actived_at
+              if (response.actived_at === '1' || response.actived_at === 1) {
+                actived_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_deleted
+              if (response.is_deleted === '1' || response.is_deleted === 1) {
+                is_deleted = 1;
+              }
+              // deleted_by
+              if (response.deleted_by === '1' || response.deleted_by === 1) {
+                deleted_by = user_id;
+              }
+              // deleted_at
+              if (response.deleted_at === '1' || response.deleted_at === 1) {
+                deleted_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              // is_published
+              if (response.is_published === '1' || response.is_published === 1) {
+                is_published = 1;
+              }
+              // published_by
+              if (response.published_by === '1' || response.published_by === 1) {
+                published_by = user_id;
+              }
+              // published_at
+              if (response.published_at === '1' || response.published_at === 1) {
+                published_at = moment().format('YYYY-MM-DD HH:mm:ss');
+              }
+              const listingQueryAction = { subject: 'Update category' };
+              const updateActions = {
+                $set: {
+                  subject: 'Delete tag',
+                  content: 'Delete tag ID: ' + req.params.id,
+                  url: '/tags/delete/:id',
+                  method: 'POST',
+                  function: null,
+                  ip: null,
+                  agent: null,
+                  created_by: created_by,
+                  created_at: created_at,
+                  updated_by: updated_by,
+                  updated_at: updated_at
+                }
+              };
+              // End write system log
+              const listingQuery = { _id: new ObjectId(req.params.id) };
+              mongoClient.connect(url, function (error, database) {
+                if (error) throw error;
+                const dbo = database.db(dbname);
+                dbo.collection(collection_activity_name).updateOne(listingQueryAction, updateActions, { upsert: true }, function (error, response) {
+                  if (error) throw error;
+                  console.log('Activity is created: ' + JSON.stringify(response));
+                });
+                dbo.collection(collection_name).deleteOne(listingQuery, function (error, response) {
+                  if (error) throw error;
+                  console.log('Tag is deleted!');
+                  res.jsonp(response);
+                  database.close();
+                });
+              });
+            }
           });
         }
       }
